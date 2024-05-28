@@ -1,0 +1,47 @@
+from pydantic import BaseModel, Field
+from typing import Optional, Union, List
+from .base import GenerateConfig
+
+
+__all__ = [
+    "TypeZhipuGenerate",
+    # zhipu
+    "ZhipuGLM4",
+    "ZhipuGLM3Turbo",
+]
+
+
+class ZhipuGenerateConfig(GenerateConfig):
+    """"""
+    messages: Union[str, List[str], List[int], object, None] = []
+    do_sample: Optional[bool] = Field(
+        default=True, description="do_sample 为 true 时启用采样策略，do_sample 为 false 时采样策略 temperature、top_p 将不生效")
+    stream: Optional[bool] = Field(
+        default=False, description="使用同步调用时，此参数应当设置为 fasle 或者省略。表示模型生成完所有内容后一次性返回所有内容。如果设置为 true，模型将通过标准 Event Stream ，逐块返回模型生成内容。")
+    temperature: Optional[float] = Field(
+        default=0.95, description="采样温度，控制输出的随机性，必须为正数取值范围是：(0.0, 1.0)，不能等于 0，默认值为 0.95，值越大，会使输出更随机，更具创造性；值越小，输出会更加稳定或确定建议您根据应用场景调整 top_p 或 temperature 参数，但不要同时调整两个参数")
+    top_p: Optional[float] = Field(
+        default=0.7, description="用温度取样的另一种方法，称为核取样取值范围是：(0.0, 1.0) 开区间，不能等于 0 或 1，默认值为 0.7模型考虑具有 top_p 概率质量 tokens 的结果")
+    max_tokens: Optional[int] = Field(
+        default=1024, description="模型输出最大 tokens，最大输出为8192，默认值为1024")
+    stop: Optional[List[str]] = Field(
+        default=None, description="否模型在遇到stop所制定的字符时将停止生成，目前仅支持单个停止词，格式为['stop_word1']")
+
+
+class ZhipuGLM4(ZhipuGenerateConfig):
+    """"""
+    model: str = "glm-4"
+    # tools: Optional[float]
+    # tool_choice: Optional[float]
+
+
+class ZhipuGLM3Turbo(ZhipuGenerateConfig):
+    """"""
+    model: str = "glm-3-turbo"
+
+
+TypeZhipuGenerate = Union[
+    ZhipuGenerateConfig,
+    ZhipuGLM4,
+    ZhipuGLM3Turbo
+]
