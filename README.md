@@ -10,5 +10,12 @@
 - `elasticsearch`: 提供elasticsearch工具
 - `agent`: 提供agent工具
 
+> Wechat
+
+<center>
+<img src="assets/wechat-group.jpg" width="200px">
+<h5>微信群</h5>
+</center>
+
 -----
 @2024/03/27
