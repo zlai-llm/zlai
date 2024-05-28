@@ -20,3 +20,4 @@ unstructured[pdf]
 huggingface_hub==0.20.1
 sentencepiece>=0.1.99
 beautifulsoup4>=4.12.2
+zhipuai
