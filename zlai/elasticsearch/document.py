@@ -47,6 +47,7 @@ class DocumentSaveToElasticsearch(LoggerMixin):
 
     def __init__(
             self,
+            host: Optional[str],
             index_name: Optional[str],
             tools: Optional[ElasticSearchTools] = None,
             embedding: Optional[Embedding] = None,

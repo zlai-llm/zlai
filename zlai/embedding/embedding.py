@@ -18,10 +18,12 @@ __all__ = [
 
 headers = {'Content-Type': 'application/json'}
 
+emb_url = EMBUrl()
+
 
 class EmbeddingCompletion(LoggerMixin):
     """"""
-    emb_url: Union[str, EMBUrl, None] = EMBUrl.bge_m3
+    emb_url: Union[str, EMBUrl, None] = emb_url.bge_m3
     model_name: Optional[EmbeddingsModel] = None
     max_len: int = 512
     instruction: bool = False
@@ -137,7 +139,7 @@ class EmbeddingCompletion(LoggerMixin):
 
 class EmbeddingMixin(EmbeddingCompletion):
     """"""
-    emb_url: Union[str, EMBUrl, None] = EMBUrl.bge_m3
+    emb_url: Union[str, EMBUrl, None] = emb_url.bge_m3
     model_name: Optional[EmbeddingsModel] = None
     max_len: int = 512
     instruction: bool = False
@@ -337,7 +339,7 @@ class EmbeddingMixin(EmbeddingCompletion):
 
 class Embedding(EmbeddingMixin):
     """"""
-    emb_url: Union[str, EMBUrl, None] = EMBUrl.bge_m3
+    emb_url: Union[str, EMBUrl, None] = emb_url.bge_m3
     model_name: Optional[EmbeddingsModel] = None
     max_len: int = 512
     instruction: bool = False
@@ -371,7 +373,7 @@ class Embedding(EmbeddingMixin):
         self.max_len = max_len
         self.instruction = instruction
         self.max_len_error = max_len_error
-        self.emb_metadata = get_dataclass_metadata(cls=EMBUrl)
+        # self.emb_metadata = get_dataclass_metadata(cls=EMBUrl)
 
         # from pretrained model
         self.model_path = model_path

@@ -97,49 +97,6 @@ class CSVAgent(AgentMixin):
         else:
             return str(data)
 
-    def generate(
-            self,
-            query: str,
-    ):
-        """"""
-        self._logger(msg=f"[{self.agent_name}] Start ...\n", color="green")
-        self._logger(msg=f"[{self.agent_name}] Question: {query}\n", color="green")
-        messages = self._make_messages(content=query, df_head_markdown=self.df.head().to_markdown())
-        while True:
-            completion = self.llm.generate(messages=messages)
-            messages.append(completion.choices[0].message)
-            content = completion.choices[0].message.content
-            self._logger(msg=f"[{self.agent_name}] Assistant: {content}\n", color="green")
-            codes = ParseCode.sparse_script(string=content, script="python")
-
-            if len(codes) > 0:
-                code = codes[0]
-            else:
-                self._logger(msg=f"[{self.agent_name}] End ...\n", color="green")
-                return completion
-
-            self._logger(msg=f"[{self.agent_name}] Parsed code: ```\n{code}\n```", color="magenta")
-            invoke_data = self.tool.invoke(input=code)
-            invoke_data = self._trans_invoke_data_str(data=invoke_data)
-            self._logger(msg=f"[{self.agent_name}] Tools invoke: {invoke_data}\n", color="green")
-
-            # observation
-            observation_messages = [PromptDataFrame.system_message_dataframe_summary]
-            observation_messages.extend([
-                UserMessage(content=query),
-                AssistantMessage(content=content),
-                UserMessage(
-                    content=PromptDataFrame.prompt_dataframe_observation_summary.format_prompt(
-                        question=query, observation=invoke_data).to_string()),
-            ])
-            self._show_messages(messages=observation_messages, drop_system=True, content_length=-1, logger_name=self.agent_name)
-
-            completion = self.llm.generate(messages=observation_messages)
-            answer = completion.choices[0].message.content
-            self._logger(msg=f"[{self.agent_name}] Final Answer: {answer}.", color="yellow")
-            self._logger(msg=f"[{self.agent_name}] End ...\n", color="green")
-            return answer
-
 
 class CSVQA(AgentObservationMixin, CSVAgent):
     """"""
