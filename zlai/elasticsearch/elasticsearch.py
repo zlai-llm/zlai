@@ -250,7 +250,7 @@ class ElasticSearchTools:
 
     def match_context(
             self,
-            key_word: Union[str, None],
+            key_word: Union[str, None] = None,
             fields: Union[List[str], str, None] = None,
             match_type='match',
             **kwargs
@@ -317,7 +317,7 @@ class ElasticSearchTools:
     def cos_smi(self, vector, doc_vec_name='vector') -> None:
         """"""
         script = {
-            "source": f"cosineSimilarity(params.query_vector, doc['{doc_vec_name}']) + 1.0",
+            "source": f"cosineSimilarity(params.query_vector, '{doc_vec_name}') + 1.0",
             "params": {"query_vector": vector}
         }
         query = ScriptScore(query=MatchAll(), script=script)

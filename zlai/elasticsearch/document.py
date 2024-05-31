@@ -63,7 +63,7 @@ class DocumentSaveToElasticsearch(LoggerMixin):
         self.thresh = thresh
         self.logger = logger
         self.verbose = verbose
-        self.con = get_es_con(hosts=ESUrl.url)
+        self.con = get_es_con(hosts=host)
         self.tools = ElasticSearchTools(index_name=self.index_name, con=self.con)
 
     def __call__(self, data: List[Dict], *args, **kwargs):
