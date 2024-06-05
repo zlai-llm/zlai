@@ -146,6 +146,14 @@ class EmbeddingMixin(EmbeddingCompletion):
     max_len_error: Literal['split', 'drop', 'error'] = 'split'
     verbose: bool = False
 
+    def __call__(
+            self,
+            text: Union[str, List[str]],
+    ) -> EmbeddingsResponded:
+        if isinstance(text, str):
+            text = [text]
+        return self.embedding(text=text)
+
     def trans_any_vectors(self, vectors: Union[EmbeddingsResponded, np.ndarray, List[List[float]]]) -> np.ndarray:
         """"""
         if isinstance(vectors, EmbeddingsResponded):
