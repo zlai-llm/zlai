@@ -12,7 +12,7 @@ from typing import (
 from ..schema import *
 from .base import *
 from .generate import Generate
-from .generate_config import ZhipuGLM4, ZhipuGLM3Turbo
+from .generate_config import TypeZhipuGenerate, GLM4GenerateConfig, GLM3TurboGenerateConfig
 
 
 __all__ = ["Zhipu"]
@@ -23,7 +23,7 @@ class Zhipu(Generate):
     api_key: Optional[str]
     api_key_name: Optional[str]
     model_name: Optional[str]
-    generate_config: Union[ZhipuGLM4, ZhipuGLM3Turbo]
+    generate_config: Union[GLM4GenerateConfig, GLM3TurboGenerateConfig]
     messages: List[Message]
     parse_info: List[ParseInfo]
     async_task_response: Optional[List]
@@ -34,7 +34,7 @@ class Zhipu(Generate):
             self,
             api_key: Optional[str] = None,
             messages: Optional[List[Message]] = None,
-            generate_config: Union[ZhipuGLM4, ZhipuGLM3Turbo] = ZhipuGLM3Turbo(),
+            generate_config: TypeZhipuGenerate = GLM3TurboGenerateConfig(),
             output: Literal["completion", "message", "str"] = "completion",
             verbose: Optional[bool] = False,
             api_key_name: Optional[str] = "ZHIPU_API_KEY",
