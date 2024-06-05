@@ -6,8 +6,13 @@ from .base import GenerateConfig
 __all__ = [
     "TypeZhipuGenerate",
     # zhipu
-    "ZhipuGLM4",
-    "ZhipuGLM3Turbo",
+    "GLM4GenerateConfig",
+    "GLM49BGenerateConfig",
+    "GLM40520GenerateConfig",
+    "GLM4AirGenerateConfig",
+    "GLM4AirXGenerateConfig",
+    "GLM4FlashGenerateConfig",
+    "GLM3TurboGenerateConfig",
 ]
 
 
@@ -28,20 +33,64 @@ class ZhipuGenerateConfig(GenerateConfig):
         default=None, description="否模型在遇到stop所制定的字符时将停止生成，目前仅支持单个停止词，格式为['stop_word1']")
 
 
-class ZhipuGLM4(ZhipuGenerateConfig):
-    """"""
+class GLM4GenerateConfig(ZhipuGenerateConfig):
+    """
+    100RMB / 1M tokens
+    """
     model: str = "glm-4"
     # tools: Optional[float]
     # tool_choice: Optional[float]
 
 
-class ZhipuGLM3Turbo(ZhipuGenerateConfig):
+class GLM49BGenerateConfig(ZhipuGenerateConfig):
     """"""
+    model: str = "glm-4-9b"
+
+
+class GLM40520GenerateConfig(ZhipuGenerateConfig):
+    """
+    glm-4-0520
+    """
+    model: str = "glm-4-0520"
+
+
+class GLM4AirGenerateConfig(ZhipuGenerateConfig):
+    """
+    1RMB / 1M tokens
+    """
+    model: str = "glm-4-air"
+
+
+class GLM4AirXGenerateConfig(ZhipuGenerateConfig):
+    """
+    Air 极速版
+    10RMB / 1M tokens
+    """
+    model: str = "glm-4-airx"
+
+
+class GLM4FlashGenerateConfig(ZhipuGenerateConfig):
+    """
+    Flash 最实惠
+    0.1RMB / 1M tokens
+    """
+    model: str = "glm-4-flash"
+
+
+class GLM3TurboGenerateConfig(ZhipuGenerateConfig):
+    """
+    1RMB / 1M tokens
+    """
     model: str = "glm-3-turbo"
 
 
 TypeZhipuGenerate = Union[
     ZhipuGenerateConfig,
-    ZhipuGLM4,
-    ZhipuGLM3Turbo
+    GLM4GenerateConfig,
+    GLM49BGenerateConfig,
+    GLM40520GenerateConfig,
+    GLM4AirGenerateConfig,
+    GLM4AirXGenerateConfig,
+    GLM4FlashGenerateConfig,
+    GLM3TurboGenerateConfig,
 ]
