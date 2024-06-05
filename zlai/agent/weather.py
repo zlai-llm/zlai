@@ -1,13 +1,12 @@
 import requests
 import traceback
-from typing import Any, Dict, List, Union, Annotated, Optional, Callable
+from typing import Any, Dict, Union, Annotated, Optional, Callable
 
-from ..llms import TypeLLM, Zhipu, ZhipuGLM3Turbo
-from ..schema import Message, SystemMessage
-from ..prompt import MessagesPrompt
+from ..llms import TypeLLM
+from ..schema import SystemMessage
 from .base import AgentMixin
 from .prompt.weather import *
-from .prompt.tasks import TaskDescription, TaskParameters, TaskCompletion
+from .prompt.tasks import TaskDescription, TaskCompletion
 from .address import AddressAgent, StandardAddress
 from .tasks import TaskSequence
 

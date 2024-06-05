@@ -1,11 +1,11 @@
 from typing import Any, Dict, List, Union, Iterable, Optional, Callable
 
-from ..llms import TypeLLM, Zhipu, ZhipuGLM3Turbo
+from ..llms import TypeLLM
 from ..schema import Message, SystemMessage
 from ..prompt import MessagesPrompt
 from ..parse import ParseDict
 from .base import AgentMixin
-from .prompt.tasks import TaskDescription, TaskParameters, TaskCompletion
+from .prompt.tasks import TaskCompletion
 from .prompt.pyecharts import *
 from .echarts import *
 

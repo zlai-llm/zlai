@@ -7,7 +7,7 @@ import sqlite3
 import pandas as pd
 from typing import Any, List, Union, Tuple, Optional, Callable, Iterable
 
-from ..llms import TypeLLM, Zhipu, ZhipuGLM3Turbo
+from ..llms import TypeLLM
 from ..embedding import TypeEmbedding
 from ..schema import Message, SystemMessage
 from ..prompt import MessagesPrompt

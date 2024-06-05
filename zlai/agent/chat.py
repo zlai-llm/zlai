@@ -1,6 +1,6 @@
 from typing import Any, List, Union, Iterable, Optional, Callable
 
-from ..llms import TypeLLM, Zhipu, ZhipuGLM3Turbo
+from ..llms import TypeLLM
 from ..schema import Message, SystemMessage
 from ..prompt import MessagesPrompt
 from .base import AgentMixin
