@@ -97,6 +97,16 @@ class TestEmbeddingMatch(unittest.TestCase):
         data = self.embedding._match_keyword(source=source, target=target, thresh=0.7, keyword_method='content')
         self.print_list(data)
 
+    def test_embedding_match_keyword(self):
+        """"""
+        source = ['铁路']
+        target = ['铁路大桥', '铁桥', '铁道', '火车', '雪糕']
+        data = self.embedding.match_with_keyword(source=source, target=target, thresh=(0.8, 0.6), keyword_method='keyword')
+        self.print_list(data)
+
+        data = self.embedding.match_with_keyword(source=source, target=target, thresh=(0.8, 0.6), keyword_method='keyword', drop_duplicate=False)
+        self.print_list(data)
+
     def test_embedding_match_with_keywords(self):
         """"""
         # 功能测试
