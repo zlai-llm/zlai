@@ -38,9 +38,9 @@ class TestMokeZhipuModels(unittest.TestCase):
         data = llm.generate(query="1+1=")
         print(data.choices[0].message.content)
 
-    def test_glm_4(self):
+    def test_glm_4_flash(self):
         """"""
-        llm = Zhipu(generate_config=GLM4())
+        llm = Zhipu(generate_config=GLM4FlashGenerateConfig())
         data = llm.generate(query="1+1=")
         print(data.choices[0].message.content)
 
@@ -93,19 +93,15 @@ class TestZhipu(unittest.TestCase):
             return eval(string)
 
         llm = Zhipu(generate_config=GLM3TurboGenerateConfig())
-
         question = """
         文本：张三在杭州吃了一笼小笼包。
         问题：请解析出文本中的人名、地点，以Dict的格式输出。
         格式示例：{'name': ..., 'place': ...,}
         你只需要输出解析后的Dict，不需要输出其他内容。"""
-
         output = llm.generate_with_parse(query=question, parse_fun=udf_parse)
-
         print(llm.parse_info)
         print(f"解析后数据类型: {type(output[0])}")
         print(f"解析结果: {output[0]}")
-
 
     def test_glm3_message(self):
         """"""
