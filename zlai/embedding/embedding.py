@@ -267,8 +267,10 @@ class EmbeddingMixin(EmbeddingCompletion):
                 drop_duplicate_match.append(output)
             else:
                 exit_idx = exit_src_name.index(output.src)
-                drop_duplicate_match[exit_idx].dst.extend(output.dst)
-                drop_duplicate_match[exit_idx].score.extend(output.score)
+                for i, dst_item in enumerate(output.dst):
+                    if dst_item not in drop_duplicate_match[exit_idx].dst:
+                        drop_duplicate_match[exit_idx].dst.append(dst_item)
+                        drop_duplicate_match[exit_idx].score.append(output.score[i])
                 drop_duplicate_match[exit_idx].match_type.extend(output.match_type)
         return drop_duplicate_match
 
