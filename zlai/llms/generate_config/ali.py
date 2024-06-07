@@ -7,19 +7,34 @@ __all__ = [
     "TypeAliGenerate",
     # Ali
     "AliGenerateConfig",
-    "AliQwenTurboGenerateConfig",
-    "AliQwenPlusGenerateConfig",
-    "AliQwenMaxGenerateConfig",
-    "AliQwenMax1201GenerateConfig",
-    "AliQwenMaxLongContextGenerateConfig",
-    "AliQwen15Chat72BGenerateConfig",
-    "AliQwen15Chat14BGenerateConfig",
-    "AliQwen15Chat7BGenerateConfig",
-    "AliQwenChat72BGenerateConfig",
-    "AliQwenChat14BGenerateConfig",
-    "AliQwenChat7BGenerateConfig",
-    "AliQwenChat18BGenerateConfig",
-    "AliQwenChat18BLongContextGenerateConfig",
+
+    # qwen api
+    'AliQwenTurboGenerateConfig',
+    'AliQwenPlusGenerateConfig',
+    'AliQwenMaxGenerateConfig',
+    'AliQwenMax1201GenerateConfig',
+    'AliQwenMaxLongContextGenerateConfig',
+    # qwen v2
+    'AliQwen2Instruct57BA14BGenerateConfig',
+    'AliQwen2Instruct72BGenerateConfig',
+    'AliQwenInstruct27BGenerateConfig',
+    'AliQwen2Instruct15BGenerateConfig',
+    'AliQwen2Instruct05BGenerateConfig',
+    # qwen v1.5
+    'AliQwen15Chat110BGenerateConfig',
+    'AliQwen15Chat72BGenerateConfig',
+    'AliQwen15Chat32BGenerateConfig',
+    'AliQwen15Chat14BGenerateConfig',
+    'AliQwen15Chat7BGenerateConfig',
+    'AliQwen15Chat18BGenerateConfig',
+    'AliQwen15Chat05BGenerateConfig',
+    'AliQwen15Code7BGenerateConfig',
+    # qwen v1
+    'AliQwenChat72BGenerateConfig',
+    'AliQwenChat14BGenerateConfig',
+    'AliQwenChat7BGenerateConfig',
+    'AliQwenChat18BGenerateConfig',
+    'AliQwenChat18BLongContextGenerateConfig',
 ]
 
 
@@ -89,6 +104,52 @@ class AliGenerateConfig(GenerateConfig):
     messages: Union[List[Dict], List[Message]] = Field(default=[])
 
 
+class AliQwen2Instruct57BA14BGenerateConfig(AliGenerateConfig):
+    """ qwen2-57b-a14b-instruct
+    通义千问2对外开源的57B规模14B激活参数的MOE模型
+    模型支持 32,768 tokens上下文，为了保障正常使用和正常输出，API限定用户输入为 30,720 ，输出最大 6,144。
+    """
+    model: Optional[str] = Field(default="qwen2-57b-a14b-instruct", description="模型名称")
+    max_tokens: Optional[int] = Field(default=6144, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+
+
+class AliQwen2Instruct72BGenerateConfig(AliGenerateConfig):
+    """qwen2-72b-instruct
+    通义千问2对外开源的0.5~72B规模的模型
+    模型支持 131,072 tokens上下文，为了保障正常使用和正常输出，API限定用户输入为 128,000 ，输出最大 6,144。
+    """
+    model: Optional[str] = Field(default="qwen2-72b-instruct", description="模型名称")
+    max_tokens: Optional[int] = Field(default=6144, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+
+
+class AliQwenInstruct27BGenerateConfig(AliGenerateConfig):
+    """qwen2-7b-instruct
+    通义千问2对外开源的0.5~72B规模的模型
+    模型支持 131,072 tokens上下文，为了保障正常使用和正常输出，API限定用户输入为 128,000 ，输出最大 6,144。
+    """
+    model: Optional[str] = Field(default="qwen2-7b-instruct", description="模型名称")
+    max_tokens: Optional[int] = Field(default=6144, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+
+
+class AliQwen2Instruct15BGenerateConfig(AliGenerateConfig):
+    """qwen2-1.5b-instruct
+    通义千问2对外开源的0.5~72B规模的模型
+    模型支持 131,072 tokens上下文，为了保障正常使用和正常输出，API限定用户输入为 128,000 ，输出最大 6,144。
+    """
+    model: Optional[str] = Field(default="qwen2-1.5b-instruct", description="模型名称")
+    max_tokens: Optional[int] = Field(default=6144, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+
+
+class AliQwen2Instruct05BGenerateConfig(AliGenerateConfig):
+    """qwen2-0.5b-instruct
+    通义千问2对外开源的0.5~72B规模的模型
+    模型支持 131,072 tokens上下文，为了保障正常使用和正常输出，API限定用户输入为 128,000 ，输出最大 6,144。
+    """
+    model: Optional[str] = Field(default="qwen2-0.5b-instruct", description="模型名称")
+    max_tokens: Optional[int] = Field(default=6144,
+                                      description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+
+
 class AliQwenTurboGenerateConfig(AliGenerateConfig):
     """ qwen-turbo
     通义千问超大规模语言模型，支持中文、英文等不同语言输入。
@@ -134,30 +195,76 @@ class AliQwenMaxLongContextGenerateConfig(AliGenerateConfig):
     max_tokens: Optional[int] = Field(default=2000, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
 
 
+class AliQwen15Chat110BGenerateConfig(AliGenerateConfig):
+    """ qwen1.5-110b-chat
+    通义千问1.5对外开源的110B规模参数量的经过人类指令对齐的chat模型
+    模型支持 32,000 tokens上下文，为了保障正常使用和正常输出，API限定用户输入为30,000，输出最大 8,000。
+    """
+    model: Optional[str] = Field(default="qwen1.5-110b-chat", description="模型名称")
+    max_tokens: Optional[int] = Field(default=8000, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+
+
 class AliQwen15Chat72BGenerateConfig(AliGenerateConfig):
     """ qwen1.5-72b-chat
     通义千问1.5对外开源的72B规模参数量的经过人类指令对齐的chat模型
     支持32k tokens上下文，输入最大30k，输出最大2k tokens。
     """
     model: Optional[str] = Field(default="qwen1.5-72b-chat", description="模型名称")
-    max_tokens: Optional[int] = Field(default=1500, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+    max_tokens: Optional[int] = Field(default=2000, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+
+
+class AliQwen15Chat32BGenerateConfig(AliGenerateConfig):
+    """ qwen1.5-32b-chat
+    通义千问1.5对外开源的32B规模参数量的经过人类指令对齐的chat模型
+    支持32k tokens上下文，输入最大30k，输出最大2k tokens。
+    """
+    model: Optional[str] = Field(default="qwen1.5-32b-chat", description="模型名称")
+    max_tokens: Optional[int] = Field(default=2000, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
 
 
 class AliQwen15Chat14BGenerateConfig(AliGenerateConfig):
     """ qwen1.5-14b-chat
     通义千问1.5对外开源的14B规模参数量的经过人类指令对齐的chat模型
-    模型支持 8k tokens上下文，为了保障正常使用和正常输出，API限定用户输入为6k Tokens。
+    模型支持 8,000 tokens上下文，为了保障正常使用和正常输出，API限定用户输入为6,000，输出最大 2,000。
     """
     model: Optional[str] = Field(default="qwen1.5-14b-chat", description="模型名称")
-    max_tokens: Optional[int] = Field(default=1500, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+    max_tokens: Optional[int] = Field(default=2000, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
 
 
 class AliQwen15Chat7BGenerateConfig(AliGenerateConfig):
     """ qwen1.5-7b-chat
-    通义千问1.5对外开源的7B规模参数量是经过人类指令对齐的chat模型
+    通义千问1.5对外开源的7B规模参数量的经过人类指令对齐的chat模型
+    模型支持 8,000 tokens上下文，为了保障正常使用和正常输出，API限定用户输入为6,000，输出最大 2,000。
     """
     model: Optional[str] = Field(default="qwen1.5-7b-chat", description="模型名称")
-    max_tokens: Optional[int] = Field(default=1500, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+    max_tokens: Optional[int] = Field(default=2000, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+
+
+class AliQwen15Chat18BGenerateConfig(AliGenerateConfig):
+    """ qwen1.5-1.8b-chat
+    通义千问1.5对外开源的1.8B规模参数量的经过人类指令对齐的chat模型
+    模型支持 32,000 tokens上下文，为了保障正常使用和正常输出，API限定用户输入为30,000，输出最大 2,000。
+    """
+    model: Optional[str] = Field(default="qwen1.5-1.8b-chat", description="模型名称")
+    max_tokens: Optional[int] = Field(default=2000, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+
+
+class AliQwen15Chat05BGenerateConfig(AliGenerateConfig):
+    """ qwen1.5-0.5b-chat
+    通义千问1.5对外开源的1.8B规模参数量的经过人类指令对齐的chat模型
+    模型支持 32,000 tokens上下文，为了保障正常使用和正常输出，API限定用户输入为30,000，输出最大 2,000。
+    """
+    model: Optional[str] = Field(default="qwen1.5-0.5b-chat", description="模型名称")
+    max_tokens: Optional[int] = Field(default=2000, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+
+
+class AliQwen15Code7BGenerateConfig(AliGenerateConfig):
+    """ codeqwen1.5-7b-chat
+    通义千问1.5对外开源的7B规模参数量的经过人类指令对齐的针对代码场景的chat模型
+    模型支持 64,000 tokens上下文，为了保障正常使用和正常输出，API限定用户输入为56,000，输出最大 8,000。
+    """
+    model: Optional[str] = Field(default="codeqwen1.5-7b-chat", description="模型名称")
+    max_tokens: Optional[int] = Field(default=8000, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
 
 
 class AliQwenChat72BGenerateConfig(AliGenerateConfig):
@@ -176,7 +283,7 @@ class AliQwenChat14BGenerateConfig(AliGenerateConfig):
     模型支持 8k tokens上下文，为了保障正常使用和正常输出，API限定用户输入为6k Tokens。
     """
     model: Optional[str] = Field(default="qwen-14b-chat", description="模型名称")
-    max_tokens: Optional[int] = Field(default=1500,
+    max_tokens: Optional[int] = Field(default=2000,
                                       description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
 
 
@@ -185,7 +292,7 @@ class AliQwenChat7BGenerateConfig(AliGenerateConfig):
     通义千问对外开源的7B规模参数量的经过人类指令对齐的chat模型
     """
     model: Optional[str] = Field(default="qwen-7b-chat", description="模型名称")
-    max_tokens: Optional[int] = Field(default=1500,
+    max_tokens: Optional[int] = Field(default=2000,
                                       description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
 
 
@@ -195,7 +302,7 @@ class AliQwenChat18BGenerateConfig(AliGenerateConfig):
     模型支持 8k tokens上下文，为了保障正常使用和正常输出，API限定用户输入为6k Tokens。
     """
     model: Optional[str] = Field(default="qwen-1.8b-chat", description="模型名称")
-    max_tokens: Optional[int] = Field(default=1500,
+    max_tokens: Optional[int] = Field(default=2000,
                                       description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
 
 
@@ -211,14 +318,28 @@ class AliQwenChat18BLongContextGenerateConfig(AliGenerateConfig):
 
 TypeAliGenerate = Union[
     AliGenerateConfig,
+    # qwen api
     AliQwenTurboGenerateConfig,
     AliQwenPlusGenerateConfig,
     AliQwenMaxGenerateConfig,
     AliQwenMax1201GenerateConfig,
     AliQwenMaxLongContextGenerateConfig,
+    # qwen v2
+    AliQwen2Instruct57BA14BGenerateConfig,
+    AliQwen2Instruct72BGenerateConfig,
+    AliQwenInstruct27BGenerateConfig,
+    AliQwen2Instruct15BGenerateConfig,
+    AliQwen2Instruct05BGenerateConfig,
+    # qwen v1.5
+    AliQwen15Chat110BGenerateConfig,
     AliQwen15Chat72BGenerateConfig,
+    AliQwen15Chat32BGenerateConfig,
     AliQwen15Chat14BGenerateConfig,
     AliQwen15Chat7BGenerateConfig,
+    AliQwen15Chat18BGenerateConfig,
+    AliQwen15Chat05BGenerateConfig,
+    AliQwen15Code7BGenerateConfig,
+    # qwen v1
     AliQwenChat72BGenerateConfig,
     AliQwenChat14BGenerateConfig,
     AliQwenChat7BGenerateConfig,
