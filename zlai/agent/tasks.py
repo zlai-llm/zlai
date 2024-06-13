@@ -106,14 +106,14 @@ class TaskSwitch(Tasks):
             matches = re.findall(r"\d+", content)
             return matches
         match_task_idx = _parse_task(content=content)
-        self._logger(msg=f"[{self.task_name}] matched task id: {match_task_idx}", color="green")
+        self._logger(msg=f"[{self.task_name}] matched task id: {match_task_idx}\n", color="green")
         if len(match_task_idx) == 0:
             return TaskDescription()
         else:
             task_id = int(match_task_idx[0])
             for task in self.task_list:
                 if task.task_id == task_id:
-                    self._logger(msg=f"[{self.task_name}] task id: {task.task_id}, task name: {task.task_name}, content: [{content}]",
+                    self._logger(msg=f"[{self.task_name}] task id: {task.task_id}, task name: {task.task_name}, content: [{content}]\n",
                                  color="green")
                     return task
             return TaskDescription()
