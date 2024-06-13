@@ -55,10 +55,24 @@ class TestAgentMemory(unittest.TestCase):
         print(task_completion.content)
 
     def test_agent_memory(self):
-        self.knowledge.use_memory = True
-
         task_completion = self.knowledge("你好吗？")
         print(len(self.knowledge.task_completions))
         task_completion = self.knowledge(task_completion)
         print(len(self.knowledge.task_completions))
         print(task_completion.content)
+
+    def test_agent_memory_query(self):
+        task_completion = self.knowledge("你好")
+        task_completion = self.knowledge("你好")
+        print(len(self.knowledge.task_completions))
+        print(task_completion.content)
+
+    def test_agent_memory_chat(self):
+        task_completion = self.knowledge("闲聊模式，请记住：你的名字叫小刚，今年33岁，在读博士。")
+        task_completion = self.knowledge("你好")
+        task_completion = self.knowledge("旅游股2024年一季度合计净利润为？")
+        task_completion = self.knowledge("你的名字是？")
+        print(len(self.knowledge.task_completions))
+        print(task_completion.content)
+
+
