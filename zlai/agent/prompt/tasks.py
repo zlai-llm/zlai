@@ -12,11 +12,12 @@ from ...schema.messages import Message, UserMessage, AssistantMessage, SystemMes
 __all__ = [
     "TaskParameters",
     "TaskDescription",
-    "TaskPrompt",
+    "TaskSwitchPrompt",
+    "TaskPlanPrompt",
     "TaskAnswer",
     "TaskCompletion",
     "FreezeTaskCompletion",
-    "few_shot_task_id_lst",
+    "TaskPlanCompletion",
 ]
 
 
@@ -85,27 +86,31 @@ PromptTask: str = """Given a user question, determine the user's question is sui
 Return ONLY the TASK ID and nothing else.
 """
 
-PromptTaskPlan: str = """
-
-"""
-
-system_message_task_plan = SystemMessage(content="""""")
+system_message_task_plan = SystemMessage(content="""你是一个任务规划机器人，你需要把给定的问题，拆分为一个List，使用问题原文回答。""")
 
 few_shot_task_id_lst = [
-    UserMessage(content=""""""),
-    AssistantMessage(content=""""""),
+    UserMessage(content="""问题: 帮我查询杭州的天气，并从文本数据库中查询“旅游股2024年一季度合计净利润”。\nList: """),
+    AssistantMessage(content=str(["查询杭州的天气", "旅游股2024年一季度合计净利润"])),
 ]
+
 
 messages_prompt = MessagesPrompt(
     system_message=system_message_task_plan,
     few_shot=few_shot_task_id_lst,
+    prompt_template=PromptTemplate(
+        input_variables=["content"],
+        template="""问题: {content}。\nList: """),
 )
 
 
 @dataclass
-class TaskPrompt:
+class TaskSwitchPrompt:
     """"""
     task_prompt: PromptTemplate = PromptTemplate(input_variables=["task_info"], template=PromptTask)
+
+
+@dataclass
+class TaskPlanPrompt:
     task_prompt_plan: PromptTemplate = PromptTemplate(input_variables=["task_info"], template=PromptTask)
     few_shot_task_id_lst: ClassVar[List[Message]] = few_shot_task_id_lst
     messages_prompt: MessagesPrompt = messages_prompt
@@ -129,3 +134,9 @@ class FreezeTaskCompletion(BaseModel):
 class TaskCompletion(FreezeTaskCompletion):
     """"""
     task_description: Optional[TaskDescription] = Field(default=None, description="")
+
+
+class TaskPlanCompletion(BaseModel):
+    """"""
+    task: Optional[str] = Field(default=None, description="任务/问题描述")
+    task_completion: Optional[TaskCompletion] = Field(default=None, description="任务/问题回答")

@@ -5,21 +5,23 @@ from langchain.prompts import PromptTemplate
 from ..prompt import MessagesPrompt
 from ..schema import Message, SystemMessage
 from ..embedding import Embedding
+from ..parse import ParseList
 from ..llms import *
 from .base import *
-from .prompt.tasks import TaskDescription, TaskPrompt, TaskCompletion
+from .prompt.tasks import *
 
 
 __all__ = [
     "Tasks",
     "TaskSwitch",
     "TaskSequence",
+    "TaskPlan"
 ]
 
 
 class Tasks(AgentMixin):
     """"""
-    task_prompt: Optional[TaskPrompt]
+    task_prompt: Optional[TaskSwitchPrompt]
     task_list: Optional[List[TaskDescription]]
     task_mapping: Optional[Dict[str, int]]
 
@@ -27,10 +29,10 @@ class Tasks(AgentMixin):
             self,
             llm: Optional[TypeLLM] = None,
             embedding: Optional[Embedding] = None,
-            task_prompt: Optional[TaskPrompt] = None,
+            task_prompt: Optional[TaskSwitchPrompt] = None,
 
             system_message: Optional[SystemMessage] = None,
-            system_template: Optional[PromptTemplate] = TaskPrompt.task_prompt,
+            system_template: Optional[PromptTemplate] = TaskSwitchPrompt.task_prompt,
             prompt_template: Optional[PromptTemplate] = None,
             few_shot: Optional[List[Message]] = None,
             messages_prompt: Optional[MessagesPrompt] = None,
@@ -81,7 +83,7 @@ class TaskSwitch(Tasks):
     def __init__(
             self,
             task_name: Optional[str] = "Task Switch",
-            system_template: Optional[PromptTemplate] = TaskPrompt.task_prompt,
+            system_template: Optional[PromptTemplate] = TaskSwitchPrompt.task_prompt,
             use_memory: Optional[bool] = False,
             *args: Any,
             **kwargs: Any,
@@ -296,3 +298,57 @@ class TaskSequence(Tasks):
             self.task_completions.append(self._deep_copy_task_completion(task_completion))
             self._logger(msg=f"[{self.task_name} @ {_task_generate.agent_name}] End.\n", color="magenta")
         self._logger(msg=f"[{self.task_name}] End.", color="green")
+
+
+class TaskPlan(TaskSwitch):
+    """"""
+    task_name: Optional[str] = "Task Plan"
+
+    def __init__(
+            self,
+            task_name: Optional[str] = "Task Plan",
+            task_list: Optional[List[TaskDescription]] = None,
+            messages_prompt: Optional[MessagesPrompt] = TaskPlanPrompt.messages_prompt,
+            use_memory: Optional[bool] = False,
+            *args: Any,
+            **kwargs: Any,
+    ):
+        super().__init__(*args, **kwargs)
+        self.task_list = task_list
+        self.task_name = task_name
+        self.messages_prompt = messages_prompt
+        self.switch = TaskSwitch(task_list=task_list, use_memory=use_memory, *args, **kwargs)
+
+    def _task_plan(self, task_completion: TaskCompletion) -> List[TaskPlanCompletion]:
+        """"""
+        messages = self._make_messages(content=task_completion.query, task_completion=task_completion)
+        self._show_messages(messages=messages)
+        completion = self.llm.generate(messages=messages)
+        content = completion.choices[0].message.content
+
+        task_completion.content = content
+        task_completion.parsed_data = ParseList.eval_list(content)[0]
+        self.task_completions.append(self._deep_copy_task_completion(task_completion))
+
+        for i, task_description in enumerate(task_completion.parsed_data):
+            self._logger(msg=f"[{self.task_name}] description - [{i}]: {task_description}\n", color="green")
+
+        task_plan = [TaskPlanCompletion(task=task) for task in task_completion.parsed_data]
+        return task_plan
+
+    def generate(
+            self,
+            query: Union[str, TaskCompletion],
+            *args: Any,
+            **kwargs: Any,
+    ) -> List[TaskPlanCompletion]:
+        """"""
+        self._logger(msg=f"[{self.task_name}] Start ...\n", color="green")
+        task_completion = self._make_task_completion(query)
+        self._logger(msg=f"[{self.task_name}] Question: {task_completion.query}", color="green")
+        self.task_completions.append(self._deep_copy_task_completion(task_completion))
+
+        plan_list = self._task_plan(task_completion)
+        for todo_item in plan_list:
+            todo_item.task_completion = self.switch(todo_item.task, *args, **kwargs)
+        return plan_list
