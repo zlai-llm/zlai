@@ -48,6 +48,7 @@ class TestAgentPlan(unittest.TestCase):
         )
 
     def test_agent_memory_chat(self):
-        task_completion = self.knowledge("帮我查询杭州的天气，并从文本数据库中查询“旅游股2024年一季度合计净利润”。")
+        task_plan_completions = self.knowledge("帮我查询余杭区的天气，并从文本数据库中查询“旅游股2024年一季度合计净利润”。")
         print(len(self.knowledge.task_completions))
-        print(task_completion.content)
+        for task_plan_completion in task_plan_completions:
+            print(task_plan_completion.task_completion.content)

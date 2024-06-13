@@ -136,7 +136,7 @@ class AgentMixin(LoggerMixin):
         """"""
         memory_messages = []
         if hasattr(self, "max_memory_messages") and self.use_memory and self.max_memory_messages is not None:
-            memory_messages = task_completion.memory_messages[-self.max_memory_messages:]
+            memory_messages = task_completion.memory_messages[- (self.max_memory_messages * 2):]
             task_completion.memory_messages.append(UserMessage(content=task_completion.query))
         return memory_messages
 

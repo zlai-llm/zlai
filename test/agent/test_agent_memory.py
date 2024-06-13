@@ -69,10 +69,13 @@ class TestAgentMemory(unittest.TestCase):
 
     def test_agent_memory_chat(self):
         task_completion = self.knowledge("闲聊模式，请记住：你的名字叫小刚，今年33岁，在读博士。")
+        print("问题-1: ", task_completion.content)
         task_completion = self.knowledge("你好")
+        print("问题-2: ", task_completion.content)
         task_completion = self.knowledge("旅游股2024年一季度合计净利润为？")
+        print("问题-3: ", task_completion.content)
         task_completion = self.knowledge("你的名字是？")
         print(len(self.knowledge.task_completions))
-        print(task_completion.content)
+        print("问题-4: ", task_completion.content)
 
 
