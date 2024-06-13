@@ -67,6 +67,10 @@ class AgentMixin(LoggerMixin):
     few_shot: Optional[List[Message]] = None
     messages_prompt: Optional[MessagesPrompt] = None
 
+    # memory
+    use_memory: Optional[bool]
+    max_memory_messages: Optional[int]
+
     logger: Optional[Callable]
     verbose: Optional[bool]
     stream: Optional[bool]
@@ -129,14 +133,29 @@ class AgentMixin(LoggerMixin):
             self._logger_messages(role=f"{message.role} [{len(message.content)}]", content=show_content)
         self._logger_messages_end(name=logger_name)
 
+    def _make_memory_messages(self, task_completion: TaskCompletion) -> List[Message]:
+        """"""
+        memory_messages = []
+        if hasattr(self, "max_memory_messages") and self.use_memory and self.max_memory_messages is not None:
+            memory_messages = task_completion.memory_messages[-self.max_memory_messages:]
+            task_completion.memory_messages.append(UserMessage(content=task_completion.query))
+        return memory_messages
+
     def _make_messages(
             self,
             content: Optional[str] = None,
+            task_completion: Optional[TaskCompletion] = None,
             **kwargs: Any
     ) -> List[Message]:
-        """"""
+        """
+        1. merge system message and few-shot
+        2. merge memory message
+        """
+        # messages prompt
         if self.messages_prompt:
             messages = self.messages_prompt.prompt_format(content=content, **kwargs)
+
+        # few-shot
         else:
             messages = []
             if self.system_template:
@@ -150,7 +169,10 @@ class AgentMixin(LoggerMixin):
             if self.prompt_template:
                 content = self.prompt_template.format_prompt(content=content, **kwargs).to_string()
             messages.append(UserMessage(content=content))
-        return messages
+
+        # memory messages
+        memory_messages = self._make_memory_messages(task_completion=task_completion)
+        return memory_messages + messages
 
     def make_messages_and_invoke(self, task_completion, **kwargs) -> TaskCompletion:
         """"""

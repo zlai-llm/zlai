@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from langchain.prompts import PromptTemplate
-from typing import Any, List, Dict, Type, Optional, Callable, ClassVar
+from typing import Any, List, Dict, Union, Type, Optional, Callable, ClassVar
 from dataclasses import dataclass, field, fields
 
 from ...llms import TypeLLM
@@ -37,6 +37,8 @@ class TaskParameters:
     prompt_template: Optional[PromptTemplate] = field(default=None)
     few_shot: Optional[List[Message]] = field(default=None)
     messages_prompt: Optional[MessagesPrompt] = field(default=None)
+    use_memory: Optional[bool] = field(default=False)
+    max_memory_messages: Optional[int] = field(default=None)
 
     # logger
     logger: Optional[Callable] = field(default=None)
@@ -121,6 +123,7 @@ class FreezeTaskCompletion(BaseModel):
     parsed_data: Optional[Any] = Field(default=None, description="")
     observation: Optional[str] = Field(default=None, description="")
     data: Optional[Dict[str, List]] = Field(default=None, description="")
+    memory_messages: Optional[List[Union[Message, UserMessage, AssistantMessage]]] = Field(default=[], description="历史消息")
 
 
 class TaskCompletion(FreezeTaskCompletion):

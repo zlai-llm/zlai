@@ -19,21 +19,9 @@ __all__ = [
 
 class Tasks(AgentMixin):
     """"""
-    llm: Optional[TypeLLM]
-    embedding: Optional[Embedding]
-
     task_prompt: Optional[TaskPrompt]
-    system_message: Optional[SystemMessage]
-    system_template: Optional[PromptTemplate]
-    prompt_template: Optional[PromptTemplate]
-    few_shot: Optional[List[Message]]
-    messages_prompt: Optional[MessagesPrompt]
-
     task_list: Optional[List[TaskDescription]]
     task_mapping: Optional[Dict[str, int]]
-
-    logger: Optional[Callable]
-    verbose: Optional[bool]
 
     def __init__(
             self,
@@ -97,6 +85,7 @@ class TaskSwitch(Tasks):
             self,
             task_name: Optional[str] = "Task Switch",
             system_template: Optional[PromptTemplate] = TaskPrompt.task_prompt,
+            use_memory: Optional[bool] = False,
             *args: Any,
             **kwargs: Any,
     ):
@@ -104,6 +93,7 @@ class TaskSwitch(Tasks):
         self.task_name = task_name
         self.system_template = system_template
         self.task_completions = []
+        self.use_memory = use_memory
         self.args = args
         self.kwargs = kwargs
 
@@ -144,7 +134,9 @@ class TaskSwitch(Tasks):
     def switch_task(self, task_completion: TaskCompletion) -> TaskDescription:
         """"""
         messages = self._make_messages(
-            content=task_completion.query, task_info=self.task_info(task_list=self.task_list))
+            content=task_completion.query,
+            task_info=self.task_info(task_list=self.task_list),
+        )
         self._show_messages(messages=messages, drop_system=True, content_length=None, logger_name="Task")
         self._validate_switch_llm_stream()
         completion = self.llm.generate(messages=messages)
@@ -198,8 +190,8 @@ class TaskSwitch(Tasks):
         """"""
         self._validate_task_list()
         self._logger(msg=f"[{self.task_name}] Start ...\n", color="green")
-        self._logger(msg=f"[{self.task_name}] Question: {query}", color="green")
         task_completion = self._make_task_completion(query)
+        self._logger(msg=f"[{self.task_name}] Question: {task_completion.query}", color="green")
         self.task_completions.append(self._deep_copy_task_completion(task_completion))
 
         task = self.switch_task(task_completion)
