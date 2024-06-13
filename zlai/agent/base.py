@@ -70,9 +70,8 @@ class AgentMixin(LoggerMixin):
     # memory
     use_memory: Optional[bool]
     max_memory_messages: Optional[int]
+    task_completions: Optional[List[TaskCompletion]]
 
-    logger: Optional[Callable]
-    verbose: Optional[bool]
     stream: Optional[bool]
     stream_message: Optional[StreamMessage] = StreamMessage()
     show_messages: Optional[ShowMessages] = StreamMessage()
@@ -235,11 +234,14 @@ class AgentMixin(LoggerMixin):
     def _make_task_completion(self, query: Union[str, TaskCompletion], **kwargs) -> TaskCompletion:
         """"""
         if isinstance(query, TaskCompletion):
-            return self._deep_copy_task_completion(query)
+            task_completion = self._deep_copy_task_completion(query)
+        elif hasattr(self, "task_completions") and isinstance(query, str) and len(self.task_completions) > 0:
+            task_completion = self._deep_copy_task_completion(self.task_completions[-1])
+            task_completion.query = query
         else:
             task_completion = TaskCompletion.model_validate(kwargs)
             task_completion.query = query
-            return task_completion
+        return task_completion
 
     def _new_stream_line(
             self,

@@ -77,9 +77,6 @@ class Tasks(AgentMixin):
 class TaskSwitch(Tasks):
     """"""
     task_name: Optional[str] = "Task Switch"
-    task_list: Optional[List[TaskDescription]]
-    task_completions: Optional[List[TaskCompletion]]
-    task_mapping: Optional[Dict[str, int]]
 
     def __init__(
             self,
@@ -234,8 +231,6 @@ class TaskSwitch(Tasks):
 class TaskSequence(Tasks):
     """"""
     task_name: Optional[str] = "Task Sequence"
-    task_list: Optional[List[TaskDescription]]
-    task_completions: Optional[List[TaskCompletion]]
 
     def __init__(
             self,
