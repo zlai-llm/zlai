@@ -20,7 +20,7 @@ class ToolsAgent(AgentMixin):
             llm: Optional[TypeLLM] = None,
             stream: Optional[bool] = False,
             incremental: Optional[bool] = True,
-            agent_name: Optional[str] = "Chat Agent",
+            agent_name: Optional[str] = "Tools Agent",
             system_message: Optional[SystemMessage] = PromptChat.system_message,
             system_template: Optional[PromptTemplate] = None,
             prompt_template: Optional[PromptTemplate] = None,
@@ -76,7 +76,11 @@ class ToolsAgent(AgentMixin):
             hooks: Optional[Dict] = None,
     ):
         """"""
+        self._logger(msg=f"[{self.agent_name}] Answer: {message.content}", color="red")
+        self._logger(msg=f"[{self.agent_name}] Call Tool: {tool_name}", color="magenta")
+        self._logger(msg=f"[{self.agent_name}] Tool Params: {tool_params}", color="magenta")
         data = dispatch_tool(tool_name=tool_name, tool_params=tool_params, hooks=hooks)
+        self._logger(msg=f"[{self.agent_name}] Tool Data: {data}", color="magenta")
         task_completion.memory_messages.append(
             ToolsMessage(content=str(data), tool_call_id=message.tool_calls[0].id))
 
