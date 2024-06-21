@@ -7,4 +7,4 @@ from .embedding_config import *
 from ..schema import EMBUrl
 from typing import Union
 
-TypeEmbedding = Union[Embedding, TypeZhipuEmbedding, TypeAliEmbedding]
+TypeEmbedding = Union[Embedding, TypeZhipuEmbedding, TypeAliEmbedding, PretrainedEmbedding]

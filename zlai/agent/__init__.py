@@ -21,6 +21,8 @@ from .task_description import *
 from .prompt.tasks import *
 from .dynamic import *
 
+from .tools import *
+
 # TODO: cycle call
 # TODO: add graph agent
 # TODO: add dynamic agent path

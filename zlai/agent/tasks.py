@@ -319,7 +319,7 @@ class TaskPlan(TaskSwitch):
         self.messages_prompt = messages_prompt
         self.switch = TaskSwitch(task_list=task_list, use_memory=use_memory, *args, **kwargs)
 
-    def _task_plan(self, task_completion: TaskCompletion) -> List[TaskPlanCompletion]:
+    def _task_plan(self, task_completion: TaskCompletion) -> List[TaskCompletion]:
         """"""
         messages = self._make_messages(content=task_completion.query, task_completion=task_completion)
         self._show_messages(messages=messages)
@@ -333,7 +333,25 @@ class TaskPlan(TaskSwitch):
         for i, task_description in enumerate(task_completion.parsed_data):
             self._logger(msg=f"[{self.task_name}] description - [{i}]: {task_description}\n", color="green")
 
-        task_plan = [TaskPlanCompletion(task=task) for task in task_completion.parsed_data]
+        task_plan = []
+        for i, query in enumerate(task_completion.parsed_data):
+            if len(task_completion.parsed_data) == 1:
+                previous_question = None
+                next_question = None
+            elif i == 0:
+                previous_question = None
+                next_question = task_completion.parsed_data[i + 1]
+            elif i + 1 == len(task_completion.parsed_data):
+                previous_question = task_completion.parsed_data[i - 1]
+                next_question = None
+            else:
+                previous_question = task_completion.parsed_data[i - 1]
+                next_question = task_completion.parsed_data[i + 1]
+
+            _task_completion = self._make_task_completion(
+                query=query, query_id=i, previous_question=previous_question,
+                next_question=next_question, )
+            task_plan.append(_task_completion)
         return task_plan
 
     def generate(
@@ -341,7 +359,7 @@ class TaskPlan(TaskSwitch):
             query: Union[str, TaskCompletion],
             *args: Any,
             **kwargs: Any,
-    ) -> List[TaskPlanCompletion]:
+    ) -> List[TaskCompletion]:
         """"""
         self._logger(msg=f"[{self.task_name}] Start ...\n", color="green")
         task_completion = self._make_task_completion(query)

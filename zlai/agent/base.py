@@ -235,8 +235,10 @@ class AgentMixin(LoggerMixin):
         """"""
         if isinstance(query, TaskCompletion):
             task_completion = self._deep_copy_task_completion(query)
+            task_completion = task_completion.model_copy(update=kwargs)
         elif hasattr(self, "task_completions") and isinstance(query, str) and len(self.task_completions) > 0:
             task_completion = self._deep_copy_task_completion(self.task_completions[-1])
+            task_completion = task_completion.model_copy(update=kwargs)
             task_completion.query = query
         else:
             task_completion = TaskCompletion.model_validate(kwargs)

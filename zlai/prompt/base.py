@@ -2,7 +2,7 @@ from typing import Any, List, Literal, Callable, Optional
 from langchain.prompts import PromptTemplate
 from ..utils.mixin import *
 from ..schema.messages import Message, SystemMessage, UserMessage
-from ..embedding import Embedding
+from ..embedding import TypeEmbedding
 
 
 __all__ = [
@@ -13,7 +13,7 @@ __all__ = [
 class MessagesPrompt(LoggerMixin):
     """"""
     system_message: SystemMessage
-    embedding: Embedding
+    embedding: TypeEmbedding
     few_shot: List[Message]
     rerank: bool = False
     n_shot: Optional[int]
@@ -27,7 +27,7 @@ class MessagesPrompt(LoggerMixin):
             self,
             system_message: SystemMessage,
             few_shot: List[Message],
-            embedding: Optional[Embedding] = None,
+            embedding: Optional[TypeEmbedding] = None,
             rerank: bool = False,
             n_shot: Optional[int] = 5,
             support_system: bool = True,

@@ -128,6 +128,11 @@ class FreezeTaskCompletion(BaseModel):
     parsed_data: Optional[Any] = Field(default=None, description="")
     observation: Optional[str] = Field(default=None, description="")
     data: Optional[Dict[str, List]] = Field(default=None, description="")
+    query_id: Optional[int] = Field(default=None, description="")
+    origin_query: Optional[str] = Field(default=None, description="")
+    total_question: Optional[List[str]] = Field(default=None, description="")
+    next_question: Optional[str] = Field(default=None, description="")
+    previous_question: Optional[str] = Field(default=None, description="")
     memory_messages: Optional[List[Union[Message, UserMessage, AssistantMessage]]] = Field(default=[], description="历史消息")
 
 

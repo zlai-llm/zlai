@@ -31,6 +31,12 @@ class ZhipuGenerateConfig(GenerateConfig):
         default=1024, description="模型输出最大 tokens，最大输出为8192，默认值为1024")
     stop: Optional[List[str]] = Field(
         default=None, description="否模型在遇到stop所制定的字符时将停止生成，目前仅支持单个停止词，格式为['stop_word1']")
+    tools: Optional[List] = Field(
+        default=None, description="可供模型调用的工具。默认开启web_search ，调用成功后作为参考信息提供给模型。注意：返回结果作为输入也会进行计量计费，每次调用大约会增加1000 tokens的消耗。"
+    )
+    tool_choice: Optional[str] = Field(
+        default="auto", description="用于控制模型是如何选择要调用的函数，仅当工具类型为function时补充。默认为auto，当前仅支持auto"
+    )
 
 
 class GLM4GenerateConfig(ZhipuGenerateConfig):
@@ -38,8 +44,6 @@ class GLM4GenerateConfig(ZhipuGenerateConfig):
     100RMB / 1M tokens
     """
     model: str = "glm-4"
-    # tools: Optional[float]
-    # tool_choice: Optional[float]
 
 
 class GLM49BGenerateConfig(ZhipuGenerateConfig):

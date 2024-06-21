@@ -219,14 +219,14 @@ class SystemMessage(Message):
 
 class ToolsMessage(Message):
     """"""
-    role: str = Field("system", description="角色")
-    content: str = Field("", description="对话内容")
-    tools: Union[Dict] = {}
+    role: str = Field(default="tool", description="角色")
+    content: str = Field(default="", description="对话内容")
+    tool_call_id: Union[int, str, dict] = Field(default=None, description="id")
 
     @field_validator("role")
     def validate_role(cls, role):
-        if role not in ["system"]:
-            raise ValueError(f"role must in ['system'], your role: `{role}`.")
+        if role not in ["tool"]:
+            raise ValueError(f"role must in ['tool'], your role: `{role}`.")
         return role
 
 
