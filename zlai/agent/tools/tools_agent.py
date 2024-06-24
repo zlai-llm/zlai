@@ -1,3 +1,4 @@
+from pydantic import BaseModel, Field
 from typing import Any, List, Dict, Union, Tuple, Optional, Callable
 from ...llms import TypeLLM
 from ...schema import Message, SystemMessage, AssistantMessage, ToolsMessage
@@ -5,12 +6,33 @@ from ...prompt import MessagesPrompt
 from ..base import AgentMixin
 from ..prompt.tasks import TaskCompletion
 from ..prompt.chat import *
-from .register import dispatch_tool
+from .register import dispatch_tool, register_tool
 
 
 __all__ = [
+    "Tools",
     "ToolsAgent",
 ]
+
+
+class Tools(BaseModel):
+    """"""
+    tool_descriptions: List[Dict] = Field(default=[], description="Description of the tool")
+    tool_hooks: Dict[str, Callable] = Field(default={}, description="Hooks of the tool")
+    function_list: List[Callable] = Field(default=None, description="List of function to be used as tools")
+    params_fun: Optional[Callable] = Field(default=None, description="Function to clean the parameters of the tool")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.register_tools()
+
+    def register_tools(self):
+        """"""
+        for fun in self.function_list:
+            register_tool(tool_hooks=self.tool_hooks, tool_descriptions=self.tool_descriptions)(fun)
+
+    def dispatch_tool(self, *args, **kwargs):
+        return dispatch_tool(*args, **kwargs, hooks=self.tool_hooks)
 
 
 class ToolsAgent(AgentMixin):
@@ -26,9 +48,7 @@ class ToolsAgent(AgentMixin):
             prompt_template: Optional[PromptTemplate] = None,
             few_shot: Optional[List[Message]] = None,
             messages_prompt: Optional[MessagesPrompt] = None,
-            hooks: Optional[Dict[str, Callable]] = None,
-            tools_description: Optional[List] = None,
-            tools_params_fun: Optional[Callable] = None,
+            tools: Optional[Tools] = None,
             use_memory: Optional[bool] = False,
             max_memory_messages: Optional[int] = None,
             logger: Optional[Callable] = None,
@@ -46,21 +66,30 @@ class ToolsAgent(AgentMixin):
         self.prompt_template = prompt_template
         self.few_shot = few_shot
         self.messages_prompt = messages_prompt
-        self.hooks = hooks
-        self.tools_description = tools_description
-        self.tools_params_fun = tools_params_fun
+        self.tools = tools
         self.use_memory = use_memory
         self.max_memory_messages = max_memory_messages
         self.logger = logger
         self.verbose = verbose
         self.args = args
         self.kwargs = kwargs
-        self.set_llm_tools(tools_description=self.tools_description)
+        self.set_llm_tools()
 
-    def set_llm_tools(self, tools_description: Optional[List] = None):
+    def set_llm_tools(self, tool_descriptions: Optional[List] = None):
         """"""
-        if tools_description is not None:
-            self.llm.generate_config.tools = tools_description
+        if tool_descriptions is None:
+            self.llm.generate_config.tools = self.tools.tool_descriptions
+        else:
+            self.llm.generate_config.tools = tool_descriptions
+
+        self._logger(msg=f"[{self.agent_name}] Registered {len(self.tools.tool_hooks)} Tools: {list(self.tools.tool_hooks.keys())}\n", color="green")
+
+    def _clean_tools_params(self, tool_params: Dict) -> Dict:
+        """"""
+        if self.tools.params_fun:
+            tool_params = self.tools.params_fun(tool_params=tool_params)
+            self._logger(msg=f"[{self.agent_name}] Converted Tool Params: {tool_params}", color="magenta")
+        return tool_params
 
     def _agent_start_action(
             self,
@@ -83,18 +112,13 @@ class ToolsAgent(AgentMixin):
             message: Message,
             tool_name: Optional[str] = None,
             tool_params: Optional[Dict] = None,
-            hooks: Optional[Dict] = None,
     ):
         """"""
-        self._logger(msg=f"[{self.agent_name}] Answer: {message.content}", color="red")
+        self._logger(msg=f"[{self.agent_name}] Answer Content: {message.content}", color="magenta")
         self._logger(msg=f"[{self.agent_name}] Call Tool: {tool_name}", color="magenta")
         self._logger(msg=f"[{self.agent_name}] Tool Params: {tool_params}", color="magenta")
-
-        if self.tools_params_fun:
-            tool_params = self.tools_params_fun(tool_params=tool_params)
-            self._logger(msg=f"[{self.agent_name}] Converted Tool Params: {tool_params}", color="magenta")
-
-        data = dispatch_tool(tool_name=tool_name, tool_params=tool_params, hooks=hooks)
+        tool_params = self._clean_tools_params(tool_params)
+        data = self.tools.dispatch_tool(tool_name=tool_name, tool_params=tool_params)
         self._logger(msg=f"[{self.agent_name}] Tool Data: {data}", color="magenta")
         task_completion.memory_messages.append(
             ToolsMessage(content=str(data), tool_call_id=message.tool_calls[0].id))
@@ -113,14 +137,16 @@ class ToolsAgent(AgentMixin):
         """"""
         task_completion, messages = self._agent_start_action(query, *args, **kwargs)
         completion = self.llm.generate(messages=messages)
-        task_completion.memory_messages.append(completion.choices[0].message)
-        self._call_tools(
-            task_completion=task_completion, message=completion.choices[0].message,
-            tool_name=completion.choices[0].message.tool_calls[0].function.name,
-            tool_params=eval(completion.choices[0].message.tool_calls[0].function.arguments),
-            hooks=self.hooks
-        )
-        completion = self.llm.generate(messages=task_completion.memory_messages)
         task_completion.content = completion.choices[0].message.content
+        task_completion.memory_messages.append(completion.choices[0].message)
+
+        if completion.choices[0].finish_reason == "tool_calls":
+            self._call_tools(
+                task_completion=task_completion, message=completion.choices[0].message,
+                tool_name=completion.choices[0].message.tool_calls[0].function.name,
+                tool_params=eval(completion.choices[0].message.tool_calls[0].function.arguments),
+            )
+            completion = self.llm.generate(messages=task_completion.memory_messages)
+            task_completion.content = completion.choices[0].message.content
         self._agent_end_action(task_completion=task_completion)
         return task_completion

@@ -44,6 +44,26 @@ class TestMokeZhipuModels(unittest.TestCase):
         data = llm.generate(query="1+1=")
         print(data.choices[0].message.content)
 
+    def test_web_search(self):
+        web_search_tool = {
+            "type": "web_search",
+            "web_search": {
+                "enable": True,
+                "search_result": True,
+            }
+        }
+        llm = Zhipu(generate_config=GLM4FlashGenerateConfig(tools=[web_search_tool]))
+        query = "什么是审计失败和其法律责任？"
+        data = llm.generate(query=query)
+        print(data)
+        print(data.choices[0].message.content)
+        print()
+
+        llm = Zhipu(generate_config=GLM4FlashGenerateConfig(tools=[]))
+        data = llm.generate(query=query)
+        print(data)
+        print(data.choices[0].message.content)
+
     def test_tools(self):
         """"""
         tools = [

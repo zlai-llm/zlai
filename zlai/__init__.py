@@ -3,4 +3,4 @@ from .utils import *
 from .schema import *
 
 
-__version__ = "0.3.88"
+__version__ = "0.3.89"

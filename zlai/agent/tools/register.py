@@ -108,6 +108,8 @@ def dispatch_tool(
         tool_name: str,
         tool_params: dict,
         hooks: Optional[Dict[str, Callable]],
+        *args: Any,
+        **kwargs: Any,
 ) -> str:
     if tool_name not in hooks:
         return f"Tool `{tool_name}` not found. Please use a provided tool."
