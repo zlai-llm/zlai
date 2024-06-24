@@ -1,7 +1,6 @@
 from .agent import *
 from .fund import *
 from .sql import *
-from .policy import *
 from .dataframe import *
 from .try_times import *
 

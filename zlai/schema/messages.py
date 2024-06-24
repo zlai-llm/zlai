@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Union, Dict, List, Any
+from typing import Union, Dict, List, Any, Optional
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -221,7 +221,7 @@ class ToolsMessage(Message):
     """"""
     role: str = Field(default="tool", description="角色")
     content: str = Field(default="", description="对话内容")
-    tool_call_id: Union[int, str, dict] = Field(default=None, description="id")
+    tool_call_id: Optional[Union[int, str, dict]] = Field(default=None, description="id")
 
     @field_validator("role")
     def validate_role(cls, role):
