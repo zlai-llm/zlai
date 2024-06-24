@@ -49,6 +49,11 @@ class TaskParameters:
     index_name: Optional[str] = field(default=None)
     elasticsearch_host: Optional[str] = field(default=None)
 
+    # tools
+    hooks: Optional[Dict[str, Callable]] = field(default=None)
+    tools_description: Optional[List] = field(default=None)
+    tools_params_fun: Optional[Callable] = field(default=None)
+
     kwargs: Optional[Dict] = field(default=None)
 
     def params(self) -> Dict[str, any]:
