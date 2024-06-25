@@ -22,9 +22,19 @@
 - [ ] 增加对于多模态模型的支持，图片解读、文生图等
 - [ ] 增加复杂任务的动态规划
 - [ ] 增加Agent生成知识图谱
+- [ ] 增加基金、股票、期货、期权等金融任务问答
+- [ ] 增加写代码然后执行问答
+- [ ] 增加画图问答
+- [ ] 增加其他Agent
+- [ ] 增加React
 - [ ] message prompt 的组织方式中的参数不能与 task completion 中的参数重名
 - [ ] 对知识对话增加记忆机制，增加记忆机制在多个Agent之间的共享
   - [X] 完成`ChatAgent/Knowledge`
+
+> 0.3.90
+
+1. 清理了一些代码
+2. 增加了[LLM-SiliconCloud](https://cloud.siliconflow.cn/)
 
 > 0.3.83
 
