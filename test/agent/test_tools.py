@@ -1,41 +1,147 @@
 import unittest
-from typing import Annotated
-from zlai.llms import Zhipu, GLM4FlashGenerateConfig
-from zlai.agent import ToolsAgent
-from zlai.agent.agent import register_tool
-
-TEST_TOOL_HOOKS = {}
-TEST_TOOL_DESCRIPTIONS = []
-
-
-@register_tool(tool_hooks=TEST_TOOL_HOOKS, tool_descriptions=TEST_TOOL_DESCRIPTIONS)
-def random_number_generator(
-        seed: Annotated[int, "The random seed used by the generator", True],
-        range: Annotated[tuple[int, int], "The range of the generated numbers", True],
-) -> int:
-    """
-    Generates a random number x, s.t. range[0] <= x < range[1]
-    """
-    if not isinstance(seed, int):
-        raise TypeError("Seed must be an integer")
-    if not isinstance(range, tuple):
-        raise TypeError("Range must be a tuple")
-    if not isinstance(range[0], int) or not isinstance(range[1], int):
-        raise TypeError("Range must be a tuple of integers")
-    import random
-    return random.Random(seed).randint(*range)
+from zlai.llms import Zhipu, GLM4GenerateConfig, GLM4FlashGenerateConfig
+from zlai.agent.tools import *
 
 
 class TestToolsAgent(unittest.TestCase):
     """"""
-    def setUp(self):
+
+    def test_params(self):
         """"""
-        self.llm = Zhipu(generate_config=GLM4FlashGenerateConfig(tools=TEST_TOOL_DESCRIPTIONS))
+        tool_hooks = {}
+        tool_descriptions = []
+        register_tool(tool_hooks=tool_hooks, tool_descriptions=tool_descriptions)(random_number_generator)
+        register_tool(tool_hooks=tool_hooks, tool_descriptions=tool_descriptions)(get_weather)
+        print(tool_hooks)
+        print(tool_descriptions)
+        print(get_weather)
 
-    def test_(self):
+    def test_tools(self):
         """"""
-        tools = ToolsAgent(llm=self.llm, hooks=TEST_TOOL_HOOKS)
-        completion = tools("生成一个10-17之间的随机数")
-        print(completion)
+        tools = Tools(function_list=[get_weather])
+        print(tools)
+        print(tools.function_list[0]("杭州"))
+        input_ = {"tool_name": "get_weather", "tool_params": {"city_name": "杭州"}}
+        print(tools.dispatch_tool(**input_))
+
+    def test_tools_agent(self):
+        """"""
+        llm = Zhipu(generate_config=GLM4FlashGenerateConfig())
+
+        tools = Tools(function_list=[get_weather, random_number_generator])
+        agent = ToolsAgent(llm=llm, tools=tools, verbose=True)
+        task_completion = agent("输出一个0-6的随机数？")
+        print(task_completion.content)
 
 
+class TestTools(unittest.TestCase):
+    """"""
+    def test_fund_agent(self):
+        import inspect
+        fund_agent = FundAgent(verbose=True)
+        print(inspect.signature(fund_agent.dispatch_fun).parameters)
+        data = fund_agent.dispatch_fun("get_current_fund_data", {'fund_code': '000001'})
+        print(data)
+
+    def test_fund_dispatch(self):
+        """"""
+        tool_calls = {
+            "id": "call_8231168139794583938",
+            "index": 0,
+            "type": "function",
+            "function": {
+                "arguments": '{"fund_code": "000001"}',
+                "name": "get_current_fund_data"
+            }
+        }
+        tool_name = tool_calls.get('function').get("name")
+        tool_params = eval(tool_calls.get('function').get("arguments"))
+        out = fund_tools(tool_name=tool_name, tool_params=tool_params)
+        print(out)
+
+    def test_agent_call(self):
+        """"""
+        messages = [
+            UserPrompt(content='请帮我查找000001的最新信息。').model_dump(),
+        ]
+
+        api = RemoteLLMAPI(remote=Remote.zhipu, api_key_path=self.api_key_path)
+        gen_config = ZhipuGenerateConfig(
+            tools=get_fund_tools(),
+            tool_choice='auto',
+        )
+        api.set_model(model_name=ZhipuModel.glm_3_turbo)
+        api.set_generate_config(config=gen_config)
+        response = api.generate(prompt=messages)
+
+        messages.append(response.model_dump())
+
+        print(response)
+        tool_name = response.tool_calls[0].function.name
+        tool_params = eval(response.tool_calls[0].function.arguments)
+        obs = fund_tools(tool_name=tool_name, tool_params=tool_params)
+        messages.append({
+            "role": "tool",
+            "content": obs,
+            "tool_call_id": response.tool_calls[0].id,
+        })
+        response = api.generate(prompt=messages)
+        print(response)
+
+    def test_agent_class(self):
+        """"""
+        messages = [
+            UserPrompt(content='请帮我查找020532的最新信息。').model_dump(),
+        ]
+        fund_agent = FundAgent(verbose=True)
+        fund_agent.set_llm(remote=Remote.zhipu, api_key_path=self.api_key_path, is_message_cache=True)
+        out = fund_agent(prompt=messages)
+        print(out)
+
+    def test_agent_fund_basic_info(self):
+        """"""
+        messages = [
+            UserPrompt(content='请帮我查找020532基金的基本信息。').model_dump(),
+        ]
+        fund_agent = FundAgent(verbose=True)
+        fund_agent.set_llm(remote=Remote.zhipu, api_key_path=self.api_key_path, is_message_cache=True)
+        out = fund_agent(prompt=messages)
+        print(out)
+
+    def test_agent_fund_name2code(self):
+        """"""
+        messages = [
+            UserPrompt(content='查找湘财鑫睿债券的基金代码。').model_dump(),
+        ]
+        fund_agent = FundAgent(verbose=True)
+        fund_agent.set_llm(remote=Remote.zhipu, api_key_path=self.api_key_path, is_message_cache=True)
+        out = fund_agent(prompt=messages)
+        print(out)
+
+    def test_agent_fund_name2code_stream(self):
+        """"""
+        messages = [
+            UserPrompt(content='查找大成消费主题的基金代码。').model_dump(),
+        ]
+        fund_agent = FundAgent(verbose=True, stream=True)
+        fund_agent.set_llm(
+            remote=Remote.zhipu,
+            api_key_path=self.api_key_path,
+            is_message_cache=True,
+        )
+        out = fund_agent(prompt=messages)
+        for item in out:
+            print(item)
+
+    def test(self):
+        """"""
+        import sys
+        from io import StringIO
+
+        text = """print("生还者人数：", 1)"""
+        stdout_backup = sys.stdout
+        sys.stdout = StringIO()
+        exec(text)
+        output = sys.stdout.getvalue()
+        sys.stdout = stdout_backup
+        print("Captured output:", output)
