@@ -17,8 +17,7 @@ class TestMokeAliModels(unittest.TestCase):
             Yi15Chat9BGenerateConfig,
         ]
         for gen_config in config:
-            print(gen_config.__name__)
             llm = SiliconFlow(generate_config=gen_config())
-            data = llm.generate(query="1+1=")
-            print(data.choices[0].message.content)
-
+            data = llm.generate(query="你好")
+            print(f"{gen_config.__name__.replace('GenerateConfig', '')}: {data.choices[0].message.content}")
+            print()
