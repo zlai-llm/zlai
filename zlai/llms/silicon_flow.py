@@ -2,7 +2,7 @@ from typing import Any, List, Literal, Optional
 
 from ..schema import *
 from .generate import *
-from .generate_config.deepseek import TypeDeepSeekGenerate
+from .generate_config.silicon_flow import TypeSiliconFlowGenerate
 
 
 __all__ = ["SiliconFlow"]
@@ -13,7 +13,7 @@ class SiliconFlow(OpenAICompletion):
 
     def __init__(
             self,
-            generate_config: TypeDeepSeekGenerate,
+            generate_config: TypeSiliconFlowGenerate,
             api_key: Optional[str] = None,
             messages: Optional[List[Message]] = None,
             output: Literal["completion", "message", "str"] = "completion",
