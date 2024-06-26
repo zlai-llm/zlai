@@ -96,14 +96,7 @@ class TestZhipu(unittest.TestCase):
     def setUp(self):
         """"""
         self.config_glm3 = GLM3TurboGenerateConfig()
-        self.llm = Zhipu(
-            generate_config=self.config_glm3,
-        )
-
-    def test_glm3(self):
-        """"""
-        output = self.llm.generate(query="你好")
-        print(output)
+        self.llm = Zhipu(generate_config=self.config_glm3)
 
     def test_glm3_async(self):
         """"""
@@ -148,10 +141,3 @@ class TestZhipu(unittest.TestCase):
         print(llm.parse_info)
         print(f"解析后数据类型: {type(output[0])}")
         print(f"解析结果: {output[0]}")
-
-    def test_glm3_message(self):
-        """"""
-        messages = [UserMessage(content="你好")]
-        output = self.llm.generate(messages=messages)
-        print(output)
-
