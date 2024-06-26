@@ -23,6 +23,8 @@
 - [ ] 增加复杂任务的动态规划
 - [ ] 增加Agent生成知识图谱
 - [ ] 增加基金、股票、期货、期权等金融任务问答
+  - [ ] 增加基金实时行情查询Agent
+- [ ] 增加大模型风控相关内容，问答式分箱？
 - [ ] 增加写代码然后执行问答
 - [ ] 增加画图问答
 - [ ] 增加其他Agent
@@ -34,7 +36,7 @@
 > 0.3.90
 
 1. 清理了一些代码
-2. 增加了[LLM-SiliconCloud](https://cloud.siliconflow.cn/)
+2. 增加了[LLM-SiliconCloud](https://cloud.siliconflow.cn/)全系列大模型
 
 > 0.3.83
 
