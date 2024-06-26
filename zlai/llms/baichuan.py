@@ -2,23 +2,23 @@ from typing import Any, List, Literal, Optional
 
 from ..schema import *
 from .generate import *
-from .generate_config.deepseek import TypeDeepSeekGenerate
+from .generate_config.baichuan import TypeBaichuanGenerate
 
 
-__all__ = ["DeepSeek"]
+__all__ = ["Baichuan"]
 
 
-class DeepSeek(OpenAICompletion):
-    base_url: Optional[str] = "https://api.deepseek.com"
+class Baichuan(OpenAICompletion):
+    base_url: Optional[str] = "https://api.baichuan-ai.com/v1/"
 
     def __init__(
             self,
-            generate_config: Optional[TypeDeepSeekGenerate] = None,
+            generate_config: TypeBaichuanGenerate,
             api_key: Optional[str] = None,
             messages: Optional[List[Message]] = None,
             output: Literal["completion", "message", "str"] = "completion",
             verbose: Optional[bool] = False,
-            api_key_name: Optional[str] = "DEEPSEEK_API_KEY",
+            api_key_name: Optional[str] = "BAICHUAN_API_KEY",
             *args: Any,
             **kwargs: Any,
     ):

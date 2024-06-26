@@ -87,7 +87,7 @@ class OpenAICompletion(Generate):
 
     def __init__(
             self,
-            generate_config: Optional[GenerateConfig],
+            generate_config: Optional[GenerateConfig] = None,
             api_key: Optional[str] = None,
             messages: Optional[List[Message]] = None,
             output: Literal["completion", "message", "str"] = "completion",
@@ -116,6 +116,10 @@ class OpenAICompletion(Generate):
         else:
             raise ValueError(f"api_key not found, please set api key")
         self.client = OpenAI(api_key=self.api_key, base_url=self.base_url)
+
+    def _list_models(self):
+        """"""
+        return self.client.models.list()
 
     def _output(
             self,
