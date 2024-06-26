@@ -3,7 +3,7 @@ from zlai.llms.silicon_flow import *
 from zlai.llms.generate_config.silicon_flow import *
 
 
-class TestMokeAliModels(unittest.TestCase):
+class TestMokeModels(unittest.TestCase):
     """"""
     def test_loop_config(self):
         """"""
