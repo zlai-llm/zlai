@@ -1,6 +1,7 @@
 from pydantic import Field
 from typing import Optional, List, Union, Dict
 from .base import GenerateConfig
+from .openai import OpenAIGenerateConfig
 from ...schema import Message
 
 
@@ -71,12 +72,12 @@ class DeepSeekGenerateConfig(GenerateConfig):
     )
 
 
-class DeepSeekChatGenerateConfig(DeepSeekGenerateConfig):
+class DeepSeekChatGenerateConfig(OpenAIGenerateConfig):
     """ DeepSeek-Chat """
     model: Optional[str] = Field(default="deepseek-chat", description="模型名称")
 
 
-class DeepSeekCoderGenerateConfig(DeepSeekGenerateConfig):
+class DeepSeekCoderGenerateConfig(OpenAIGenerateConfig):
     """ DeepSeek-Coder """
     model: Optional[str] = Field(default="deepseek-coder", description="模型名称")
 

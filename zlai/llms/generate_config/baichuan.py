@@ -1,3 +1,6 @@
+# Baichuan Price https://platform.baichuan-ai.com/price
+# Baichuan Document https://platform.baichuan-ai.com/docs/api
+
 from pydantic import Field
 from typing import Optional, List, Union, Dict
 from .base import GenerateConfig
@@ -8,8 +11,13 @@ __all__ = [
     "TypeBaichuanGenerate",
     # Atom model
     "BaichuanGenerateConfig",
+    "Baichuan4GenerateConfig",
+    "Baichuan3TurboGenerateConfig",
+    "Baichuan3Turbo128kGenerateConfig",
     "Baichuan2TurboGenerateConfig",
     "Baichuan2Turbo192kGenerateConfig",
+    "BaichuanNPCTurboGenerateConfig",
+    "BaichuanNPCLiteGenerateConfig",
 ]
 
 
@@ -48,11 +56,11 @@ class BaichuanGenerateConfig(GenerateConfig):
         取值范围: [.0f, 1.0f)。值越小，越容易出头部, 缺省 0.85
         """
     )
-    top_k: Optional[int] = Field(
-        default=5, description="""
-        取值范围: [0, 20]。搜索采样控制参数，越大，采样集大, 0 则不走 top_k 采样筛选策略，最大 20(超过 20 会被修正成 20)，缺省 5
-        """
-    )
+    # top_k: Optional[int] = Field(
+    #     default=5, description="""
+    #     取值范围: [0, 20]。搜索采样控制参数，越大，采样集大, 0 则不走 top_k 采样筛选策略，最大 20(超过 20 会被修正成 20)，缺省 5
+    #     """
+    # )
     max_tokens: Optional[int] = Field(
         default=2048, description="""
         回答产生的最大token数
@@ -60,10 +68,6 @@ class BaichuanGenerateConfig(GenerateConfig):
         Baichuan2-Turbo-192k，取值范围[1，2048]，默认取值2048
         """
     )
-    with_search_enhance: Optional[bool] = Field(
-        default=False, description="""
-        开启web搜索增强，搜索增强会产生额外的费用, 缺省
-        """)
     tools: Optional[List[Dict]] = Field(
         default=None, description="""
         可供模型调用的工具列表,目前支持retrieval
@@ -71,32 +75,48 @@ class BaichuanGenerateConfig(GenerateConfig):
     )
 
 
+class Baichuan4GenerateConfig(BaichuanGenerateConfig):
+    """ Baichuan4 """
+    model: Optional[str] = Field(default="Baichuan4", description="模型名称")
+
+
+class Baichuan3TurboGenerateConfig(BaichuanGenerateConfig):
+    """ Baichuan3-Turbo """
+    model: Optional[str] = Field(default="Baichuan3-Turbo", description="模型名称")
+
+
+class Baichuan3Turbo128kGenerateConfig(BaichuanGenerateConfig):
+    """ Baichuan3-Turbo-128k """
+    model: Optional[str] = Field(default="Baichuan3-Turbo-128k", description="模型名称")
+
+
 class Baichuan2TurboGenerateConfig(BaichuanGenerateConfig):
     """ Baichuan2-Turbo """
-    model: Optional[str] = Field(
-        default=None, description="""
-            使用的模型 ID，模型列表：
-            Baichuan2-Turbo
-            Baichuan2-Turbo-192k
-            """,
-        examples=["Baichuan2-Turbo", "Baichuan2-Turbo-192k", ],
-    )
+    model: Optional[str] = Field(default="Baichuan2-Turbo", description="模型名称")
 
 
 class Baichuan2Turbo192kGenerateConfig(BaichuanGenerateConfig):
     """ Baichuan2-Turbo-192k """
-    model: Optional[str] = Field(
-        default=None, description="""
-            使用的模型 ID，模型列表：
-            Baichuan2-Turbo
-            Baichuan2-Turbo-192k
-            """,
-        examples=["Baichuan2-Turbo", "Baichuan2-Turbo-192k", ],
-    )
+    model: Optional[str] = Field(default="Baichuan2-Turbo-192k", description="模型名称")
+
+
+class BaichuanNPCTurboGenerateConfig(BaichuanGenerateConfig):
+    """ Baichuan-NPC-Turbo """
+    model: Optional[str] = Field(default="Baichuan-NPC-Turbo", description="模型名称")
+
+
+class BaichuanNPCLiteGenerateConfig(BaichuanGenerateConfig):
+    """ Baichuan-NPC-Lite """
+    model: Optional[str] = Field(default="Baichuan-NPC-Lite", description="模型名称")
 
 
 TypeBaichuanGenerate = Union[
     BaichuanGenerateConfig,
+    Baichuan4GenerateConfig,
+    Baichuan3TurboGenerateConfig,
+    Baichuan3Turbo128kGenerateConfig,
     Baichuan2TurboGenerateConfig,
     Baichuan2Turbo192kGenerateConfig,
+    BaichuanNPCTurboGenerateConfig,
+    BaichuanNPCLiteGenerateConfig,
 ]
