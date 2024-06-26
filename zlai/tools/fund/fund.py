@@ -3,22 +3,29 @@ import json
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
-from typing import Dict, Annotated
+from typing import Dict, Union, Annotated
 from pydantic import BaseModel, Field
 
-from ...parse import ParseList
+from ...parse import ParseList, ParseDict
 
 
 __all__ = [
     "CurrentFundData",
     "get_fund_basic_info",
-    "get_current_fund_data",
+    "get_current_fund",
     "get_all_fund",
 ]
 headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36',
     'Referer': 'https://fundf10.eastmoney.com/',
 }
+
+
+def get_url(url):
+    """"""
+    res = requests.get(url, headers=headers)
+    res.encoding = "utf-8"
+    return res.text
 
 
 class CurrentFundData(BaseModel):
@@ -30,6 +37,30 @@ class CurrentFundData(BaseModel):
     gsz: str = Field(default="", description="估算净值（实时）")
     gszzl: str = Field(default="", description="估算涨幅（实时）")
     gztime: str = Field(default="", description="更新时间（实时）")
+
+    def mapping_data(self):
+        """"""
+        name = self.model_fields.keys()
+        desc = [item.description for item in self.model_fields.values()]
+        return name, desc
+
+    def desc2name(self):
+        """"""
+        name, desc = self.mapping_data()
+        return dict(tuple(zip(desc, name)))
+
+    def name2desc(self):
+        """"""
+        name, desc = self.mapping_data()
+        return dict(tuple(zip(name, desc)))
+
+    def map_dict(self):
+        """"""
+        output = dict()
+        mapping = self.name2desc()
+        for k, v in self.model_dump().items():
+            output[mapping[k]] = v
+        return output
 
 
 def get_fund_basic_info(
@@ -48,16 +79,21 @@ def get_fund_basic_info(
     return fund_basic_info
 
 
-def get_current_fund_data(
+def get_current_fund(
         fund_code: Annotated[str, '基金代码', True] = '000001',
-) -> CurrentFundData:
+) -> Union[Dict, str]:
     """
     依据用户传入的基金代码，获取当前基金的净值、涨幅等信息。
+    :param fund_code: 基金代码
+    :return: 基金当前数据
     """
     url = f"http://fundgz.1234567.com.cn/js/{fund_code}.js"
     text = get_url(url)
-    fund_info = json.loads(re.findall(r'jsonpgz\((.*)\)', text)[0])
-    return CurrentFundData(**fund_info).map_dict()
+    data = ParseDict.eval_dict(text)
+    if len(data) > 0:
+        return CurrentFundData(**data[0]).map_dict()
+    else:
+        return f"未查询到 {fund_code} 的数据。"
 
 
 def get_all_fund(
@@ -73,10 +109,3 @@ def get_all_fund(
     df = pd.DataFrame(info, columns=columns)
     data = df[df["基金名称"].str.contains(fund_name)].head(5).to_dict("records")
     return data
-
-
-def get_url(url):
-    """"""
-    res = requests.get(url, headers=headers)
-    res.encoding = "utf-8"
-    return res.text
