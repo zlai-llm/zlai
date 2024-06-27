@@ -1,12 +1,12 @@
 from pydantic import BaseModel, Field
 from langchain.prompts import PromptTemplate
-from typing import Any, List, Dict, Union, Type, Optional, Callable, ClassVar
+from typing import Any, List, Dict, Optional, Callable, ClassVar
 from dataclasses import dataclass, field, fields
 
 from ...llms import TypeLLM
 from ...embedding import TypeEmbedding
 from ...prompt import MessagesPrompt
-from ...schema.messages import Message, UserMessage, AssistantMessage, SystemMessage
+from ...schema import MessageType, Message, UserMessage, AssistantMessage, SystemMessage
 
 
 __all__ = [
@@ -138,7 +138,7 @@ class FreezeTaskCompletion(BaseModel):
     total_question: Optional[List[str]] = Field(default=None, description="")
     next_question: Optional[str] = Field(default=None, description="")
     previous_question: Optional[str] = Field(default=None, description="")
-    memory_messages: Optional[List[Union[Message, UserMessage, AssistantMessage]]] = Field(default=[], description="历史消息")
+    memory_messages: Optional[List[MessageType]] = Field(default=[], description="历史消息")
 
 
 class TaskCompletion(FreezeTaskCompletion):

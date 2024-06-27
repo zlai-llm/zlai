@@ -10,6 +10,7 @@ from ...parse import ParseList, ParseDict
 
 
 __all__ = [
+    "get_url",
     "CurrentFundData",
     "get_fund_basic_info",
     "get_current_fund",

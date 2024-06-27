@@ -19,7 +19,7 @@ class Tools(BaseModel):
     """"""
     tool_descriptions: List[Dict] = Field(default=[], description="Description of the tool")
     tool_hooks: Dict[str, Callable] = Field(default={}, description="Hooks of the tool")
-    function_list: List[Callable] = Field(default=None, description="List of function to be used as tools")
+    tool_list: List[Callable] = Field(default=None, description="List of function to be used as tools")
     params_fun: Optional[Callable] = Field(default=None, description="Function to clean the parameters of the tool")
 
     def __init__(self, **kwargs):
@@ -28,7 +28,7 @@ class Tools(BaseModel):
 
     def register_tools(self):
         """"""
-        for fun in self.function_list:
+        for fun in self.tool_list:
             register_tool(tool_hooks=self.tool_hooks, tool_descriptions=self.tool_descriptions)(fun)
 
     def dispatch_tool(self, *args, **kwargs):
@@ -78,7 +78,10 @@ class ToolsAgent(AgentMixin):
     def set_llm_tools(self, tool_descriptions: Optional[List] = None):
         """"""
         if tool_descriptions is None:
-            self.llm.generate_config.tools = self.tools.tool_descriptions
+            if self.tools is None:
+                raise ValueError("Tools is not set")
+            else:
+                self.llm.generate_config.tools = self.tools.tool_descriptions
         else:
             self.llm.generate_config.tools = tool_descriptions
 
