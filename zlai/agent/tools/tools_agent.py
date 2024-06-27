@@ -90,7 +90,7 @@ class ToolsAgent(AgentMixin):
     def _clean_tools_params(self, tool_params: Dict) -> Dict:
         """"""
         if self.tools.params_fun:
-            tool_params = self.tools.params_fun(tool_params=tool_params)
+            tool_params = self.tools.params_fun(tool_params)
             self._logger(msg=f"[{self.agent_name}] Converted Tool Params: {tool_params}", color="magenta")
         return tool_params
 
