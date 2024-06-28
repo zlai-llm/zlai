@@ -38,7 +38,7 @@ def search_fund(
         max_: Annotated[Optional[int], '最大返回数量', False] = 10,
 ) -> Dict:
     """
-    依据用户传入的基金名称或者基金代码，获取基金代码、基金拼音简写、基金类型、基金拼音全称等信息
+    依据基金名称或者基金代码，获取基金代码、基金拼音简写、基金类型、基金拼音全称等信息
 
     :param fund_name: 基金名称
     :param fund_code: 基金代码
@@ -121,7 +121,7 @@ def get_current_fund(
         fund_code: Annotated[str, '基金代码', True] = '000001',
 ) -> Union[Dict, str]:
     """
-    依据用户传入的基金代码，获取当前基金的净值、涨幅等信息。
+    依据基金代码，获取当前基金的净值、涨幅等信息。
     :param fund_code: 基金代码
     :return: 基金当前数据
     """
@@ -166,7 +166,7 @@ def get_fund_history(
         end_date: Annotated[str, '查询结束日期', True],
 ) -> str:
     """
-    
+    给定基金代码、查询开始与结束日期，查询日期内该基金的历史行情信息。
     :param fund_code: 基金代码
     :param end_date: 查询开始日期, yyyy-MM-dd
     :param start_date: 查询结束日期, yyyy-MM-dd
