@@ -7,5 +7,6 @@ from .deepseek import *
 from .doubao import *
 from .openai import *
 from .silicon_flow import *
+from .spark import *
 from .baidu import *
 from .local import *

@@ -7,6 +7,7 @@ from .deepseek import *
 from .doubao import *
 from .moonshot import *
 from .silicon_flow import *
+from .spark import *
 from .yi import *
 from .zhipu import *
 
@@ -18,5 +19,5 @@ from typing import Union
 
 TypeLLM = Union[
     Ali, Atom, Baichuan, Baidu, DeepSeek, DouBao,
-    MoonShot, SiliconFlow, Yi, Zhipu, LocalLLMAPI,
+    MoonShot, SiliconFlow, Spark, Yi, Zhipu, LocalLLMAPI,
 ]
