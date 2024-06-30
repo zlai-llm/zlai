@@ -5,10 +5,10 @@ from .generate import *
 from .generate_config.yi import TypeYiGenerate
 
 
-__all__ = ["DeepSeek"]
+__all__ = ["Yi"]
 
 
-class DeepSeek(OpenAICompletion):
+class Yi(OpenAICompletion):
     base_url: Optional[str] = "https://api.lingyiwanwu.com/v1"
 
     def __init__(
