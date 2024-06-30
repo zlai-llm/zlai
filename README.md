@@ -10,6 +10,8 @@
 - `elasticsearch`: 提供elasticsearch工具
 - `agent`: 提供agent工具
 
+[详细文档](https://zlai-llm.github.io/zlai-doc/#/)
+
 > Wechat
 
 <center>
@@ -32,6 +34,10 @@
 - [ ] message prompt 的组织方式中的参数不能与 task completion 中的参数重名
 - [ ] 对知识对话增加记忆机制，增加记忆机制在多个Agent之间的共享
   - [X] 完成`ChatAgent/Knowledge`
+
+> 0.3.96
+
+1. 增加百川、百度、豆包大模型
 
 > 0.3.90
 
