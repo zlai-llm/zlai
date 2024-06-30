@@ -12,6 +12,9 @@ __all__ = [
     'AliQwenTurboGenerateConfig',
     'AliQwenPlusGenerateConfig',
     'AliQwenMaxGenerateConfig',
+    "AliQwenMax0428GenerateConfig",
+    "AliQwenMax0403GenerateConfig",
+    "AliQwenMax0107GenerateConfig",
     'AliQwenMax1201GenerateConfig',
     'AliQwenMaxLongContextGenerateConfig',
     # qwen v2
@@ -177,6 +180,33 @@ class AliQwenMaxGenerateConfig(AliGenerateConfig):
     max_tokens: Optional[int] = Field(default=2000, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
 
 
+class AliQwenMax0428GenerateConfig(AliGenerateConfig):
+    """ qwen-max-0428
+    通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入。该模型为qwen-max的快照稳定版本，预期维护到下个快照版本发布时间（待定）后一个月。
+    模型支持8k tokens上下文，为了保证正常的使用和输出，API限定用户输入为6k tokens。
+    """
+    model: Optional[str] = Field(default="qwen-max-0428", description="模型名称")
+    max_tokens: Optional[int] = Field(default=2000, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+
+
+class AliQwenMax0403GenerateConfig(AliGenerateConfig):
+    """ qwen-max-0403
+    通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入。该模型为qwen-max的快照稳定版本，预期维护到下个快照版本发布时间（待定）后一个月。
+    模型支持8k tokens上下文，为了保证正常的使用和输出，API限定用户输入为6k tokens。
+    """
+    model: Optional[str] = Field(default="qwen-max-0403", description="模型名称")
+    max_tokens: Optional[int] = Field(default=2000, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+
+
+class AliQwenMax0107GenerateConfig(AliGenerateConfig):
+    """ qwen-max-0107
+    通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入。该模型为qwen-max的快照稳定版本，预期维护到下个快照版本发布时间（待定）后一个月。
+    模型支持8k tokens上下文，为了保证正常的使用和输出，API限定用户输入为6k tokens。
+    """
+    model: Optional[str] = Field(default="qwen-max-0107", description="模型名称")
+    max_tokens: Optional[int] = Field(default=2000, description="""用于指定模型在生成内容时token的最大数量，它定义了生成的上限。""")
+
+
 class AliQwenMax1201GenerateConfig(AliGenerateConfig):
     """ qwen-max-1201
     通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入。该模型为qwen-max的快照稳定版本，预期维护到下个快照版本发布时间（待定）后一个月。
@@ -322,6 +352,9 @@ TypeAliGenerate = Union[
     AliQwenTurboGenerateConfig,
     AliQwenPlusGenerateConfig,
     AliQwenMaxGenerateConfig,
+    AliQwenMax0428GenerateConfig,
+    AliQwenMax0403GenerateConfig,
+    AliQwenMax0107GenerateConfig,
     AliQwenMax1201GenerateConfig,
     AliQwenMaxLongContextGenerateConfig,
     # qwen v2
