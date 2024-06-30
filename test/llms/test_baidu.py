@@ -16,10 +16,10 @@ class TestBaidu(unittest.TestCase):
             ErnieTiny8KGenerateConfig,
         ]
         for gen_config in config:
-            print(gen_config.__name__)
             llm = Baidu(generate_config=gen_config())
             completion = llm.generate(query="1+1=")
-            print(completion.choices[0].message)
+            print(f"{gen_config.__name__.replace('GenerateConfig', '')}: {completion.choices[0].message.content}")
+            print()
 
     def test_stream(self):
         """"""
