@@ -27,10 +27,6 @@ class Baidu(Generate):
     model_name: Optional[str]
     generate_config: TypeBaiduGenerateConfig
     messages: List[Message]
-    parse_info: List[ParseInfo]
-    async_task_response: Optional[List]
-    zhipu_client: Optional[ChatCompletion]
-    async_max_request_time: Optional[int] = 600
 
     def __init__(
             self,
@@ -39,8 +35,7 @@ class Baidu(Generate):
             generate_config: TypeBaiduGenerateConfig = ErnieTiny8KGenerateConfig(),
             output: Literal["completion", "message", "str"] = "completion",
             verbose: Optional[bool] = False,
-            api_key_name: Optional[str] = "ZHIPU_API_KEY",
-            async_max_request_time: Optional[int] = 600,
+            api_key_name: Optional[str] = None,
     ):
         """"""
         self.api_key = api_key
@@ -48,10 +43,8 @@ class Baidu(Generate):
         self.messages = messages
         self.generate_config = generate_config
         self.model_name = generate_config.model
-        self.async_max_request_time = async_max_request_time
         self.verbose = verbose
         self.output = output
-        self.parse_info = []
         self._create_client()
 
     def _create_client(self):
