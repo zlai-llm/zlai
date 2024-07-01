@@ -1,4 +1,3 @@
-import os
 import unittest
 from zlai.llms import DouBao, OpenAIGenerateConfig
 
