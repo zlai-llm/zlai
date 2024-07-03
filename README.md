@@ -7,8 +7,8 @@
 [![Doc](https://img.shields.io/badge/Doc-online-green)](https://zlai-llm.github.io/zlai-doc/)
 [![Issue](https://img.shields.io/github/issues/zlai-llm/zlai)](https://github.com/zlai-llm/zlai/issues/new/choose)
 [![Discussions](https://img.shields.io/github/discussions/zlai-llm/zlai)](https://github.com/zlai-llm/zlai/issues/new/choose)
-[![CONTRIBUTING](https://img.shields.io/badge/Contributing-8A2BE2)](https://github.com/zlai-llm/zlai/blob/main/CONTRIBUTING.md)
-[![License: MIT](https://img.shields.io/github/license/zlai-llm/zlai)](https://github.com/zlai-llm/zlai/blob/main/LICENSE)
+[![CONTRIBUTING](https://img.shields.io/badge/Contributing-8A2BE2)](https://github.com/zlai-llm/zlai/blob/master/CONTRIBUTING.md)
+[![License: MIT](https://img.shields.io/github/license/zlai-llm/zlai)](https://github.com/zlai-llm/zlai/blob/master/LICENSE)
 
 > 适配中文大模型的`Langchain-Agent`
 
