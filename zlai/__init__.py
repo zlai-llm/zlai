@@ -1,6 +1,10 @@
-from .llms import *
-from .utils import *
-from .schema import *
-
-
+__all__ = ["__version__"]
 __version__ = "0.3.95"
+
+# from importlib import metadata
+#
+# try:
+#     __version__ = metadata.version(__package__)
+# except metadata.PackageNotFoundError:
+#     # Case where package metadata is not available.
+#     __version__ = ""
