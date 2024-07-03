@@ -1,6 +1,10 @@
 """
 Trading View
 https://cn.tradingview.com/markets/world-stocks/worlds-largest-companies/
+
+todo: 增加其他数据
+todo: 增加Agent Tools测试
+todo: 增加文档
 """
 
 import requests

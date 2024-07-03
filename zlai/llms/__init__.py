@@ -9,6 +9,7 @@ from .hunyuan import *
 from .moonshot import *
 from .silicon_flow import *
 from .spark import *
+from .step_fun import *
 from .yi import *
 from .zhipu import *
 
@@ -20,7 +21,8 @@ from typing import Union
 
 TypeLLM = Union[
     Ali, Atom, Baichuan, Baidu, DeepSeek, DouBao, HunYuan,
-    MoonShot, SiliconFlow, Spark, Yi, Zhipu, LocalLLMAPI,
+    MoonShot, SiliconFlow, Spark, StepFun, Yi, Zhipu,
+    LocalLLMAPI,
 ]
 
 # todo 增加天工API https://model-platform.tiangong.cn/api-reference

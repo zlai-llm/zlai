@@ -1,3 +1,9 @@
+"""
+todo: 完成期货、股票、基金全部tools
+todo: 增加期货、股票、基金全部Agent Tools
+todo: 增加测试、文档
+"""
+
 import requests
 import pandas as pd
 from typing import List, Literal, Optional, Annotated

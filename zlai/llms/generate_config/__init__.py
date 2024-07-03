@@ -10,5 +10,6 @@ from .openai import *
 from .silicon_flow import *
 from .spark import *
 from .baidu import *
+from .step_fun import *
 from .yi import *
 from .local import *
