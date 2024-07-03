@@ -1,0 +1,41 @@
+[build-system]
+# Minimum requirements for the build system to execute.
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "zlai"
+version = "0.3.96"
+description = "A LLM Agent Python package."
+authors = ["chensy cao <chensy.cao@foxmail.com>"]
+maintainers = []
+license = "MIT"
+readme = "README.md"
+homepage = "https://zlai-llm.github.io/zlai-doc/#/"
+repository = "https://github.com/zlai-llm/zlai"
+keywords = ["llm", "agent", "embedding", "chatbot", "prompt"]
+classifiers = [
+    "Topic :: Software Development :: LLM Agent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+packages = [
+    { include = "zlai" },
+]
+
+[tool.poetry.dependencies]
+python = ">=3.8"
+pandas = ">=2.1.4"
+
+[tool.poetry.extras]
+all = []
+llm = []
+agent = []
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/zlai-llm/zlai/issues"
