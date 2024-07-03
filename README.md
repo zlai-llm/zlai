@@ -26,10 +26,22 @@
 
 -----
 
+## 如何安装？
+
+```bash
+pip install zlai -U
+```
+
+您也可以在[GitHub](https://github.com/zlai-llm/zlai.git)/[PyPi](https://pypi.org/project/zlai/)查看最新代码与最新发行版本。
+
+[Quick Start](https://zlai-llm.github.io/zlai-doc/#/quick_start)
+
+-----
+
 > Wechat
 
 <center>
-<img src="assets/wechat-group.jpg" width="200px">
+<img src="assets/wechat.jpg" width="160px">
 <h5>微信群</h5>
 </center>
 
