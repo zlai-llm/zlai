@@ -17,6 +17,10 @@ from zlai.utils import *
 
 class TestImport(unittest.TestCase):
 
+    def test_version(self):
+        import zlai
+        print(zlai.__version__)
+
     def test_import(self):
         """"""
         print("Import Test.")
