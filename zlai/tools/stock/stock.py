@@ -1,15 +1,13 @@
 import requests
 import pandas as pd
 from typing import List, Literal, Optional, Annotated
+from .base import headers
 
 
 __all__ = [
     "get_stock_kline_data",
     "get_futures_data",
 ]
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36',
-}
 
 
 def get_stock_kline_data(
