@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import base64
 import inspect
 from typing import List, Dict, Any, Type, Callable, Optional
 import chardet
@@ -237,3 +238,12 @@ def call_batches(
     else:
         total = (data_len // batch_size) + 1
     return total
+
+
+def generate_websocket_key():
+    """
+    Generates a Sec-WebSocket-Key value as per the WebSocket protocol.
+    """
+    key_bytes = os.urandom(16)
+    key_b64 = base64.b64encode(key_bytes).decode('ascii')
+    return key_b64
