@@ -30,3 +30,4 @@ TypeLLM = Union[
 # todo ChatGPT https://api.openai.com/
 # todo Azure OpenAI Service https://azure.microsoft.com/en-us/products/ai-services/openai-service
 # todo Gimini https://makersuite.google.com/app/apikey
+# todo 增加商汤大模型
