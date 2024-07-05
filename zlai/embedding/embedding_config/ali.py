@@ -1,32 +1,15 @@
 from typing import Union
-from pydantic import BaseModel, Field
+from pydantic import Field
+from .base import *
 
 
 __all__ = [
-    # Type
     "TypeAliEmbedding",
-    "TypeZhipuEmbedding",
-
-    "EmbeddingConfig",
-    # Ali Config
     "AliEmbeddingV1Config",
     "AliEmbeddingAsyncV1Config",
     "AliEmbeddingV2Config",
     "AliEmbeddingAsyncV2Config",
-    
-    # zhipu config
-    "ZhipuEmbeddingConfig",
 ]
-
-
-class EmbeddingConfig(BaseModel):
-    """"""
-
-
-class ZhipuEmbeddingConfig(EmbeddingConfig):
-    """"""
-    model: str = Field(default="embedding-2")
-    max_len: int = Field(default=512)
 
 
 class AliEmbeddingV1Config(EmbeddingConfig):
@@ -68,8 +51,6 @@ class AliEmbeddingAsyncV2Config(EmbeddingConfig):
     batch_size: int = Field(default=100000)
     max_len: int = Field(default=2048)
 
-
-TypeZhipuEmbedding = Union[ZhipuEmbeddingConfig]
 
 TypeAliEmbedding = Union[
     AliEmbeddingV1Config,

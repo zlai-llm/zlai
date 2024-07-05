@@ -3,7 +3,7 @@ from functools import lru_cache
 from typing import List, Union, Tuple, Optional, Literal
 
 from .embedding import EmbeddingMixin
-from ..schema import EmbeddingsResponded, ZhipuEmbeddingModel, CompletionUsage, Vector
+from ..schema import EmbeddingsResponded, CompletionUsage, Vector
 from .embedding_config import TypeZhipuEmbedding
 
 
@@ -14,7 +14,6 @@ __all__ = [
 
 class ZhipuEmbedding(EmbeddingMixin):
     """TODO: 现在不支持批量"""
-    model_name: Optional[ZhipuEmbeddingModel] = None
     config: Optional[TypeZhipuEmbedding] = None
     max_len: int = 512
     max_len_error: Literal['split', 'drop', 'error'] = 'split'
@@ -25,7 +24,6 @@ class ZhipuEmbedding(EmbeddingMixin):
 
     def __init__(
             self,
-            model_name: Optional[ZhipuEmbeddingModel] = None,
             config: Optional[TypeZhipuEmbedding] = None,
             max_len: int = 512,
             max_len_error: Literal['split', 'drop', 'error'] = 'split',
@@ -36,7 +34,6 @@ class ZhipuEmbedding(EmbeddingMixin):
             **kwargs
     ):
         """"""
-        self.model_name = model_name
         self.config = config
         self.max_len = max_len
         self.max_len_error = max_len_error
