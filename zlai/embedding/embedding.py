@@ -24,7 +24,6 @@ emb_url = EMBUrl()
 class EmbeddingCompletion(LoggerMixin):
     """"""
     emb_url: Union[str, EMBUrl, None] = emb_url.bge_m3
-    model_name: Optional[EmbeddingsModel] = None
     max_len: int = 512
     instruction: bool = False
     max_len_error: Literal['split', 'drop', 'error'] = 'split'
@@ -134,13 +133,12 @@ class EmbeddingCompletion(LoggerMixin):
         elif self.model_path:
             return self.pretrained_model_embedding(text=text)
         else:
-            raise ValueError(f"{self.emb_url} or {self.model_name} is not supported.")
+            raise ValueError(f"model is not supported.")
 
 
 class EmbeddingMixin(EmbeddingCompletion):
     """"""
     emb_url: Union[str, EMBUrl, None] = emb_url.bge_m3
-    model_name: Optional[EmbeddingsModel] = None
     max_len: int = 512
     instruction: bool = False
     max_len_error: Literal['split', 'drop', 'error'] = 'split'
@@ -350,7 +348,6 @@ class EmbeddingMixin(EmbeddingCompletion):
 class Embedding(EmbeddingMixin):
     """"""
     emb_url: Union[str, EMBUrl, None] = emb_url.bge_m3
-    model_name: Optional[EmbeddingsModel] = None
     max_len: int = 512
     instruction: bool = False
     max_len_error: Literal['split', 'drop', 'error'] = 'split'
@@ -363,7 +360,6 @@ class Embedding(EmbeddingMixin):
     def __init__(
             self,
             emb_url: Union[str, EMBUrl, None] = None,
-            model_name: Optional[EmbeddingsModel] = None,
             model_path: Optional[str] = None,
             batch_size: int = 128,
             max_len: int = 512,
@@ -379,7 +375,6 @@ class Embedding(EmbeddingMixin):
 
         # local
         self.emb_url = emb_url
-        self.model_name = model_name
         self.max_len = max_len
         self.instruction = instruction
         self.max_len_error = max_len_error
