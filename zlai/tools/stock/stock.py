@@ -8,6 +8,7 @@ import requests
 import pandas as pd
 from typing import List, Literal, Optional, Annotated
 from .base import headers
+from ..utils import *
 
 
 __all__ = [
@@ -20,32 +21,35 @@ def get_stock_kline_data(
         symbol: Annotated[str, "股票代码", True] = "sh000001",
         scale: Annotated[Optional[Literal[5, 15, 30, 60]], "时间间隔", False] = 5,
         data_len: Annotated[Optional[int], "数据长度", False] = 10,
+        return_type: Annotated[Optional[Literal["DataFrame", "List", "Markdown"]], "返回类型", False] = "Markdown",
 ):
     """
-    股票历史数据API
-    :param symbol:
-    :param scale:
-    :param data_len:
-    :return:
+    股票历史K-Line数据API
+
+    :param symbol: 股票代码，如：sh000001
+    :param scale: 时间间隔min，如：5，15，30，60
+    :param data_len: 数据长度，如：10
+    :param return_type: 返回类型，如：DataFrame, List
+    :return: DataFrame
     """
     url = f"""https://quotes.sina.cn/cn/api/json_v2.php/CN_MarketDataService.getKLineData?symbol={symbol}&scale={scale}&datalen={data_len}"""
     r = requests.get(url, headers=headers)
     data = r.json()
     data = pd.DataFrame(data)
-    return data
+    return trans_dataframe(data, return_type=return_type)
 
 
-# https://stock2.finance.sina.com.cn/futures/api/json.php/InnerFuturesNewService.getMinLine?symbol=AG2408
-# https://stock2.finance.sina.com.cn/futures/api/json.php/InnerFuturesNewService.getFourDaysLine?symbol=AG2408
-# https://stock2.finance.sina.com.cn/futures/api/json.php/InnerFuturesNewService.getDailyKLine?symbol=AG2408
-# https://stock2.finance.sina.com.cn/futures/api/json.php/InnerFuturesNewService.getFewMinLine?symbol={symbol}&type={scale}
 def get_futures_data(
         symbol: Annotated[str, "股票代码", True] = "AG2408",
         _type: Annotated[Optional[Literal["1min", "5min", "15min", "30min", "60min", "1day", "5day"]], "时间间隔", False] = "5min",
+        return_type: Annotated[Optional[Literal["DataFrame", "List", "Markdown"]], "返回类型", False] = "Markdown",
 ):
     """
-    商品期货历史数据API:
+    商品期货历史数据API
 
+    :param symbol: 期货代码，如：AG2408
+    :param _type: 时间间隔，如：1min，5min，15min，30min，60min，1day，5day
+    :param return_type: 返回类型，如：DataFrame, List
     :return:
     """
     fun_mapping = {
@@ -76,4 +80,4 @@ def get_futures_data(
         data = pd.concat(days_data, axis=0)
     else:
         data = pd.DataFrame(data)
-    return data
+    return trans_dataframe(data, return_type=return_type)
