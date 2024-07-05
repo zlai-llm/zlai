@@ -44,7 +44,7 @@ __all__ = [
 class AliVLGenerateConfig(GenerateConfig):
     """"""
     model_config = ConfigDict(protected_namespaces=())
-    model_name: AliModel = Field(default="qwen-vl-plus", description="模型名称。", )
+    model: str = Field(default="qwen-vl-plus", description="模型名称。", )
     seed: Optional[int] = Field(default=1234, description="生成时使用的随机数种子，用户控制模型生成内容的随机性。", )
     top_p: Optional[float] = Field(default=0.8)
     top_k: Optional[Union[int, None]] = Field(default=100)
