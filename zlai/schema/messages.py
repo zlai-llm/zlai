@@ -12,7 +12,6 @@ __all__ = [
     "ChatPrompt",
     "ObservationPrompt",
     "ImagePrompt",
-    "FewShot",
     "Message",
     "Messages",
     "SystemMessage",
@@ -280,9 +279,3 @@ class AssistantMessage(Message):
         if role not in ["assistant",]:
             raise ValueError(f"role must in ['assistant'], your role: `{role}`.")
         return role
-
-
-class FewShot(BaseModel):
-    """"""
-    few_shot: List[ChatPrompt]
-
