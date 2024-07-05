@@ -53,7 +53,7 @@ pip install zlai[api] -U
 > Wechat
 
 <center>
-<img src="assets/wechat.jpg" width="160px">
+<img src="https://raw.githubusercontent.com/zlai-llm/zlai/master/assets/wechat.jpg" width="160px">
 <h5>微信群</h5>
 </center>
 
