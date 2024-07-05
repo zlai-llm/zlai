@@ -9,6 +9,7 @@ from .address import *
 from .weather import *
 from .sqlite import *
 from .knowledge import *
+from .parse import *
 
 # TASK
 from .tasks import *
