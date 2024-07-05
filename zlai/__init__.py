@@ -1,6 +1,3 @@
-# __all__ = ["__version__"]
-# __version__ = "0.3.95"
-
 from importlib import metadata
 
 try:
