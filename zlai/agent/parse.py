@@ -1,5 +1,3 @@
-# todo: 更清晰的数据解析方式
-
 from pydantic import BaseModel
 from langchain.prompts import PromptTemplate
 from typing import List, Dict, Union, Any, Optional, Callable, Literal
