@@ -1,7 +1,8 @@
+from pandas import DataFrame
 from pydantic import BaseModel, Field
 from typing import Any, List, Dict, Union, Tuple, Optional, Callable
 from ...llms import TypeLLM
-from ...schema import Message, SystemMessage, AssistantMessage, ToolsMessage
+from ...schema import TypeMessage, Message, SystemMessage, AssistantMessage, ToolsMessage
 from ...prompt import MessagesPrompt
 from ..base import AgentMixin
 from ..prompt.tasks import TaskCompletion
@@ -31,7 +32,7 @@ class Tools(BaseModel):
         for fun in self.tool_list:
             register_tool(tool_hooks=self.tool_hooks, tool_descriptions=self.tool_descriptions)(fun)
 
-    def dispatch_tool(self, *args, **kwargs):
+    def dispatch_tool(self, *args: Any, **kwargs: Any) -> Any:
         return dispatch_tool(*args, **kwargs, hooks=self.tool_hooks)
 
 
@@ -109,10 +110,22 @@ class ToolsAgent(AgentMixin):
         task_completion.memory_messages = messages
         return task_completion, messages
 
+    def _validate_data(
+            self,
+            data: Union[str, Dict, List, DataFrame]
+    ) -> str:
+        """"""
+        self._logger(msg=f"[{self.agent_name}] Tool Data Type: {type(data)}, length: {len(data)}", color="magenta")
+        if isinstance(data, DataFrame):
+            data = data.to_markdown()
+        else:
+            data = str(data)
+        return data
+
     def _call_tools(
             self,
             task_completion: TaskCompletion,
-            message: Message,
+            message: TypeMessage,
             tool_name: Optional[str] = None,
             tool_params: Optional[Dict] = None,
     ):
@@ -122,6 +135,7 @@ class ToolsAgent(AgentMixin):
         self._logger(msg=f"[{self.agent_name}] Tool Params: {tool_params}", color="magenta")
         tool_params = self._clean_tools_params(tool_params)
         data = self.tools.dispatch_tool(tool_name=tool_name, tool_params=tool_params)
+        data = self._validate_data(data=data)
         self._logger(msg=f"[{self.agent_name}] Tool Data: {data}", color="magenta")
         task_completion.memory_messages.append(
             ToolsMessage(content=str(data), tool_call_id=message.tool_calls[0].id))
