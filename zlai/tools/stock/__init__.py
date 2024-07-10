@@ -1,2 +1,2 @@
-from .stock import *
+from .sina import *
 from .trading_view import *

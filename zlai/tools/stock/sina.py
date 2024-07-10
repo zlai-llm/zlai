@@ -6,14 +6,15 @@ todo: 增加测试、文档
 
 import requests
 import pandas as pd
-from typing import List, Literal, Optional, Annotated
-from .base import headers
+from typing import Literal, Optional, Annotated
+from .sina_schema import *
 from ..utils import *
 
 
 __all__ = [
     "get_stock_kline_data",
     "get_futures_data",
+    "get_current_stock_rank",
 ]
 
 
@@ -81,3 +82,36 @@ def get_futures_data(
     else:
         data = pd.DataFrame(data)
     return trans_dataframe(data, return_type=return_type)
+
+
+def get_current_stock_rank(
+        market: Annotated[TypeMarket, "市场", False] = "sh_a",
+        sort_by: Annotated[TypeSortBy, "排序字段", False] = "change_percent",
+        num: Annotated[Optional[int], "返回条数", False] = 5,
+        ascending: Annotated[Optional[Literal[0, 1]], "升序/降序", False] = 0,
+        return_type: Annotated[Optional[Literal["DataFrame", "List", "Markdown"]], "返回类型", False] = "Markdown",
+):
+    """
+    获取当前股票排名
+    :param market: 市场
+        如：sh_a: 上证A股; sh_b: 上证B股; sz_a: 深圳A股; sz_b: 深圳B股; hk: 港股, warn: 警示板
+    :param sort_by: 排序字段
+        如：最新价:trade, 涨跌额:price_change, 涨跌幅:change_percent, 买入:buy, 买出:sell,
+        昨日收盘:settlement, 今开:open, 最高:high, 最低:low, 成交量:volume, 成交额:amount
+    :param num: 返回数据条数
+    :param ascending: 升序/降序，0：降序，1：升序
+    :param return_type: 返回类型，如：DataFrame, List, Markdown
+    :return: Union[DataFrame, List, Markdown]
+    """
+    if market == "hk":
+        func_name = "getHKStockData"
+    else:
+        func_name = "getHQNodeData"
+    base_url = f"https://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.{func_name}"
+    market = market_mapping.get(market)
+    sort_by = sort_by_mapping.get(sort_by)
+    params = StockRankParams(page=1, num=num, sort=sort_by, asc=ascending, node=market).model_dump()
+    r = requests.get(base_url, params=params, headers=headers)
+    data = r.json()
+    data = pd.DataFrame(data)
+    return trans_dataframe(df=data, return_type=return_type)
