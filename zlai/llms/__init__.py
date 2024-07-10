@@ -22,7 +22,7 @@ from typing import Union
 TypeLLM = Union[
     Ali, Atom, Baichuan, Baidu, DeepSeek, DouBao, HunYuan,
     MoonShot, SiliconFlow, Spark, StepFun, Yi, Zhipu,
-    LocalLLMAPI,
+    LocalLLMAPI, OpenAICompletion,
 ]
 
 # todo 增加天工API https://model-platform.tiangong.cn/api-reference

@@ -1,12 +1,13 @@
 try:
     from openai import OpenAI
     from openai.types.chat import ChatCompletion, ChatCompletionChunk
+    from openai.types.chat import ChatCompletionMessage
     from openai._streaming import Stream
 except ModuleNotFoundError:
     raise ModuleNotFoundError("pip install openai")
 
 import os
-from typing import Any, Union, List, Dict, Iterable, Literal, Optional, Callable
+from typing import Any, List, Dict, Iterable, Literal, Optional, Callable
 from ..schema import *
 from ..utils import *
 from ..parse import *
@@ -15,6 +16,7 @@ from ..parse import *
 __all__ = [
     "Generate",
     "OpenAICompletion",
+    "ChatCompletionMessage",
 ]
 
 
