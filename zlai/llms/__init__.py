@@ -31,3 +31,5 @@ TypeLLM = Union[
 # todo Azure OpenAI Service https://azure.microsoft.com/en-us/products/ai-services/openai-service
 # todo Gimini https://makersuite.google.com/app/apikey
 # todo 增加商汤大模型
+# todo 增加Link-ai https://docs.link-ai.tech/platform/api/chat
+
