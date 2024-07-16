@@ -14,6 +14,7 @@ class TestMokeZhipuModels(unittest.TestCase):
             GLM4AirXGenerateConfig,
             GLM4FlashGenerateConfig,
             GLM3TurboGenerateConfig,
+            CodeGeexGenerateConfig,
         ]
         for gen_config in config:
             print(gen_config.__name__)

@@ -13,6 +13,7 @@ __all__ = [
     "GLM4AirXGenerateConfig",
     "GLM4FlashGenerateConfig",
     "GLM3TurboGenerateConfig",
+    "CodeGeexGenerateConfig",
 ]
 
 
@@ -88,6 +89,14 @@ class GLM3TurboGenerateConfig(ZhipuGenerateConfig):
     model: str = "glm-3-turbo"
 
 
+class CodeGeexGenerateConfig(ZhipuGenerateConfig):
+    """"""
+    model: str = "codegeex-4"
+    stop: Optional[List[str]] = Field(
+        default=["<|endoftext|>", "<|user|>", "<|assistant|>", "<|observation|>"],
+        description="否模型在遇到stop所制定的字符时将停止生成，目前仅支持单个停止词，格式为['stop_word1']")
+
+
 TypeZhipuGenerate = Union[
     ZhipuGenerateConfig,
     GLM4GenerateConfig,
@@ -97,4 +106,8 @@ TypeZhipuGenerate = Union[
     GLM4AirXGenerateConfig,
     GLM4FlashGenerateConfig,
     GLM3TurboGenerateConfig,
+    CodeGeexGenerateConfig,
 ]
+
+
+# todo: 增加 CodeGexx
