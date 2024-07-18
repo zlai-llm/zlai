@@ -14,6 +14,7 @@ __all__ = [
     "GLM4FlashGenerateConfig",
     "GLM3TurboGenerateConfig",
     "CodeGeexGenerateConfig",
+    "GLM4AllToolsGenerateConfig",
 ]
 
 
@@ -97,6 +98,11 @@ class CodeGeexGenerateConfig(ZhipuGenerateConfig):
         description="否模型在遇到stop所制定的字符时将停止生成，目前仅支持单个停止词，格式为['stop_word1']")
 
 
+class GLM4AllToolsGenerateConfig(ZhipuGenerateConfig):
+    """"""
+    model: str = "glm-4-alltools"
+
+
 TypeZhipuGenerate = Union[
     ZhipuGenerateConfig,
     GLM4GenerateConfig,
@@ -107,7 +113,8 @@ TypeZhipuGenerate = Union[
     GLM4FlashGenerateConfig,
     GLM3TurboGenerateConfig,
     CodeGeexGenerateConfig,
+    GLM4AllToolsGenerateConfig,
 ]
 
 
-# todo: 增加 CodeGexx
+# todo: 增加 CodeGeex
