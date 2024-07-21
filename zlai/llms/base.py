@@ -1,11 +1,19 @@
 import json
 import requests
-from typing import List, Union, Iterable
-from ..schema import *
-from ..schema.response import *
+from pydantic import BaseModel, ConfigDict
+from typing import List, Union, Iterable, Optional
+
+from ..llms.generate_config import TypeGenerateConfig
+from ..schema import (
+    LLMUrl, Message, Model,
+    Completion, CompletionUsage, CompletionMessage, CompletionChoice,
+    AsyncCompletion, AsyncTaskStatus,
+    ValidateMessagesResponded, Role
+)
 
 
 __all__ = [
+    "LLMRequest",
     "llm_url",
     "invoke_llm",
     "invoke_sse_llm",
@@ -19,6 +27,14 @@ __all__ = [
 
 headers = {'Content-Type': 'application/json'}
 llm_url = LLMUrl
+
+
+class LLMRequest(BaseModel):
+    """"""
+    model_config = ConfigDict(protected_namespaces=())
+    model_name: Optional[Union[Model, str]] = ''
+    messages: Optional[List[Message]] = [CompletionMessage(content='hi.', role='user')]
+    generate_config: Optional[TypeGenerateConfig]
 
 
 def completion_message(completion: Completion) -> Union[CompletionMessage, Message]:

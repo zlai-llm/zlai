@@ -12,7 +12,7 @@ except ModuleNotFoundError:
 from typing import List, Dict, Literal, Optional, Iterable
 from ..schema import *
 from .generate import Generate
-from .generate_config.baidu import TypeBaiduGenerateConfig, ErnieTiny8KGenerateConfig
+from .generate_config.baidu import TypeBaiduGenerate, ErnieTiny8KGenerateConfig
 
 
 __all__ = [
@@ -25,14 +25,14 @@ class Baidu(Generate):
     api_key: Optional[str]
     api_key_name: Optional[str]
     model_name: Optional[str]
-    generate_config: TypeBaiduGenerateConfig
+    generate_config: TypeBaiduGenerate
     messages: List[Message]
 
     def __init__(
             self,
             api_key: Optional[str] = None,
             messages: Optional[List[Message]] = None,
-            generate_config: TypeBaiduGenerateConfig = ErnieTiny8KGenerateConfig(),
+            generate_config: TypeBaiduGenerate = ErnieTiny8KGenerateConfig(),
             output: Literal["completion", "message", "str"] = "completion",
             verbose: Optional[bool] = False,
             api_key_name: Optional[str] = None,

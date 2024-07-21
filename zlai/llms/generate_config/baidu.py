@@ -5,7 +5,7 @@ from ...schema import Message
 
 
 __all__ = [
-    "TypeBaiduGenerateConfig",
+    "TypeBaiduGenerate",
     "BaiduGenerateConfig",
     # ernie-4
     # "Ernie4Turbo8KGenerateConfig",
@@ -94,7 +94,7 @@ class Ernie4Turbo8KGenerateConfig(BaiduGenerateConfig):
         default=None, description="指定响应内容的格式，说明：（1）可选值：· json_object：以json格式返回，可能出现不满足效果情况· text：以文本格式返回")
 
 
-TypeBaiduGenerateConfig = Union[
+TypeBaiduGenerate = Union[
     BaiduGenerateConfig,
 
     ErnieSpeed8KGenerateConfig,
