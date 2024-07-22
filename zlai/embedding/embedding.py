@@ -6,7 +6,8 @@ from functools import lru_cache
 from typing import Any, List, Union, Tuple, Callable, Literal, Optional
 
 from ..utils import *
-from ..schema import *
+from ..schema import EMBUrl, CompletionUsage, EmbeddingMatchOutput
+from .schema import Vector, EmbeddingsResponded
 from .emb_utils import *
 
 

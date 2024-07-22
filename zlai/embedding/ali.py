@@ -8,7 +8,8 @@ from http import HTTPStatus
 from functools import lru_cache
 from typing import List, Union, Tuple, Optional, Literal, Generator
 
-from ..schema import EmbeddingsResponded, CompletionUsage, Vector
+from ..schema import CompletionUsage
+from ..embedding.schema import EmbeddingsResponded, Vector
 from .embedding import EmbeddingMixin
 from .embedding_config import *
 

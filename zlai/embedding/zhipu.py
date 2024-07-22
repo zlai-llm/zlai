@@ -3,7 +3,8 @@ from functools import lru_cache
 from typing import List, Union, Tuple, Optional, Literal
 
 from .embedding import EmbeddingMixin
-from ..schema import EmbeddingsResponded, CompletionUsage, Vector
+from ..schema import CompletionUsage
+from .schema import EmbeddingsResponded, Vector
 from .embedding_config import TypeZhipuEmbedding
 
 

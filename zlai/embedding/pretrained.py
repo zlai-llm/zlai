@@ -1,6 +1,6 @@
 from typing import Optional, Callable, Literal, Union, List, Tuple
 from functools import lru_cache
-from ..schema import EmbeddingsResponded
+from .schema import EmbeddingsResponded
 from .embedding import EmbeddingMixin
 
 
