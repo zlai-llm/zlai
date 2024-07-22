@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from langchain.prompts import PromptTemplate
 from typing import Any, List, Dict, Optional, Callable, ClassVar
 from dataclasses import dataclass, field, fields
@@ -65,9 +65,7 @@ class TaskParameters:
 
 class TaskDescription(BaseModel):
     """"""
-    class Config:
-        arbitrary_types_allowed = True
-
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     task: Optional[Callable] = Field(default=None, description="")
     task_id: Optional[int] = Field(default=None, description="")
     task_name: Optional[str] = Field(default=None, description="")
@@ -82,7 +80,7 @@ class TaskAnswer(BaseModel):
     task_answer: Optional[Any] = Field(default=None, description="")
 
 
-PromptTask: str = """Given a user question, determine the user's question is suitable for which task below: 
+PromptTask: str = """Given a user question, determine the user's question is suitable for which task below:
 
 ```
 {task_info}
