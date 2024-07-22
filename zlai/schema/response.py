@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import Optional, List
 
-import numpy as np
 from pydantic import BaseModel, Field
 from zhipuai.types.chat.async_chat_completion import AsyncTaskStatus
 from zhipuai.types.chat.chat_completion_chunk import ChatCompletionChunk
@@ -16,11 +15,6 @@ __all__ = [
     "CompletionMessage",
     "AsyncCompletion",
     "ChatCompletionChunk",
-
-    # EMB
-    "EmbeddingsResponded",
-    "Vector",
-
     # Responded
     "ValidateMessagesResponded",
     "constant_completion",
@@ -63,28 +57,6 @@ class AsyncCompletion(BaseModel):
     task_status: str
     choices: List[CompletionChoice]
     usage: CompletionUsage
-
-
-class Vector(BaseModel):
-    object: str = Field(default="list", description="")
-    index: Optional[int] = Field(default=0, description="")
-    embedding: List[float] = Field(default=[], description="")
-
-
-class EmbeddingsResponded(BaseModel):
-    object: str = Field(default="list", description="")
-    data: List[Vector] = Field(default=[], description="")
-    model: str = Field(default="embedding-2", description="")
-    usage: CompletionUsage = Field(default=CompletionUsage(), description="")
-
-    def to_numpy(self) -> np.ndarray:
-        """"""
-        vectors = [vec.embedding for vec in self.data]
-        return np.array(vectors)
-
-    def to_list(self) -> List[List[float]]:
-        vectors = [vec.embedding for vec in self.data]
-        return vectors
 
 
 class ValidateMessagesResponded(BaseModel):

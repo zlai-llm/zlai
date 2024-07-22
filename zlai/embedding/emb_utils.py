@@ -2,9 +2,10 @@ import json
 import requests
 from tqdm import tqdm
 import numpy as np
-from typing import List, Dict, Union, Tuple, Literal, Sequence
+from typing import List, Dict, Tuple, Union, Literal, Sequence
 
-from ..schema import *
+from .schema import *
+from ..schema import EMBUrl
 from ..utils import batches
 
 
