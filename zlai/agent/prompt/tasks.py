@@ -11,6 +11,7 @@ from ...schema import TypeMessage, Message, UserMessage, AssistantMessage, Syste
 
 __all__ = [
     "TaskParameters",
+    "TaskParametersV2",
     "TaskDescription",
     "TaskSwitchPrompt",
     "TaskPlanPrompt",
@@ -63,14 +64,51 @@ class TaskParameters:
         return _params
 
 
-class TaskDescription(BaseModel):
+class TaskParametersV2(BaseModel):
     """"""
+    # model
+    llm: Optional[TypeLLM] = Field(default=None)
+    embedding: Optional[TypeEmbedding] = Field(default=None)
+
+    # database
+    db: Optional[Any] = Field(default=None)
+    db_path: Optional[str] = Field(default=None)
+
+    # messages
+    system_message: Optional[SystemMessage] = Field(default=None)
+    system_template: Optional[PromptTemplate] = Field(default=None)
+    prompt_template: Optional[PromptTemplate] = Field(default=None)
+    few_shot: Optional[List[Message]] = Field(default=None)
+    messages_prompt: Optional[MessagesPrompt] = Field(default=None)
+    use_memory: Optional[bool] = Field(default=False)
+    max_memory_messages: Optional[int] = Field(default=None)
+
+    # logger
+    logger: Optional[Callable] = Field(default=None)
+    verbose: Optional[bool] = Field(default=None)
+
+    # ElasticSearch
+    index_name: Optional[str] = Field(default=None)
+    elasticsearch_host: Optional[str] = Field(default=None)
+
+    # tools
+    hooks: Optional[Dict[str, Callable]] = Field(default=None)
+    tools_description: Optional[List] = Field(default=None)
+    tools_params_fun: Optional[Callable] = Field(default=None)
+
+    kwargs: Optional[Dict] = Field(default=None)
+
+
+class TaskDescription(BaseModel):
+    """
+    todo: 修正 task_parameters 的 typing
+    """
     model_config = ConfigDict(arbitrary_types_allowed=True)
     task: Optional[Callable] = Field(default=None, description="")
     task_id: Optional[int] = Field(default=None, description="")
     task_name: Optional[str] = Field(default=None, description="")
     task_description: Optional[str] = Field(default=None, description="")
-    task_parameters: Optional[TaskParameters] = Field(default=TaskParameters(), description="")
+    task_parameters: Optional[Any] = Field(default=TaskParameters(), description="")
 
 
 class TaskAnswer(BaseModel):
