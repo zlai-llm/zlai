@@ -1,4 +1,4 @@
-from ..prompt import PromptTemplate
+from .template import PromptTemplate
 from ..schema import SystemMessage
 
 __all__ = [

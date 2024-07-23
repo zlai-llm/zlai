@@ -1,5 +1,5 @@
 from typing import Any, List, Literal, Callable, Optional
-from ..prompt import PromptTemplate
+from .template import PromptTemplate
 from ..utils.mixin import *
 from ..schema.messages import Message, SystemMessage, UserMessage
 from ..embedding import TypeEmbedding
