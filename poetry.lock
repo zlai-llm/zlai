@@ -5899,4 +5899,4 @@ web = ["httpx", "selenium"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.9.7 || >3.9.7,<4.0"
-content-hash = "fb9f386778f9c77632eafe65bb7e2fe35c9f50d529f89c667547e9fbc8379768"
+content-hash = "e087cbe8bc4fc810c1198f4e4048cda88e8e15d292ffd766ed00662ec567d540"
