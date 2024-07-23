@@ -1,6 +1,5 @@
 import unittest
 from pydantic import BaseModel, Field, ConfigDict
-from langchain.prompts import PromptTemplate
 from typing import Any, Optional
 from zlai.schema import *
 from zlai.llms import TypeLLM, Zhipu, GLM4AirGenerateConfig
