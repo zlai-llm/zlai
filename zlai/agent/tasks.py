@@ -1,8 +1,7 @@
 import re
 from typing import Any, List, Dict, Tuple, Iterable, Literal, Optional, Callable
-from langchain.prompts import PromptTemplate
 
-from ..prompt import MessagesPrompt
+from ..prompt import MessagesPrompt, PromptTemplate
 from ..schema import Message, SystemMessage
 from ..embedding import Embedding
 from ..parse import ParseList

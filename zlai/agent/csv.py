@@ -1,5 +1,4 @@
-from typing import Any, List, Literal, Optional, Callable
-from langchain.prompts import PromptTemplate
+from typing import Any, List, Optional, Callable
 import pandas as pd
 
 try:
@@ -7,8 +6,8 @@ try:
 except ModuleNotFoundError:
     raise ModuleNotFoundError("pip install langchain_experimental")
 
-from ..prompt import MessagesPrompt
-from ..schema import Message, UserMessage, AssistantMessage, SystemMessage
+from ..prompt import MessagesPrompt, PromptTemplate
+from ..schema import Message, SystemMessage
 from ..embedding import Embedding
 from ..llms import *
 from ..parse import ParseCode

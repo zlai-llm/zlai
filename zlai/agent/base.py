@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 from dataclasses import dataclass
 from pydantic import BaseModel, Field
 from typing import Any, List, Dict, Union, Iterable, Optional, Callable, get_args
-from langchain.prompts import PromptTemplate
 
 try:
     from langchain_experimental.tools import PythonAstREPLTool
@@ -13,7 +12,7 @@ except ModuleNotFoundError:
     raise ModuleNotFoundError("pip install langchain_experimental")
 
 from ..utils import LoggerMixin, pkg_config
-from ..prompt import MessagesPrompt
+from ..prompt import MessagesPrompt, PromptTemplate
 from ..llms import TypeLLM, TypeLocalGenerate, TypeZhipuGenerate, TypeAliGenerate
 from ..embedding import TypeEmbedding
 from ..schema import Message, UserMessage, SystemMessage

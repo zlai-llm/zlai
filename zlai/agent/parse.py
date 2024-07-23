@@ -1,9 +1,8 @@
 from pydantic import BaseModel
-from langchain.prompts import PromptTemplate
 from typing import List, Dict, Union, Any, Optional, Callable, Literal
 from ..llms import TypeLLM
 from ..schema import Message, SystemMessage
-from ..prompt import MessagesPrompt
+from ..prompt import MessagesPrompt, PromptTemplate
 from .base import AgentMixin
 from .prompt.tasks import TaskCompletion
 

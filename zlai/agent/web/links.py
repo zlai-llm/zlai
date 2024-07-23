@@ -1,4 +1,3 @@
-from langchain.prompts import PromptTemplate
 from langchain_community.document_loaders import SeleniumURLLoader
 from typing import List, Literal, Callable, Optional
 try:
@@ -8,7 +7,7 @@ except ModuleNotFoundError:
 
 from zlai.utils import LoggerMixin
 from zlai.llms import TypeLLM
-from zlai.prompt import MessagesPrompt
+from zlai.prompt import MessagesPrompt, PromptTemplate
 from zlai.prompt.summary import system_message, summary_prompt
 from zlai.schema import Message, SystemMessage
 from zlai.schema.content import PageContent
