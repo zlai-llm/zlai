@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from langchain.prompts import PromptTemplate
 from ...schema.messages import Message, SystemMessage
 
 

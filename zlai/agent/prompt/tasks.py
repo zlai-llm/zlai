@@ -1,11 +1,10 @@
 from pydantic import BaseModel, Field, ConfigDict
-from langchain.prompts import PromptTemplate
 from typing import Any, List, Dict, Optional, Callable, ClassVar
 from dataclasses import dataclass, field, fields
 
 from ...llms import TypeLLM
 from ...embedding import TypeEmbedding
-from ...prompt import MessagesPrompt
+from ...prompt import MessagesPrompt, PromptTemplate
 from ...schema import TypeMessage, Message, UserMessage, AssistantMessage, SystemMessage
 
 

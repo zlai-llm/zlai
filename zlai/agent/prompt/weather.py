@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from langchain.prompts import PromptTemplate
-from typing import List, ClassVar
+from ...prompt import PromptTemplate
 from ...schema.messages import Message, SystemMessage, UserMessage, AssistantMessage
 
 

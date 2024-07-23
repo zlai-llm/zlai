@@ -1,7 +1,7 @@
 from dataclasses import dataclass
-from langchain.prompts import PromptTemplate
 from typing import Optional
 from ...schema.messages import SystemMessage
+from ...prompt import PromptTemplate
 
 
 __all__ = [

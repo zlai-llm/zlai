@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-from langchain.prompts import PromptTemplate
 from typing import List, ClassVar, Optional
 from ...schema.messages import Message, SystemMessage
-from ...prompt import MessagesPrompt
+from ...prompt import MessagesPrompt, PromptTemplate
 
 
 __all__ = [

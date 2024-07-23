@@ -1,8 +1,8 @@
 from typing import List, Optional, ClassVar
 from pydantic import BaseModel, Field
 from dataclasses import dataclass
-from langchain.prompts import PromptTemplate
 
+from ...prompt import PromptTemplate
 from ...schema import Message, SystemMessage, UserMessage, AssistantMessage
 
 __all__ = [

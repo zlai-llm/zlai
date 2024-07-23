@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from langchain.prompts import PromptTemplate
+from ...prompt import PromptTemplate
 from ...schema import SystemMessage
 
 __all__ = [
