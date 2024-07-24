@@ -1,12 +1,10 @@
-from dataclasses import dataclass
-from typing import List, ClassVar
-from ...schema.messages import Message, SystemMessage, UserMessage, AssistantMessage
-from ...prompt import MessagesPrompt, PromptTemplate
+from ...schema.messages import SystemMessage, UserMessage, AssistantMessage
+from ...prompt import MessagesPrompt
+from ..schema.base import AgentPrompt
 
 
 __all__ = [
-    "PromptTemplate",
-    "PromptAddress",
+    "prompt_address",
 ]
 
 
@@ -25,15 +23,12 @@ few_shot = [
 ]
 
 
-@dataclass
-class PromptAddress:
-    """"""
-    # address
-    system_message: SystemMessage = system_message
-    few_shot: ClassVar[List[Message]] = few_shot
-    messages_prompt: MessagesPrompt = MessagesPrompt(
+prompt_address = AgentPrompt(
+    system_message=system_message,
+    few_shot=few_shot,
+    messages_prompt=MessagesPrompt(
         system_message=system_message,
         few_shot=few_shot,
         n_shot=5,
     )
-
+)

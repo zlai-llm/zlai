@@ -4,6 +4,7 @@ from typing import Any, Dict, Union, Annotated, Optional, Callable
 
 from ..llms import TypeLLM
 from ..schema import SystemMessage
+from ..prompt import PromptTemplate
 from .base import AgentMixin
 from .prompt.weather import *
 from .prompt.tasks import TaskDescription, TaskCompletion
@@ -19,15 +20,13 @@ __all__ = [
 class WeatherAgent(AgentMixin):
     """"""
     agent_name: Optional[str] = "Weather Agent"
-    system_message: Optional[SystemMessage] = PromptWeather.system_message,
-    prompt_template: Optional[PromptTemplate] = PromptWeather.prompt_weather,
 
     def __init__(
             self,
             agent_name: Optional[str] = "Weather Agent",
             llm: Optional[TypeLLM] = None,
-            system_message: Optional[SystemMessage] = PromptWeather.system_message,
-            prompt_template: Optional[PromptTemplate] = PromptWeather.prompt_weather,
+            system_message: Optional[SystemMessage] = prompt_weather.system_message,
+            prompt_template: Optional[PromptTemplate] = prompt_weather.prompt_template,
             logger: Optional[Callable] = None,
             verbose: Optional[bool] = False,
             *args: Any,

@@ -1,12 +1,14 @@
 import re
-from typing import Any, List, Dict, Tuple, Iterable, Literal, Optional, Callable
+from typing import Any, List, Dict, Union, Tuple, Iterable, Literal, Optional, Callable
+from collections import ChainMap
 
 from ..prompt import MessagesPrompt, PromptTemplate
 from ..schema import Message, SystemMessage
 from ..embedding import Embedding
 from ..parse import ParseList
-from ..llms import *
+from ..llms import TypeLLM
 from .base import *
+from .schema import *
 from .prompt.tasks import *
 
 
@@ -20,7 +22,7 @@ __all__ = [
 
 class Tasks(AgentMixin):
     """"""
-    task_prompt: Optional[TaskSwitchPrompt]
+    task_prompt: Optional[AgentPrompt]
     task_list: Optional[List[TaskDescription]]
     task_mapping: Optional[Dict[str, int]]
 
@@ -28,10 +30,10 @@ class Tasks(AgentMixin):
             self,
             llm: Optional[TypeLLM] = None,
             embedding: Optional[Embedding] = None,
-            task_prompt: Optional[TaskSwitchPrompt] = None,
+            task_prompt: Optional[AgentPrompt] = None,
 
             system_message: Optional[SystemMessage] = None,
-            system_template: Optional[PromptTemplate] = TaskSwitchPrompt.task_prompt,
+            system_template: Optional[PromptTemplate] = None,
             prompt_template: Optional[PromptTemplate] = None,
             few_shot: Optional[List[Message]] = None,
             messages_prompt: Optional[MessagesPrompt] = None,
@@ -74,6 +76,22 @@ class Tasks(AgentMixin):
         if len(self.task_list) == 0:
             raise ValueError(f"Task List ERROR: Not find Task.")
 
+    def _merge_task_parameters(self, *dicts: Dict) -> Dict:
+        """"""
+        merged = dict(ChainMap(*dicts))
+        for key in set().union(*dicts):
+            if all(d.get(key) is None for d in dicts):
+                merged[key] = None
+            else:
+                merged[key] = next(filter(lambda x: x is not None, (d.get(key) for d in dicts)))
+        return merged
+
+    def _get_task_generate_config(self, *dicts) -> Dict:
+        """"""
+        gen_config = self._merge_task_parameters(*dicts)
+        gen_config = {k: v for k, v in gen_config.items() if v is not None}
+        return gen_config
+
 
 class TaskSwitch(Tasks):
     """"""
@@ -82,7 +100,7 @@ class TaskSwitch(Tasks):
     def __init__(
             self,
             task_name: Optional[str] = "Task Switch",
-            system_template: Optional[PromptTemplate] = TaskSwitchPrompt.task_prompt,
+            system_template: Optional[PromptTemplate] = task_switch_prompt.system_template,
             use_memory: Optional[bool] = False,
             *args: Any,
             **kwargs: Any,
@@ -163,10 +181,7 @@ class TaskSwitch(Tasks):
 
     def _task_config(self, task: TaskDescription, *args: Any, **kwargs: Any) -> Dict:
         """"""
-        if task.task_parameters:
-            gen_config = {**self.kwargs, **task.task_parameters.params(), **kwargs}
-        else:
-            gen_config = {**self.kwargs, **kwargs}
+        gen_config = self._get_task_generate_config(kwargs, task.task_parameters.params(), self.kwargs)
         self.update_gen_config_system_message(gen_config)
         self.update_gen_config_few_shot(gen_config)
         self._validate_task_llm_stream(gen_config)
@@ -259,10 +274,7 @@ class TaskSequence(Tasks):
         task_completion = self._make_task_completion(
             query, task_id=self.task_list[0].task_id, task_name=self.task_list[0].task_name)
         for i, task in enumerate(self.task_list):
-            if task.task_parameters:
-                gen_config = {**self.kwargs, **task.task_parameters.params(), **kwargs}
-            else:
-                gen_config = {**self.kwargs, **kwargs}
+            gen_config = self._get_task_generate_config(kwargs, task.task_parameters.params(), self.kwargs)
             _task_generate = task.task(**gen_config)
             self._logger(msg=f"[{self.task_name} @ {_task_generate.agent_name}] Start ...", color="magenta")
             task_completion = _task_generate(task_completion, *args, **kwargs)
@@ -284,10 +296,7 @@ class TaskSequence(Tasks):
         task_completion = self._make_task_completion(
             query, task_id=self.task_list[0].task_id, task_name=self.task_list[0].task_name)
         for i, task in enumerate(self.task_list):
-            if task.task_parameters:
-                gen_config = {**self.kwargs, **task.task_parameters.params(), **kwargs}
-            else:
-                gen_config = {**self.kwargs, **kwargs}
+            gen_config = self._get_task_generate_config(kwargs, task.task_parameters.params(), self.kwargs)
             _task_generate = task.task(**gen_config)
             self._logger(msg=f"[{self.task_name} @ {_task_generate.agent_name}] Start ...", color="magenta")
 
@@ -307,7 +316,7 @@ class TaskPlan(TaskSwitch):
             self,
             task_name: Optional[str] = "Task Plan",
             task_list: Optional[List[TaskDescription]] = None,
-            messages_prompt: Optional[MessagesPrompt] = TaskPlanPrompt.messages_prompt,
+            messages_prompt: Optional[MessagesPrompt] = task_plan_prompt.messages_prompt,
             use_memory: Optional[bool] = False,
             *args: Any,
             **kwargs: Any,

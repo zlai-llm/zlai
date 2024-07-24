@@ -1,13 +1,18 @@
 from typing import List, Optional, ClassVar
 from pydantic import BaseModel, Field
 from dataclasses import dataclass
-
 from ...prompt import PromptTemplate
 from ...schema import Message, SystemMessage, UserMessage, AssistantMessage
+from ..schema import AgentPrompt
+
 
 __all__ = [
-    "PromptTemplate",
-    "PromptSQLite",
+    "prompt_sqlite_table",
+    "prompt_sqlite_qa",
+    "prompt_sqlite_script",
+    "prompt_sqlite_observation",
+    "prompt_sqlite",
+    # pre-version
     "SQLAgentOut",
     "MatchTableOutput",
 ]
@@ -110,26 +115,26 @@ few_shot_table = [
     AssistantMessage(content="公司人员基本信息表"),
 ]
 
-
-@dataclass
-class PromptSQLite:
-    """"""
-    # find table
-    system_message_table: SystemMessage = system_message_table
-    few_shot_table: ClassVar[List[Message]] = few_shot_table
-
-    # write SQLite code for QA
-    system_message_query: SystemMessage = SystemMessage(content=system_content_sqlite_query)
-    prompt_sqlite_query: PromptTemplate = prompt_sqlite_query
-    prompt_sqlite_observation: PromptTemplate = prompt_sqlite_observation
-
-    # just Table Info QA
-    system_message_qa: SystemMessage = SystemMessage(content="You are a database administrator.")
-    prompt_sqlite_qa: PromptTemplate = prompt_sqlite_qa
-
-    # chat
-    system_message_chat: SystemMessage = system_message_chat
-    few_shot_chat: ClassVar[List[Message]] = few_shot_chat
+# SQLiteTable
+prompt_sqlite_table = AgentPrompt(system_message=system_message_table, few_shot=few_shot_table)
+# SQLiteQA
+prompt_sqlite_qa = AgentPrompt(
+    system_message=SystemMessage(content="You are a database administrator."),
+    prompt_template=prompt_sqlite_qa)
+# SQLiteScript
+prompt_sqlite_script = AgentPrompt(
+    system_message=SystemMessage(content=system_content_sqlite_query),
+    prompt_template=prompt_sqlite_query)
+# SQLiteObservation
+prompt_sqlite_observation = AgentPrompt(
+    system_message=SystemMessage(content="You are a database administrator."),
+    prompt_template=prompt_sqlite_observation
+)
+# SQLite
+prompt_sqlite = AgentPrompt(
+    few_shot=few_shot_chat,
+    system_message=system_message_chat,
+)
 
 
 class SQLAgentOut(BaseModel):

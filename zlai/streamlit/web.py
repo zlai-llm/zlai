@@ -1,7 +1,7 @@
 from typing import *
 import pandas as pd
 import streamlit as st
-from dataclasses import dataclass, field
+from pydantic import BaseModel, Field
 from streamlit.delta_generator import DeltaGenerator
 
 
@@ -34,13 +34,12 @@ def get_show_fun(placeholder: DeltaGenerator, display_type):
     return show_fun_dict.get(display_type)
 
 
-@dataclass
-class Conversation:
+class Conversation(BaseModel):
     role: str
     content: Any
     tool: Union[str, None] = None
     display_type: str = 'markdown'
-    display_info: Dict = field(default_factory=dict)
+    display_info: Dict = Field(default_factory=dict)
 
     def get_chat_prompt(self) -> Dict[str, str]:
         """"""

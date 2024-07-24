@@ -5,7 +5,7 @@ from ..llms import TypeLLM
 from ..prompt import MessagesPrompt
 from ..parse import ParseDict
 from .base import AgentMixin
-from .prompt.address import *
+from .prompt.address import prompt_address
 from .prompt.tasks import TaskCompletion
 
 
@@ -28,7 +28,7 @@ class AddressAgent(AgentMixin):
             self,
             llm: Optional[TypeLLM] = None,
             agent_name: Optional[str] = "Address Agent",
-            messages_prompt: Optional[MessagesPrompt] = PromptAddress.messages_prompt,
+            messages_prompt: Optional[MessagesPrompt] = prompt_address.messages_prompt,
             logger: Optional[Callable] = None,
             verbose: Optional[bool] = False,
             *args: Any,
@@ -62,7 +62,7 @@ class AddressAgent(AgentMixin):
         task_completion = self._make_task_completion(query=query, **kwargs)
         self._logger(msg=f"[{self.agent_name}] User Question: {task_completion.query}", color='green')
         messages = self._make_messages(content=task_completion.query)
-        self._show_messages(messages=messages, few_shot=False, logger_name=self.agent_name)
+        self._show_messages(messages=messages, few_shot=True, logger_name=self.agent_name)
         completion = self.llm.generate(messages=messages)
         task_completion.content = completion.choices[0].message.content
         self._logger(msg=f"[{self.agent_name}] Final Answer:\n{task_completion.content}", color="green")

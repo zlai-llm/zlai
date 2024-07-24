@@ -2,13 +2,12 @@ import os
 import numpy as np
 import pandas as pd
 from pydantic import BaseModel, Field
-from typing import Any, Dict, List, Union, ClassVar, Annotated, Literal, Optional, Callable, Iterable
+from typing import Any, Dict, List, Union, Annotated, Literal, Optional, Callable, Iterable
 
-from ..utils import pkg_config
 from ..llms import TypeLLM
-from ..embedding import TypeEmbedding, Embedding
+from ..embedding import TypeEmbedding
 from ..schema import Message, SystemMessage
-from ..prompt import MessagesPrompt
+from ..prompt import MessagesPrompt, PromptTemplate
 from ..parse import ParseList, ParseDict
 from .base import *
 from .tasks import TaskSwitch, TaskSequence
@@ -27,7 +26,6 @@ __all__ = [
     # fund code
     "FundCodeAgent",
     "FundStatus",
-
 ]
 
 
@@ -145,9 +143,9 @@ class FundInformationAgent(FundAgent):
     def __init__(
             self,
             agent_name: Optional[str] = "Fund Information Agent",
-            system_message: Optional[SystemMessage] = PromptFund.system_message_fund_keyword,
-            few_shot: Optional[List[Message]] = PromptFund.few_shot_keyword,
-            prompt_template: Optional[PromptTemplate] = PromptFund.prompt_fund_keyword,
+            system_message: Optional[SystemMessage] = prompt_information.system_message,
+            few_shot: Optional[List[Message]] = prompt_information.few_shot,
+            prompt_template: Optional[PromptTemplate] = prompt_information.prompt_template,
             n_fund: int = 5,
             *args: Any,
             **kwargs: Any,
@@ -193,8 +191,8 @@ class FundObservation(FundAgent):
     def __init__(
             self,
             agent_name: Optional[str] = "Fund Observation",
-            system_message: Optional[SystemMessage] = PromptFund.system_message,
-            prompt_template: Optional[PromptTemplate] = PromptFund.prompt_fund_observation,
+            system_message: Optional[SystemMessage] = prompt_fund_observation.system_message,
+            prompt_template: Optional[PromptTemplate] = prompt_fund_observation.prompt_template,
             *args: Any,
             **kwargs: Any
     ):
@@ -244,9 +242,9 @@ class FundCodeAgent(FundAgent):
     def __init__(
             self,
             agent_name: Optional[str] = "Fund Code Agent",
-            system_message: Optional[SystemMessage] = PromptFund.system_message_fund_code,
-            few_shot: Optional[List[Message]] = PromptFund.few_shot_code,
-            prompt_template: Optional[PromptTemplate] = PromptFund.prompt_fund_code,
+            system_message: Optional[SystemMessage] = prompt_fund_code.system_message,
+            few_shot: Optional[List[Message]] = prompt_fund_code.few_shot,
+            prompt_template: Optional[PromptTemplate] = prompt_fund_code.prompt_template,
             *args: Any,
             **kwargs: Any
     ):
@@ -280,8 +278,8 @@ class FundStatusAgent(FundAgent):
     def __init__(
             self,
             agent_name: Optional[str] = "Fund Observation",
-            system_message: Optional[SystemMessage] = PromptFund.system_message,
-            prompt_template: Optional[PromptTemplate] = PromptFund.prompt_fund_observation,
+            system_message: Optional[SystemMessage] = prompt_fund_status.system_message,
+            prompt_template: Optional[PromptTemplate] = prompt_fund_status.prompt_template,
             *args: Any,
             **kwargs: Any
     ):

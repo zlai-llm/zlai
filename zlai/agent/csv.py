@@ -50,7 +50,7 @@ class CSVAgent(AgentMixin):
             llm: Optional[TypeLLM] = None,
             embedding: Optional[Embedding] = None,
             system_message: Optional[SystemMessage] = None,
-            system_template: Optional[PromptTemplate] = PromptDataFrame.prompt_dataframe_code,
+            system_template: Optional[PromptTemplate] = prompt_csv_agent.system_template,
             prompt_template: Optional[PromptTemplate] = None,
             few_shot: Optional[List[Message]] = None,
             messages_prompt: Optional[MessagesPrompt] = None,
@@ -104,7 +104,7 @@ class CSVQA(AgentObservationMixin, CSVAgent):
             self,
             csv_path: Optional[str] = None,
             agent_name: Optional[str] = "CSVAgent-QA",
-            system_template: Optional[PromptTemplate] = PromptDataFrame.prompt_csv,
+            system_template: Optional[PromptTemplate] = prompt_csv_qa.system_template,
             *args: Any,
             **kwargs: Any,
     ):
@@ -143,7 +143,7 @@ class CSVScript(CSVAgent):
             self,
             agent_name: Optional[str] = "CSVAgent-Script",
             csv_path: Optional[str] = None,
-            system_template: Optional[PromptTemplate] = PromptDataFrame.prompt_dataframe_code,
+            system_template: Optional[PromptTemplate] = prompt_csv_script.system_template,
             *args: Any,
             **kwargs: Any,
     ):
@@ -203,8 +203,8 @@ class CSVObservation(CSVAgent):
             self,
             agent_name: Optional[str] = "CSVAgent-Observation",
             csv_path: Optional[str] = None,
-            system_message: Optional[SystemMessage] = PromptDataFrame.system_message_dataframe_summary,
-            prompt_template: Optional[PromptTemplate] = PromptDataFrame.prompt_dataframe_observation_summary,
+            system_message: Optional[SystemMessage] = prompt_csv_observation.system_message,
+            prompt_template: Optional[PromptTemplate] = prompt_csv_observation.prompt_template,
             *args: Any,
             **kwargs: Any,
     ):

@@ -1,10 +1,10 @@
-from dataclasses import dataclass
 from ...prompt import PromptTemplate
 from ...schema import SystemMessage
+from ..schema import AgentPrompt
+
 
 __all__ = [
-    "PromptTemplate",
-    "PromptPyecharts",
+    "prompt_pyecharts",
 ]
 
 system_message = SystemMessage(content="""You are a chart robot. You need to choose the appropriate\
@@ -40,9 +40,4 @@ chart_prompt = PromptTemplate(
     input_variables=["table", "question"],
     template=PROMPT_SUMMARY_TMP)
 
-
-@dataclass
-class PromptPyecharts:
-    """"""
-    system_message: SystemMessage = system_message
-    chart_prompt: PromptTemplate = chart_prompt
+prompt_pyecharts = AgentPrompt(system_message=system_message, prompt_template=chart_prompt)

@@ -1,8 +1,8 @@
 from typing import Any, List, Union, Tuple, Iterable, Optional, Callable
 
 from ..llms import TypeLLM
-from ..schema import Message, SystemMessage, UserMessage, AssistantMessage
-from ..prompt import MessagesPrompt
+from ..schema import Message, SystemMessage, AssistantMessage
+from ..prompt import MessagesPrompt, PromptTemplate
 from .base import AgentMixin
 from .prompt.tasks import TaskDescription, TaskCompletion
 from .prompt.chat import *
@@ -21,7 +21,7 @@ class ChatAgent(AgentMixin):
             stream: Optional[bool] = False,
             incremental: Optional[bool] = True,
             agent_name: Optional[str] = "Chat Agent",
-            system_message: Optional[SystemMessage] = PromptChat.system_message,
+            system_message: Optional[SystemMessage] = prompt_chat.system_message,
             system_template: Optional[PromptTemplate] = None,
             prompt_template: Optional[PromptTemplate] = None,
             few_shot: Optional[List[Message]] = None,

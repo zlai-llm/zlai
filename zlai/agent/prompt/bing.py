@@ -1,12 +1,11 @@
-from dataclasses import dataclass
 from ...prompt import PromptTemplate
 from ...schema import SystemMessage
+from ..schema import AgentPrompt
 
 __all__ = [
-    "PromptTemplate",
     "summary_prompt",
     "system_message",
-    "PromptBingSearch",
+    "prompt_bing_search",
 ]
 
 PROMPT_SUMMARY_TMP = """Content: {content}\nQuestion: {question}"""
@@ -18,9 +17,4 @@ summary_prompt = PromptTemplate(
 system_message = SystemMessage(
     content="""You were a helpful assistant, answering questions using the reference content provided.""")
 
-
-@dataclass
-class PromptBingSearch:
-    """"""
-    system_message: SystemMessage = system_message
-    summary_prompt: PromptTemplate = summary_prompt
+prompt_bing_search = AgentPrompt(system_message=system_message, prompt_template=summary_prompt)

@@ -10,13 +10,14 @@ from typing import Any, List, Union, Tuple, Optional, Callable, Iterable
 from ..llms import TypeLLM
 from ..embedding import TypeEmbedding
 from ..schema import Message, SystemMessage
-from ..prompt import MessagesPrompt
+from ..prompt import MessagesPrompt, PromptTemplate
 from ..parse import ParseCode
 from .base import *
 from .prompt.sqlite import *
 from .prompt.tasks import TaskDescription, TaskParameters, TaskCompletion
 from .tasks import TaskSwitch, TaskSequence
 from .chat import ChatAgent
+from .schema import StreamMessage
 
 # TODO: 在query进入后先提取表名，再进行相似表的匹配。
 
@@ -176,8 +177,8 @@ class SQLiteTable(SQLiteAgent):
     def __init__(
             self,
             agent_name: Optional[str] = "SQLite Table",
-            system_message: Optional[SystemMessage] = PromptSQLite.system_message_table,
-            few_shot: Optional[List[Message]] = PromptSQLite.few_shot_table,
+            system_message: Optional[SystemMessage] = prompt_sqlite_table.system_message,
+            few_shot: Optional[List[Message]] = prompt_sqlite_table.few_shot,
             stream: Optional[bool] = False,
             *args: Any,
             **kwargs: Any
@@ -281,8 +282,8 @@ class SQLiteQA(SQLiteAgent, AgentObservationMixin):
     def __init__(
             self,
             agent_name: Optional[str] = "SQLite QA",
-            system_message: Optional[SystemMessage] = PromptSQLite.system_message_qa,
-            prompt_template: Optional[PromptTemplate] = PromptSQLite.prompt_sqlite_qa,
+            system_message: Optional[SystemMessage] = prompt_sqlite_qa.system_message,
+            prompt_template: Optional[PromptTemplate] = prompt_sqlite_qa.prompt_template,
             stream: Optional[bool] = False,
             *args: Any,
             **kwargs: Any
@@ -362,9 +363,9 @@ class SQLiteScript(AgentScriptMixin, SQLiteAgent):
     def __init__(
             self,
             agent_name: Optional[str] = "SQLite Script",
-            system_message: Optional[SystemMessage] = PromptSQLite.system_message_query,
+            system_message: Optional[SystemMessage] = prompt_sqlite_script.system_message,
             system_template: Optional[PromptTemplate] = None,
-            prompt_template: Optional[PromptTemplate] = PromptSQLite.prompt_sqlite_query,
+            prompt_template: Optional[PromptTemplate] = prompt_sqlite_script.prompt_template,
             few_shot: Optional[List[Message]] = None,
             messages_prompt: Optional[MessagesPrompt] = None,
             stream_message: Optional[StreamMessage] = StreamMessage(),
@@ -468,8 +469,8 @@ class SQLiteObservation(AgentObservationMixin, SQLiteAgent):
     def __init__(
             self,
             agent_name: Optional[str] = "SQLiteAgent-Observation",
-            system_message: Optional[SystemMessage] = PromptSQLite.system_message_qa,
-            prompt_template: Optional[PromptTemplate] = PromptSQLite.prompt_sqlite_observation,
+            system_message: Optional[SystemMessage] = prompt_sqlite_observation.system_message,
+            prompt_template: Optional[PromptTemplate] = prompt_sqlite_observation.prompt_template,
             *args: Any,
             **kwargs: Any,
     ):
@@ -548,8 +549,8 @@ class SQLite(TaskSwitch):
                 task=ChatAgent, task_id=0, task_name="数据库介绍机器人",
                 task_description="""可以帮助你数据的一般疑问，不可以查询数据，只能够给出对于数据库的一般性介绍。如：数据库中有哪些表？或者一般性的闲聊，如：你是谁？""",
                 task_parameters=TaskParameters(
-                    few_shot=PromptSQLite.few_shot_chat,
-                    system_message=PromptSQLite.system_message_chat,
+                    few_shot=prompt_sqlite.few_shot,
+                    system_message=prompt_sqlite.system_message,
                 )
             ),
             TaskDescription(

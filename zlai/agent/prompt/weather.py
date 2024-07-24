@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from ...prompt import PromptTemplate
-from ...schema.messages import Message, SystemMessage, UserMessage, AssistantMessage
+from ...schema.messages import SystemMessage, UserMessage, AssistantMessage
+from ..schema import AgentPrompt
 
 
 __all__ = [
-    "PromptTemplate",
-    "PromptWeather",
+    "prompt_weather",
     "weather_task_plan",
 ]
 
@@ -21,14 +21,7 @@ prompt_weather = PromptTemplate(
     input_variables=["weather", "question"],
     template=PromptWeather)
 
-
-@dataclass
-class PromptWeather:
-    """"""
-    # weather
-    system_message: SystemMessage = system_message
-    prompt_weather: PromptTemplate = prompt_weather
-
+prompt_weather = AgentPrompt(system_message=system_message, prompt_template=prompt_weather)
 
 weather_task_plan = [
     UserMessage(content="余杭区的天气怎么样？"),

@@ -3,10 +3,10 @@ from pydantic import BaseModel, Field
 from typing import Any, List, Dict, Union, Tuple, Optional, Callable
 from ...llms import TypeLLM
 from ...schema import TypeMessage, Message, SystemMessage, AssistantMessage, ToolsMessage
-from ...prompt import MessagesPrompt
+from ...prompt import MessagesPrompt, PromptTemplate
 from ..base import AgentMixin
 from ..prompt.tasks import TaskCompletion
-from ..prompt.chat import *
+from ..prompt.chat import prompt_chat
 from .register import dispatch_tool, register_tool
 
 
@@ -44,7 +44,7 @@ class ToolsAgent(AgentMixin):
             stream: Optional[bool] = False,
             incremental: Optional[bool] = True,
             agent_name: Optional[str] = "Tools Agent",
-            system_message: Optional[SystemMessage] = PromptChat.system_message,
+            system_message: Optional[SystemMessage] = prompt_chat.system_message,
             system_template: Optional[PromptTemplate] = None,
             prompt_template: Optional[PromptTemplate] = None,
             few_shot: Optional[List[Message]] = None,

@@ -15,6 +15,7 @@ from .parse import *
 from .tasks import *
 from .task_description import *
 from .prompt.tasks import *
+from .schema import *
 
 from .tools import *
 

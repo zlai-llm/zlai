@@ -9,14 +9,15 @@ try:
 except ModuleNotFoundError:
     raise ModuleNotFoundError("pip install langchain_text_splitters")
 
-from zlai.retrievers import TextClean
-from zlai.llms import TypeLLM
-from zlai.embedding import TypeEmbedding
-from zlai.schema import SystemMessage, EmbeddingMatchOutput
-from zlai.schema.content import PageContent
-from zlai.agent.base import AgentMixin
-from zlai.agent.prompt.tasks import TaskCompletion
-from zlai.agent.prompt.bing import *
+from ...retrievers import TextClean
+from ...llms import TypeLLM
+from ...embedding import TypeEmbedding
+from ...prompt import PromptTemplate
+from ...schema import SystemMessage, EmbeddingMatchOutput
+from ...schema.content import PageContent
+from ..base import AgentMixin
+from ..prompt.tasks import TaskCompletion
+from ..prompt.bing import *
 
 
 __all__ = [
@@ -50,8 +51,8 @@ class BingSearch(AgentMixin):
             embedding: Optional[TypeEmbedding] = None,
             stream: Optional[bool] = False,
 
-            system_message: Optional[SystemMessage] = PromptBingSearch.system_message,
-            prompt_template: Optional[PromptTemplate] = PromptBingSearch.summary_prompt,
+            system_message: Optional[SystemMessage] = prompt_bing_search.system_message,
+            prompt_template: Optional[PromptTemplate] = prompt_bing_search.prompt_template,
 
             n_pages: Optional[int] = 10,
             chunk_size: Optional[int] = 1500,

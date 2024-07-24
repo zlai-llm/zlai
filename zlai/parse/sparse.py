@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 
 __all__ = [
-    "Re",
+    "re_pattern",
     "sparse_bool",
     "sparse_bool_lst",
     "sparse_list",
@@ -29,10 +29,12 @@ __all__ = [
 TypeScript = Literal["python", "sql", "json"]
 
 
-@dataclass
-class Re:
+class RePattern(BaseModel):
     """"""
     multi_space: str = r'\s+'
+
+
+re_pattern = RePattern()
 
 
 def sparse_bool(

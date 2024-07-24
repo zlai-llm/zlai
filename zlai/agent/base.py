@@ -2,9 +2,7 @@ import chardet
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
-from dataclasses import dataclass
-from pydantic import BaseModel, Field
-from typing import Any, List, Dict, Union, Iterable, Optional, Callable, get_args
+from typing import Any, List, Dict, Union, Iterable, Optional, get_args
 
 try:
     from langchain_experimental.tools import PythonAstREPLTool
@@ -13,42 +11,20 @@ except ModuleNotFoundError:
 
 from ..utils import LoggerMixin, pkg_config
 from ..prompt import MessagesPrompt, PromptTemplate
-from ..llms import TypeLLM, TypeLocalGenerate, TypeZhipuGenerate, TypeAliGenerate
+from ..llms import TypeLLM, TypeZhipuGenerate
 from ..embedding import TypeEmbedding
 from ..schema import Message, UserMessage, SystemMessage
 from ..parse import ParseCode
 from .config import *
 from .prompt.tasks import TaskDescription, TaskCompletion, FreezeTaskCompletion
+from .schema.info import ShowMessages, StreamMessage, steam_message
 
 
 __all__ = [
     "AgentMixin",
     "AgentScriptMixin",
     "AgentObservationMixin",
-    "AgentParseDataMixin",
-    "ShowMessages",
-    "StreamMessage",
 ]
-
-
-@dataclass
-class StreamMessage:
-    not_find_content: Optional[str] = "**未在知识库中找到相关信息**...\n\n"
-    not_find_table: Optional[str] = "**未在数据库中找到相关表，请您提供更为准确的表名，我再为您解答**...\n\n"
-    thinking: Optional[str] = "**正在思考**...\n\n"
-    write_script: Optional[str] = "**正在编写相关程序**...\n\n"
-    run_script: Optional[str] = "**执行程序**...\n\n"
-    script_result: Optional[str] = "**执行结果**:\n\n"
-    observation_answer: Optional[str] = "**总结回答**:\n\n"
-
-
-class ShowMessages(BaseModel):
-    """"""
-    messages: List[Message] = Field(default=[], description="")
-    drop_system: Optional[bool] = Field(default=True, description="")
-    content_length: Optional[int] = Field(default=None, description="")
-    few_shot: Optional[bool] = Field(default=True, description="")
-    logger_name: Optional[str] = Field(default="Logger", description="")
 
 
 class AgentMixin(LoggerMixin):
@@ -106,7 +82,7 @@ class AgentMixin(LoggerMixin):
     def _show_messages(
             self,
             messages: List[Message],
-            drop_system: Optional[bool] = True,
+            drop_system: Optional[bool] = False,
             content_length: Optional[int] = None,
             few_shot: Optional[bool] = True,
             logger_name: Optional[str] = "Logger",
@@ -448,8 +424,3 @@ class AgentObservationMixin(AgentMixin):
         self._logger(msg=f"[{self.agent_name}] Final Answer: {task_completion.content}", color="yellow")
         self._logger(msg=f"[{self.agent_name}] End ...\n", color="green")
         return task_completion
-
-
-class AgentParseDataMixin(AgentMixin):
-    """"""
-

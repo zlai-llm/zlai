@@ -3,8 +3,9 @@ from dataclasses import dataclass
 
 from ..llms import TypeLLM
 from ..embedding import Embedding
-from ..schema import Message, SystemMessage, UserMessage, AssistantMessage
+from ..schema import SystemMessage, AssistantMessage
 from ..elasticsearch import *
+from ..prompt import PromptTemplate
 from .base import AgentMixin
 from .tasks import TaskSwitch
 from .chat import ChatAgent
@@ -35,8 +36,8 @@ class KnowledgeAgent(AgentMixin):
             agent_name: Optional[str] = "Knowledge Agent",
             llm: Optional[TypeLLM] = None,
             embedding: Optional[Embedding] = None,
-            system_message: Optional[SystemMessage] = PromptKnowledge.system_message,
-            prompt_template: Optional[PromptTemplate] = PromptKnowledge.summary_prompt,
+            system_message: Optional[SystemMessage] = prompt_knowledge.system_message,
+            prompt_template: Optional[PromptTemplate] = prompt_knowledge.prompt_template,
             index_name: Optional[str] = None,
             elasticsearch_host: Optional[str] = None,
             stream: Optional[bool] = False,

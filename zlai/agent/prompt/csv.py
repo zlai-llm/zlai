@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 from ...prompt import PromptTemplate
 from ...schema.messages import Message, SystemMessage
+from ..schema import AgentPrompt
 
 
 __all__ = [
-    "PromptDataFrame",
-    "PromptDataFrameCode",
-    "prompt_dataframe_code",
-    "system_message_dataframe_summary",
-    "prompt_dataframe_observation_summary",
+    "prompt_csv_agent",
+    "prompt_csv_qa",
+    "prompt_csv_script",
+    "prompt_csv_observation",
 ]
 
 
@@ -54,15 +54,14 @@ please answer the user’s question according to these contents.
 
 prompt_csv = PromptTemplate(input_variables=["df_head_markdown"], template=PromptCSV)
 
-
-@dataclass
-class PromptDataFrame:
-    """"""
-    # write pandas dataframe code for QA
-    prompt_dataframe_code: PromptTemplate = prompt_dataframe_code
-    prompt_dataframe_observation_summary: PromptTemplate = prompt_dataframe_observation_summary
-    system_message_dataframe_summary: Message = system_message_dataframe_summary
-
-    # just for csv head QA
-    prompt_csv: PromptTemplate = prompt_csv
-
+# CSVAgent
+prompt_csv_agent = AgentPrompt(system_template=prompt_dataframe_code,)
+# CSVQA
+prompt_csv_qa = AgentPrompt(system_template=prompt_csv)
+# CSVScript
+prompt_csv_script = AgentPrompt(system_template=prompt_dataframe_code)
+# CSVObservation
+prompt_csv_observation = AgentPrompt(
+    system_message=system_message_dataframe_summary,
+    prompt_template=prompt_dataframe_observation_summary,
+)

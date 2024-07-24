@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, field_validator
 
 
 __all__ = [
-    "Role",
+    "Role", "role",
     "SystemPrompt",
     "UserPrompt",
     "AssistantPrompt",
@@ -24,12 +24,14 @@ __all__ = [
 prompt_system_tools_content = 'Answer the following questions as best as you can. You have access to the following tools:'
 
 
-@dataclass
-class Role:
+class Role(BaseModel):
     """"""
     system: str = "system"
     user: str = "user"
     assistant: str = "assistant"
+
+
+role = Role()
 
 
 class Message(BaseModel):

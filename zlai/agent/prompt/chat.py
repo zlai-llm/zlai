@@ -1,23 +1,13 @@
-from dataclasses import dataclass
-from typing import List, ClassVar, Optional
-from ...schema.messages import Message, SystemMessage
-from ...prompt import MessagesPrompt, PromptTemplate
+from ...schema.messages import SystemMessage
+from ..schema.base import AgentPrompt
 
 
 __all__ = [
-    "PromptTemplate",
-    "PromptChat",
+    "prompt_chat",
 ]
 
 
 system_message = SystemMessage(content="""You are a helpful assistant.""")
 
 
-@dataclass
-class PromptChat:
-    """"""
-    # address
-    system_message: SystemMessage = system_message
-    few_shot: ClassVar[List[Message]] = []
-    messages_prompt: Optional[MessagesPrompt] = None
-    prompt_template: Optional[PromptTemplate] = None
+prompt_chat = AgentPrompt(system_message=system_message)

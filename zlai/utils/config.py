@@ -1,7 +1,7 @@
 import os
 import pathlib
 import sys
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
 __all__ = [
@@ -15,10 +15,9 @@ headers = {
 }
 
 
-@dataclass
-class Config:
+class Config(BaseModel):
     cache_path: str = os.path.join(pathlib.Path.home(), ".zlai")
-    python_version = sys.version_info
+    python_version: str = str(sys.version_info)
 
 
 pkg_config = Config()

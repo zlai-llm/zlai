@@ -1,17 +1,12 @@
 from dataclasses import dataclass
-from ...schema.messages import Message, SystemMessage
+from ...schema.messages import SystemMessage
+from ..schema import AgentPrompt
 
 
 __all__ = [
-    "PromptShell",
+    "prompt_shell",
 ]
 
 
 system_message = SystemMessage(content="You are a helpful SHELL assistant.")
-
-
-@dataclass
-class PromptShell:
-    """"""
-    system_message: SystemMessage = system_message
-
+prompt_shell = AgentPrompt(system_message=system_message)

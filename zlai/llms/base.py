@@ -8,7 +8,7 @@ from ..schema import (
     LLMUrl, Message, Model,
     Completion, CompletionUsage, CompletionMessage, CompletionChoice,
     AsyncCompletion, AsyncTaskStatus,
-    ValidateMessagesResponded, Role
+    ValidateMessagesResponded, role
 )
 
 
@@ -91,13 +91,13 @@ def validate_messages(
     """
     responded = ValidateMessagesResponded()
 
-    if messages[-1].role != Role.user:
-        responded.message = f"Last message role must be {Role.user}."
+    if messages[-1].role != role.user:
+        responded.message = f"Last message role must be {role.user}."
         responded.access = False
         return responded
 
     for i, message in enumerate(messages):
-        if i != 0 and message.role == Role.system:
+        if i != 0 and message.role == role.system:
             responded.message = f"System message id {i} is not allowed."
             responded.access = False
             return responded

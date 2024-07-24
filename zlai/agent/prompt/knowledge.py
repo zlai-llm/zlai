@@ -1,15 +1,13 @@
-from dataclasses import dataclass
-from typing import Optional
 from ...schema.messages import SystemMessage
 from ...prompt import PromptTemplate
+from ..schema import AgentPrompt
 
 
 __all__ = [
-    "PromptTemplate",
     "PROMPT_SUMMARY",
     "system_message",
     "summary_prompt",
-    "PromptKnowledge",
+    "prompt_knowledge",
 ]
 
 
@@ -25,9 +23,4 @@ summary_prompt = PromptTemplate(
     input_variables=["content", "question"],
     template=PROMPT_SUMMARY)
 
-
-@dataclass
-class PromptKnowledge:
-    """"""
-    system_message: SystemMessage = system_message
-    summary_prompt: Optional[PromptTemplate] = summary_prompt
+prompt_knowledge = AgentPrompt(system_message=system_message, prompt_template=summary_prompt)

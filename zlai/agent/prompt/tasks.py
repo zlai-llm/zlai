@@ -1,87 +1,15 @@
-from pydantic import BaseModel, Field, ConfigDict
-from typing import Any, List, Dict, Optional, Callable, ClassVar
-from dataclasses import dataclass, field, fields
-
-from ...llms import TypeLLM
-from ...embedding import TypeEmbedding
 from ...prompt import MessagesPrompt, PromptTemplate
-from ...schema import TypeMessage, Message, UserMessage, AssistantMessage, SystemMessage
+from ...schema import UserMessage, AssistantMessage, SystemMessage
+from ..schema import *
 
 
 __all__ = [
-    "TaskParameters",
-    "TaskDescription",
-    "TaskSwitchPrompt",
-    "TaskPlanPrompt",
-    "TaskAnswer",
-    "TaskCompletion",
-    "FreezeTaskCompletion",
-    "TaskPlanCompletion",
+    "task_switch_prompt",
+    "task_plan_prompt",
 ]
 
 
-@dataclass
-class TaskParameters:
-    """"""
-    # model
-    llm: Optional[TypeLLM] = field(default=None)
-    embedding: Optional[TypeEmbedding] = field(default=None)
-
-    # database
-    db: Optional[Any] = field(default=None)
-    db_path: Optional[str] = field(default=None)
-
-    # messages
-    system_message: Optional[SystemMessage] = field(default=None)
-    system_template: Optional[PromptTemplate] = field(default=None)
-    prompt_template: Optional[PromptTemplate] = field(default=None)
-    few_shot: Optional[List[Message]] = field(default=None)
-    messages_prompt: Optional[MessagesPrompt] = field(default=None)
-    use_memory: Optional[bool] = field(default=False)
-    max_memory_messages: Optional[int] = field(default=None)
-
-    # logger
-    logger: Optional[Callable] = field(default=None)
-    verbose: Optional[bool] = field(default=None)
-
-    # ElasticSearch
-    index_name: Optional[str] = field(default=None)
-    elasticsearch_host: Optional[str] = field(default=None)
-
-    # tools
-    hooks: Optional[Dict[str, Callable]] = field(default=None)
-    tools_description: Optional[List] = field(default=None)
-    tools_params_fun: Optional[Callable] = field(default=None)
-
-    kwargs: Optional[Dict] = field(default=None)
-
-    def params(self) -> Dict[str, any]:
-        _params = {field.name: getattr(self, field.name) for field in fields(self) if getattr(self, field.name) is not None}
-        if self.kwargs is not None:
-            _params.update(self.kwargs)
-        return _params
-
-
-class TaskDescription(BaseModel):
-    """
-    todo: 修正 task_parameters 的 typing
-    """
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-    task: Optional[Callable] = Field(default=None, description="")
-    task_id: Optional[int] = Field(default=None, description="")
-    task_name: Optional[str] = Field(default=None, description="")
-    task_description: Optional[str] = Field(default=None, description="")
-    task_parameters: Optional[TaskParameters] = Field(default=TaskParameters(), description="")
-
-
-class TaskAnswer(BaseModel):
-    task_id: Optional[int] = Field(default=None, description="")
-    task_name: Optional[str] = Field(default=None, description="")
-    task_query: Optional[Any] = Field(default=None, description="")
-    task_answer: Optional[Any] = Field(default=None, description="")
-
-
-PromptTask: str = """Given a user question, determine the user's question is suitable for which task below:
+PromptTaskSwitch: str = """Given a user question, determine the user's question is suitable for which task below:
 
 ```
 {task_info}
@@ -97,7 +25,6 @@ few_shot_task_id_lst = [
     AssistantMessage(content=str(["查询杭州的天气", "旅游股2024年一季度合计净利润"])),
 ]
 
-
 messages_prompt = MessagesPrompt(
     system_message=system_message_task_plan,
     few_shot=few_shot_task_id_lst,
@@ -106,46 +33,11 @@ messages_prompt = MessagesPrompt(
         template="""问题: {content}。\nList: """),
 )
 
+task_switch_prompt = AgentPrompt(
+    system_template=PromptTemplate(input_variables=["task_info"], template=PromptTaskSwitch))
 
-@dataclass
-class TaskSwitchPrompt:
-    """"""
-    task_prompt: PromptTemplate = PromptTemplate(input_variables=["task_info"], template=PromptTask)
-
-
-@dataclass
-class TaskPlanPrompt:
-    task_prompt_plan: PromptTemplate = PromptTemplate(input_variables=["task_info"], template=PromptTask)
-    few_shot_task_id_lst: ClassVar[List[Message]] = few_shot_task_id_lst
-    messages_prompt: MessagesPrompt = messages_prompt
-
-
-class FreezeTaskCompletion(BaseModel):
-    """"""
-    query: Optional[str] = Field(default=None, description="")
-    task_id: Optional[int] = Field(default=None, description="")
-    task_name: Optional[str] = Field(default=None, description="")
-    content: Optional[str] = Field(default=None, description="")
-    stream: Optional[str] = Field(default=None, description="")
-    delta: Optional[str] = Field(default=None, description="")
-    script: Optional[str] = Field(default=None, description="")
-    parsed_data: Optional[Any] = Field(default=None, description="")
-    observation: Optional[str] = Field(default=None, description="")
-    data: Optional[Dict[str, List]] = Field(default=None, description="")
-    query_id: Optional[int] = Field(default=None, description="")
-    origin_query: Optional[str] = Field(default=None, description="")
-    total_question: Optional[List[str]] = Field(default=None, description="")
-    next_question: Optional[str] = Field(default=None, description="")
-    previous_question: Optional[str] = Field(default=None, description="")
-    memory_messages: Optional[List[TypeMessage]] = Field(default=[], description="历史消息")
-
-
-class TaskCompletion(FreezeTaskCompletion):
-    """"""
-    task_description: Optional[TaskDescription] = Field(default=None, description="")
-
-
-class TaskPlanCompletion(BaseModel):
-    """"""
-    task: Optional[str] = Field(default=None, description="任务/问题描述")
-    task_completion: Optional[TaskCompletion] = Field(default=None, description="任务/问题回答")
+task_plan_prompt = AgentPrompt(
+    prompt_template=PromptTemplate(input_variables=["task_info"], template=PromptTaskSwitch),
+    few_shot=few_shot_task_id_lst,
+    messages_prompt=messages_prompt,
+)

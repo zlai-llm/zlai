@@ -9,7 +9,7 @@ except ModuleNotFoundError:
 
 from ...utils import headers
 from ...llms import TypeLLM
-from ...prompt import MessagesPrompt
+from ...prompt import MessagesPrompt, PromptTemplate
 from ...embedding import TypeEmbedding
 from ...schema import Message, SystemMessage
 from ...schema.content import PageContent
@@ -222,8 +222,8 @@ class AutoDeepWeb(AutoDeepWebAgent):
             self,
             llm: Optional[TypeLLM] = None,
             agent_name: Optional[str] = "Auto Deep Web",
-            system_message: Optional[SystemMessage] = PromptAutoWeb.system_message,
-            prompt_template: Optional[PromptTemplate] = PromptAutoWeb.summary_prompt,
+            system_message: Optional[SystemMessage] = prompt_auto_web.system_message,
+            prompt_template: Optional[PromptTemplate] = prompt_auto_web.summary_prompt,
             logger: Optional[Callable] = None,
             verbose: Optional[bool] = False,
             *args: Any,

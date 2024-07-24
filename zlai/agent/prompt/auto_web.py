@@ -1,11 +1,10 @@
-from dataclasses import dataclass
 from ...prompt import PromptTemplate
 from ...schema.messages import SystemMessage
+from ..schema import AgentPrompt
 
 
 __all__ = [
-    "PromptTemplate",
-    "PromptAutoWeb",
+    "prompt_auto_web",
 ]
 
 
@@ -16,11 +15,4 @@ summary_prompt = PromptTemplate(
     input_variables=["content", "question"],
     template=PROMPT_SUMMARY_TMP)
 
-
-@dataclass
-class PromptAutoWeb:
-    """"""
-    # address
-    system_message: SystemMessage = system_message
-    summary_prompt: PromptTemplate = summary_prompt
-
+prompt_auto_web = AgentPrompt(system_message=system_message, prompt_template=summary_prompt)
