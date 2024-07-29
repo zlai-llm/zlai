@@ -6,7 +6,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "zlai"
-version = "0.3.102"
+version = "0.3.103"
 description = "A LLM Agent Python package."
 authors = ["chensy cao <chensy.cao@foxmail.com>"]
 maintainers = []
