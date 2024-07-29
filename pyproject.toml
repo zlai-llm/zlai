@@ -74,6 +74,15 @@ streamlit = { version = "^1.36.0", optional = true }
 # unstructured
 unstructured = { version = ">=0.10.5", extras = ["pdf"], optional = true }
 
+# LLM API
+fastapi = {version = "^0.111.1", optional = true}
+uvicorn = {version = "^0.30.3", optional = true}
+transformers = {version = "^4.43.3", optional = true}
+click = {version = "^8.1.7", optional = true}
+sentence-transformers = {version = "^3.0.1", optional = true}
+torch = {version = "2.0.1", optional = true}
+accelerate = {version = "^0.33.0", optional = true}
+
 
 [tool.poetry.group.streamlit.dependencies]
 streamlit = "^1.36.0"
@@ -107,6 +116,16 @@ langchain-core = "^0.2.11"
 langchain-experimental = "^0.0.62"
 
 
+[tool.poetry.group.local.dependencies]
+click = "^8.1.7"
+torch = "2.0.1"
+fastapi = "^0.111.1"
+uvicorn = "^0.30.3"
+transformers = "^4.43.3"
+sentence-transformers = "^3.0.1"
+accelerate = "^0.33.0"
+
+
 [tool.poetry.extras]
 all = [
     "openai", "zhipuai", "dashscope", "tencentcloud-sdk-python", "qianfan",
@@ -127,7 +146,12 @@ database = ["pyspark", "sqlalchemy"]
 echarts = ["pyecharts"]
 streamlit = ["streamlit"]
 unstructured = ["unstructured"]
+local = ["fastapi", "uvicorn", "transformers", "click", "sentence-transformers", "torch", "accelerate"]
 
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/zlai-llm/zlai/issues"
+
+
+[tool.poetry.scripts]
+zlai = "zlai.models.app:models"

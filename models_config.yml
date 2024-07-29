@@ -1,0 +1,9 @@
+models_config:
+  - model_name: Qwen2-0.5B-Instruct
+    model_path: /home/models/Qwen/Qwen2-0.5B-Instruct
+    model_type: completion
+    load_method: load_qwen2
+  - model_name: bge-m3
+    model_path: /home/models/BAAI/bge-m3
+    model_type: embedding
+    load_method: load_embedding
