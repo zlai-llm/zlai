@@ -3,7 +3,6 @@ from pydantic import BaseModel, Field, ConfigDict
 from openai.types.chat.completion_create_params import Function, FunctionCall
 from openai.types.chat.chat_completion_tool_param import ChatCompletionToolParam
 from openai.types.chat.chat_completion_tool_choice_option_param import ChatCompletionToolChoiceOptionParam
-from zlai.llms import GenerateConfig
 
 
 __all__ = [

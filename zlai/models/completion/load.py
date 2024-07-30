@@ -12,14 +12,22 @@ __all__ = [
 ]
 
 
+def get_device_max_memory(max_memory: Optional[Dict] = None) -> Dict:
+    """"""
+    if max_memory is None and torch.cuda.is_available():
+        max_memory = {0: "20GB"}
+    else:
+        max_memory = None
+    return max_memory
+
+
 @lru_cache()
 def load_qwen2(
         model_path: str,
         max_memory: Optional[Dict] = None
 ) -> Tuple[Any, Any]:
     """"""
-    if max_memory is None:
-        max_memory = {0: "20GB"}
+    max_memory = get_device_max_memory(max_memory)
     model = AutoModelForCausalLM.from_pretrained(
         pretrained_model_name_or_path=model_path,
         torch_dtype="auto",
@@ -36,8 +44,7 @@ def load_glm4(
         max_memory: Optional[Dict] = None
 ) -> Tuple[Any, Any]:
     """"""
-    if max_memory is None:
-        max_memory = {0: "20GB"}
+    max_memory = get_device_max_memory(max_memory)
     device = "cuda"
     tokenizer = AutoTokenizer.from_pretrained(
         pretrained_model_name_or_path=model_path, trust_remote_code=True)
