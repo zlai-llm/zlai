@@ -1,4 +1,5 @@
 import time
+import torch
 from logging import Logger
 from threading import Thread
 from typing import Any, List, Dict, Union, Optional, Callable
@@ -46,6 +47,17 @@ class LoadModelCompletion(LoggerMixin):
         self.kwargs = kwargs
         self.set_model_path()
         self.load_model()
+        self.qwen_2_completion_model: List[str] = [
+            "Qwen2-0.5B-Instruct"
+            "Qwen2-1.5B-Instruct"
+            "Qwen2-7B-Instruct"
+            "Qwen2-57B-A14B-Instruct-GPTQ-Int4"
+        ]
+        self.glm_4_completion_model: List[str] = [
+            "glm-4-9b-chat"
+            "glm-4-9b-chat-1m"
+            "glm-4v-9b"
+        ]
 
     def set_model_path(self):
         """"""
@@ -84,25 +96,43 @@ class LoadModelCompletion(LoggerMixin):
         vectors = self.model.encode(text, normalize_embeddings=True).to_list()
         return vectors
 
-    def completion(self, messages: List[Dict]) -> str:
+    def completion_qwen_2(self, messages: List[Dict]) -> str:
         """"""
-        self._logger(msg=f"[{__class__.__name__}] Generating...", color="green")
-        self._logger(msg=f"[{__class__.__name__}] User Question: {messages[-1].get('content')}", color="green")
         text = self.tokenizer.apply_chat_template(
             messages,
             tokenize=False,
             add_generation_prompt=True
         )
         model_inputs = self.tokenizer([text], return_tensors="pt").to(self.model.device)
-
-        generated_ids = self.model.generate(
-            model_inputs.input_ids,
-            max_new_tokens=512
-        )
+        generated_ids = self.model.generate(model_inputs.input_ids, max_new_tokens=512)
         generated_ids = [
             output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
         ]
         content = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        return content
+
+    def completion_glm_4(self, messages: List[Dict]) -> str:
+        """"""
+        inputs = self.tokenizer.apply_chat_template(
+            messages, add_generation_prompt=True, tokenize=True, return_tensors="pt", return_dict=True
+        ).to(self.model.device)
+        gen_kwargs = {"max_length": 2500, "do_sample": True, "top_k": 1}
+        with torch.no_grad():
+            outputs = self.model.generate(**inputs, **gen_kwargs)
+            outputs = outputs[:, inputs['input_ids'].shape[1]:]
+            content = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+        return content
+
+    def completion(self, messages: List[Dict]) -> str:
+        """"""
+        self._logger(msg=f"[{__class__.__name__}] Generating...", color="green")
+        self._logger(msg=f"[{__class__.__name__}] User Question: {messages[-1].get('content')}", color="green")
+        if self.model_name in self.qwen_2_completion_model:
+            content = self.completion_qwen_2(messages=messages)
+        elif self.model_name in self.glm_4_completion_model:
+            content = self.completion_glm_4(messages=messages)
+        else:
+            content = f"Not find completion method: {self.model_name}"
         self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")
         self._logger(msg=f"[{__class__.__name__}] Completion content: {content}", color="green")
         return content

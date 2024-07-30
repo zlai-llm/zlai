@@ -26,19 +26,19 @@ models_config:
   - model_name: glm-4-9b-chat
     model_path: /home/models/THUDM/glm-4-9b-chat
     model_type: completion
-    load_method: load_qwen2
+    load_method: load_glm4
     max_memory:
       0: "30GB"
   - model_name: glm-4-9b-chat-1m
     model_path: /home/models/THUDM/glm-4-9b-chat-1m
     model_type: completion
-    load_method: load_qwen2
+    load_method: load_glm4
     max_memory:
       0: "30GB"
   - model_name: glm-4v-9b
     model_path: /home/models/THUDM/glm-4v-9b
     model_type: completion
-    load_method: load_qwen2
+    load_method: load_glm4
     max_memory:
       0: "32GB"
   - model_name: bge-m3

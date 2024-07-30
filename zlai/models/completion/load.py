@@ -7,8 +7,10 @@ from sentence_transformers import SentenceTransformer
 
 __all__ = [
     "load_qwen2",
+    "load_glm4",
     "load_embedding",
     "load_method_mapping",
+    "get_device_max_memory",
 ]
 
 
@@ -67,5 +69,6 @@ def load_embedding(model_path: str):
 
 load_method_mapping = {
     "load_qwen2": load_qwen2,
+    "load_glm4": load_glm4,
     "load_embedding": load_embedding,
 }
