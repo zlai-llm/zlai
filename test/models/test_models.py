@@ -1,6 +1,6 @@
 import yaml
 import unittest
-from zlai.models.load import *
+from zlai.models.completion import *
 from zlai.models.types import *
 
 

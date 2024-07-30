@@ -1,5 +1,5 @@
 import unittest
-from zlai.models.load import *
+from zlai.models.completion import *
 
 
 class TestLoadModel(unittest.TestCase):
