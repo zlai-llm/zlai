@@ -70,6 +70,7 @@ pyecharts = { version = ">=2.0.5", optional = true }
 
 # streamlit
 streamlit = { version = "^1.36.0", optional = true }
+bs4 = {version = "^0.0.2", optional = true}
 
 # unstructured
 unstructured = { version = ">=0.10.5", extras = ["pdf"], optional = true }
@@ -86,6 +87,7 @@ accelerate = {version = "^0.33.0", optional = true}
 
 [tool.poetry.group.streamlit.dependencies]
 streamlit = "^1.36.0"
+bs4 = "^0.0.2"
 
 
 [tool.poetry.group.api.dependencies]
@@ -144,7 +146,7 @@ langchain = ["langchain-core", "langchain-experimental"]
 web = ["httpx", "selenium"]
 database = ["pyspark", "sqlalchemy"]
 echarts = ["pyecharts"]
-streamlit = ["streamlit"]
+streamlit = ["streamlit", "bs4"]
 unstructured = ["unstructured"]
 local = ["fastapi", "uvicorn", "transformers", "click", "sentence-transformers", "torch", "accelerate"]
 
@@ -154,4 +156,5 @@ local = ["fastapi", "uvicorn", "transformers", "click", "sentence-transformers",
 
 
 [tool.poetry.scripts]
-zlai = "zlai.models.app:models"
+zlai_models = "zlai.models.app:models"
+zlai_pages = "zlai.streamlit.web.run:run_streamlit_app"
