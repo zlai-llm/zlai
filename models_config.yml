@@ -3,6 +3,44 @@ models_config:
     model_path: /home/models/Qwen/Qwen2-0.5B-Instruct
     model_type: completion
     load_method: load_qwen2
+    max_memory:
+      0: "2GB"
+  - model_name: Qwen2-1.5B-Instruct
+    model_path: /home/models/Qwen/Qwen2-1.5B-Instruct
+    model_type: completion
+    load_method: load_qwen2
+    max_memory:
+      0: "4GB"
+  - model_name: Qwen2-7B-Instruct
+    model_path: /home/models/Qwen/Qwen2-7B-Instruct
+    model_type: completion
+    load_method: load_qwen2
+    max_memory:
+      0: "20GB"
+  - model_name: Qwen2-57B-A14B-Instruct-GPTQ-Int4
+    model_path: /home/models/Qwen/Qwen2-57B-A14B-Instruct-GPTQ-Int4
+    model_type: completion
+    load_method: load_qwen2
+    max_memory:
+      0: "30GB"
+  - model_name: glm-4-9b-chat
+    model_path: /home/models/THUDM/glm-4-9b-chat
+    model_type: completion
+    load_method: load_qwen2
+    max_memory:
+      0: "30GB"
+  - model_name: glm-4-9b-chat-1m
+    model_path: /home/models/THUDM/glm-4-9b-chat-1m
+    model_type: completion
+    load_method: load_qwen2
+    max_memory:
+      0: "30GB"
+  - model_name: glm-4v-9b
+    model_path: /home/models/THUDM/glm-4v-9b
+    model_type: completion
+    load_method: load_qwen2
+    max_memory:
+      0: "32GB"
   - model_name: bge-m3
     model_path: /home/models/BAAI/bge-m3
     model_type: embedding
