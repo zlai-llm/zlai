@@ -48,15 +48,15 @@ class LoadModelCompletion(LoggerMixin):
         self.set_model_path()
         self.load_model()
         self.qwen_2_completion_model: List[str] = [
-            "Qwen2-0.5B-Instruct"
-            "Qwen2-1.5B-Instruct"
-            "Qwen2-7B-Instruct"
-            "Qwen2-57B-A14B-Instruct-GPTQ-Int4"
+            "Qwen2-0.5B-Instruct",
+            "Qwen2-1.5B-Instruct",
+            "Qwen2-7B-Instruct",
+            "Qwen2-57B-A14B-Instruct-GPTQ-Int4",
         ]
         self.glm_4_completion_model: List[str] = [
-            "glm-4-9b-chat"
-            "glm-4-9b-chat-1m"
-            "glm-4v-9b"
+            "glm-4-9b-chat",
+            "glm-4-9b-chat-1m",
+            "glm-4v-9b",
         ]
 
     def set_model_path(self):
