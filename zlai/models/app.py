@@ -15,7 +15,7 @@ from openai.types.chat.chat_completion_message import ChatCompletionMessage
 from zlai.models.types.chat_completion_chunk import *
 from zlai.models.types.schema import *
 from zlai.utils.config import pkg_config
-from .load import *
+from .completion import *
 
 
 __all__ = [

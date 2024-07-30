@@ -1,5 +1,5 @@
 from typing import Union, List, Dict, Literal, Optional, Iterable
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from openai.types.chat.completion_create_params import Function, FunctionCall
 from openai.types.chat.chat_completion_tool_param import ChatCompletionToolParam
 from openai.types.chat.chat_completion_tool_choice_option_param import ChatCompletionToolChoiceOptionParam
@@ -8,6 +8,7 @@ from zlai.llms import GenerateConfig
 
 __all__ = [
     "Message",
+    "ModelConfig",
     "ChatCompletionRequest",
     "StreamInferenceGenerateConfig",
 ]
@@ -59,3 +60,13 @@ class StreamInferenceGenerateConfig(BaseModel):
             if key in gen_config:
                 _ = gen_config.pop(key)
         return gen_config
+
+
+class ModelConfig(BaseModel):
+    """"""
+    model_config = ConfigDict(protected_namespaces=())
+    model_name: Optional[str] = Field(default=None, description="")
+    model_path: Optional[str] = Field(default=None, description="")
+    model_type: Optional[str] = Field(default=None, description="")
+    load_method: Optional[str] = Field(default=None, description="")
+    max_memory: Optional[Dict[Union[str, int], str]] = Field(default={0: "20GB"}, description="")
