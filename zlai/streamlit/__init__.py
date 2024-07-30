@@ -1,1 +1,1 @@
-from .web import *
+from .streamlit import *
