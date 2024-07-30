@@ -2,7 +2,8 @@ try:
     from colorama import Fore, Style
 except ModuleNotFoundError:
     raise ModuleNotFoundError("pip install colorama")
-from typing import Dict, Optional, Callable, Literal
+from typing import Dict, Union, Optional, Callable, Literal
+from logging import Logger
 
 
 __all__ = ["LoggerMixin"]
@@ -26,7 +27,7 @@ TypePrintColor = Literal['black', 'red', 'green', 'yellow', 'blue', 'cyan', 'mag
 
 class LoggerMixin:
     """"""
-    logger: Optional[Callable]
+    logger: Optional[Union[Logger, Callable]]
     verbose: Optional[bool]
 
     def _logger(

@@ -3,14 +3,18 @@ from pydantic import BaseModel, Field
 from openai.types.chat.completion_create_params import Function, FunctionCall
 from openai.types.chat.chat_completion_tool_param import ChatCompletionToolParam
 from openai.types.chat.chat_completion_tool_choice_option_param import ChatCompletionToolChoiceOptionParam
+from zlai.llms import GenerateConfig
 
 
 __all__ = [
     "Message",
-    "ChatCompletionRequest"
+    "ChatCompletionRequest",
+    "StreamInferenceGenerateConfig",
 ]
 
-ChatModel = Literal["gpt-4-turbo",]
+ChatModel = Literal[
+    "gpt-4-turbo",
+]
 
 
 class Message(BaseModel):
@@ -37,3 +41,21 @@ class ChatCompletionRequest(BaseModel):
     tools: Iterable[ChatCompletionToolParam] = Field(default=None, description="")
     top_logprobs: Optional[int] = Field(default=None, description="")
     top_p: Optional[float] = Field(default=None, description="")
+
+
+class StreamInferenceGenerateConfig(BaseModel):
+    """"""
+    max_length: Optional[int] = 1024
+    max_new_tokens: Optional[int] = None
+    top_k: Optional[int] = 20
+    top_p: Optional[float] = 0.8
+    do_sample: Optional[bool] = True
+    temperature: Optional[float] = 0.8
+    stream: Optional[bool] = False
+
+    def stream_generate_config(self) -> Dict:
+        gen_config = self.model_dump()
+        for key in ['model', 'messages', 'stream']:
+            if key in gen_config:
+                _ = gen_config.pop(key)
+        return gen_config

@@ -1,8 +1,14 @@
 import time
-from typing import Any, List, Dict, Optional, Callable
+from logging import Logger
+from threading import Thread
+from typing import Any, List, Dict, Union, Optional, Callable
+from openai.types.chat.chat_completion_chunk import ChoiceDelta, Choice, ChatCompletionChunk
+from transformers import TextIteratorStreamer
 
+from zlai.llms import GenerateConfig
 from zlai.utils.mixin import LoggerMixin
 from .load import *
+from ..types import *
 
 
 __all__ = [
@@ -22,8 +28,9 @@ class LoadModelCompletion(LoggerMixin):
             model_path: Optional[str] = None,
             models_config: Optional[List[Dict]] = None,
             model_name: Optional[str] = None,
+            generate_config: Optional[StreamInferenceGenerateConfig] = None,
             load_method: Optional[str] = "auto",
-            logger: Optional[Callable] = None,
+            logger: Optional[Union[Logger, Callable]] = None,
             verbose: Optional[bool] = False,
             *args: Any,
             **kwargs: Any,
@@ -31,6 +38,7 @@ class LoadModelCompletion(LoggerMixin):
         self.model_path = model_path
         self.models_config = models_config
         self.model_name = model_name
+        self.generate_config = generate_config
         self.logger = logger
         self.verbose = verbose
         self.load_method = load_method
@@ -98,3 +106,46 @@ class LoadModelCompletion(LoggerMixin):
         self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")
         self._logger(msg=f"[{__class__.__name__}] Completion content: {content}", color="green")
         return content
+
+    def _get_chunk(self, _id: int, choice: Choice) -> ChatCompletionChunk:
+        """"""
+        chunk = ChatCompletionChunk(
+            id=str(_id), object="chat.completion.chunk", created=int(time.time()),
+            model="blah", choices=[choice],
+        )
+        return chunk
+
+    async def stream_completion(self, messages: List[Dict]) -> str:
+        """"""
+        self._logger(msg=f"[{__class__.__name__}] Generating...", color="green")
+        self._logger(msg=f"[{__class__.__name__}] User Question: {messages[-1].get('content')}", color="green")
+        try:
+            streamer = TextIteratorStreamer(self.tokenizer)
+            inputs = self.tokenizer.apply_chat_template(
+                messages, add_generation_prompt=True, return_tensors="pt").to(self.model.device)
+
+            gen_config = {
+                "inputs": inputs, "streamer": streamer,
+                **self.generate_config.stream_generate_config(),
+            }
+            thread = Thread(target=self.model.generate, kwargs=gen_config)
+            thread.start()
+            answer = ""
+            for i, response in enumerate(streamer):
+                if i > 0:
+                    content = response.replace(self.tokenizer.eos_token, '')
+                    answer += content
+                    choice = Choice(index=0, finish_reason=None, delta=ChoiceDelta(content=content))
+                    chunk = self._get_chunk(i - 1, choice)
+                    yield f"data: {chunk.model_dump_json()}\n\n"
+
+            choice = Choice(index=0, finish_reason="stop", delta=ChoiceDelta(content=""))
+            chunk = self._get_chunk(i, choice)
+            yield f"data: {chunk.model_dump_json()}\n\n"
+            self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")
+            self._logger(msg=f"[{__class__.__name__}] Completion content: {answer}", color="green")
+        except Exception as error:
+            choice = Choice(index=0, finish_reason="stop", delta=ChoiceDelta(content=f'Inference ERROR: {error}.'))
+            chunk = self._get_chunk(i, choice)
+            yield f"data: {chunk.model_dump_json()}\n\n"
+            self._logger(msg=f"[{__class__.__name__}] Inference ERROR: {error}.", color="red")

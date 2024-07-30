@@ -1,31 +1,37 @@
+import yaml
 import unittest
-from openai import OpenAI
+from zlai.models.load import *
+from zlai.models.types import *
 
 
-class TestModels(unittest.TestCase):
+class TestLoadModel(unittest.TestCase):
+    def setUp(self):
+        """"""
+        with open('../../models_config.yml', 'r') as f:
+            self.models_config = yaml.load(f, Loader=yaml.FullLoader).get("models_config")
+        self.generate_config = StreamInferenceGenerateConfig()
+        print(self.models_config)
+
     def test_completion(self):
-        """"""
-        client = OpenAI(api_key="1234", base_url="http://127.0.0.1:8000/")
-        response = client.chat.completions.create(
-            model="Qwen2-0.5B-Instruct",
-            messages=[
-                {"role": "user", "content": "Hello"},
-            ],
-            stream=False
+        model_completion = LoadModelCompletion(
+            models_config=self.models_config,
+            model_name="Qwen2-0.5B-Instruct",
+            verbose=True,
         )
-        print(response)
+        content = model_completion.completion(messages=[{"role": "user", "content": "hi"}])
+        print(content)
 
-    def test_completion_stream(self):
-        """"""
-        client = OpenAI(
-            api_key="fake-api-key",
-            base_url="http://localhost:8000"
+    def test_stream_completion(self):
+        model_completion = LoadModelCompletion(
+            models_config=self.models_config,
+            model_name="Qwen2-0.5B-Instruct",
+            generate_config=StreamInferenceGenerateConfig(),
+            verbose=True,
         )
+        response = model_completion.stream_completion(messages=[{"role": "user", "content": "hi"}])
+        answer = ""
+        for content in response:
+            answer += answer
+            print(content)
+        print(answer)
 
-        stream = client.chat.completions.create(
-            model="mock-gpt-model",
-            messages=[{"role": "user", "content": "Say this is a test"}],
-            stream=True,
-        )
-        for chunk in stream:
-            print(chunk)
