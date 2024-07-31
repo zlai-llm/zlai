@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field, ConfigDict
 from openai.types.chat.completion_create_params import Function, FunctionCall
 from openai.types.chat.chat_completion_tool_param import ChatCompletionToolParam
 from openai.types.chat.chat_completion_tool_choice_option_param import ChatCompletionToolChoiceOptionParam
+from zlai.types.messages import TypeMessage
 
 
 __all__ = [
@@ -23,7 +24,7 @@ class Message(BaseModel):
 
 
 class ChatCompletionRequest(BaseModel):
-    messages: List[Message]
+    messages: List[TypeMessage]
     model: Union[str, ChatModel]
     frequency_penalty: Optional[float] = Field(default=None, description="")
     function_call: FunctionCall = Field(default=None, description="")
@@ -37,8 +38,8 @@ class ChatCompletionRequest(BaseModel):
     stop: Union[Optional[str], List[str]] = Field(default=None, description="")
     stream: Optional[bool] = Field(default=False, description="")
     temperature: Optional[float] = Field(default=None, description="")
-    tool_choice: ChatCompletionToolChoiceOptionParam = Field(default=None, description="")
-    tools: Iterable[ChatCompletionToolParam] = Field(default=None, description="")
+    tool_choice: Optional[ChatCompletionToolChoiceOptionParam] = Field(default='none', description="")
+    tools: Optional[Union[Iterable[ChatCompletionToolParam], List[Dict]]] = Field(default=None, description="")
     top_logprobs: Optional[int] = Field(default=None, description="")
     top_p: Optional[float] = Field(default=None, description="")
 
