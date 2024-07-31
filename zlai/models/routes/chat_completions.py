@@ -2,9 +2,8 @@ import os
 import time
 from fastapi import HTTPException
 from starlette.responses import StreamingResponse
-from openai.types.chat.chat_completion import ChatCompletion, Choice
-from openai.types.chat.chat_completion_message import ChatCompletionMessage
 
+from zlai.types import *
 from zlai.models.types.schema import *
 from zlai.utils.config import pkg_config
 from ..completion import *
@@ -47,14 +46,20 @@ async def chat_completions(request: ChatCompletionRequest):
     if request.tools:
         parse_function_call = ParseFunctionCall(content=resp_content, tools=request.tools)
         chat_completion_message = parse_function_call.to_chat_completion_message()
+        if chat_completion_message.content is None and chat_completion_message.tool_calls:
+            finish_reason = "tool_calls"
+        else:
+            finish_reason = "stop"
     else:
         chat_completion_message = ChatCompletionMessage(role="assistant", content=resp_content)
+        finish_reason = "stop"
 
+    choice = Choice(finish_reason=finish_reason, index=0, message=chat_completion_message)
     chat_completion = ChatCompletion(
         id="1337",
         object="chat.completion",
         created=int(time.time()),
         model=request.model,
-        choices=[Choice(finish_reason="stop", index=0, message=chat_completion_message)]
+        choices=[choice]
     )
     return chat_completion

@@ -98,7 +98,7 @@ class ParseFunctionCall:
         tool_calls = [
             ChatCompletionMessageToolCall(
                 id=self.generate_id('call_', 24),
-                function=self.parse(),
+                function=Function.model_validate(self.parse().model_dump()),
                 type="function")
         ]
         response_message = ChatCompletionMessage(

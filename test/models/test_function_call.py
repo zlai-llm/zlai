@@ -1,3 +1,4 @@
+import time
 import unittest
 from zlai.models.completion.glm4 import *
 from zlai.types import *
@@ -62,3 +63,20 @@ class TestParseFunctionCall(unittest.TestCase):
         parse_function = ParseFunctionCall(tools=tools, content=content)
         function_call_params = parse_function.parse()
         print(function_call_params)
+
+    def test_to_chat_completion_message(self):
+        """"""
+        content = """get_current_weather\n{"location": "San Francisco, CA", "format": "celsius"}"""
+        parse_function = ParseFunctionCall(tools=tools, content=content)
+        chat_completion_message = parse_function.to_chat_completion_message()
+        print(chat_completion_message)
+        print(Choice(finish_reason="stop", index=0, message=chat_completion_message))
+        chat_completion = ChatCompletion(
+            id="1337",
+            object="chat.completion",
+            created=int(time.time()),
+            model="request.model",
+            choices=[Choice(finish_reason="stop", index=0, message=chat_completion_message)]
+        )
+        print(chat_completion)
+

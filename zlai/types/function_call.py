@@ -1,8 +1,9 @@
-from typing import Literal, Optional
+from typing import Union, Literal, Optional
 from pydantic import BaseModel
 
 
 __all__ = [
+    "Function",
     "FunctionCall",
     "ChatCompletionMessageToolCall",
     "ChoiceDeltaToolCallFunction",
