@@ -136,8 +136,9 @@ all = [
     "httpx", "selenium",
     "pyspark", "sqlalchemy",
     "pyecharts",
-    "streamlit",
+    "streamlit", "bs4",
     "unstructured",
+    "fastapi", "uvicorn", "transformers", "click", "sentence-transformers", "torch", "accelerate",
 ]
 tiny = ["openai", "zhipuai"]
 api = ["zhipuai", "openai", "dashscope", "tencentcloud-sdk-python", "qianfan"]
