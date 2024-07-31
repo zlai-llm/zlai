@@ -95,12 +95,17 @@ class ParseFunctionCall:
 
     def to_chat_completion_message(self) -> ChatCompletionMessage:
         """"""
-        tool_calls = [
-            ChatCompletionMessageToolCall(
-                id=self.generate_id('call_', 24),
-                function=Function.model_validate(self.parse().model_dump()),
-                type="function")
-        ]
+        function_call = self.parse()
+        if isinstance(function_call, FunctionCall):
+            function = Function.model_validate(function_call.model_dump())
+            tool_calls = [
+                ChatCompletionMessageToolCall(
+                    id=self.generate_id('call_', 24),
+                    function=function,
+                    type="function")
+            ]
+        else:
+            tool_calls = None
         response_message = ChatCompletionMessage(
             role="assistant",
             content=None if tool_calls else self.content,

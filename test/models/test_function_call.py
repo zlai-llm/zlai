@@ -44,6 +44,15 @@ class TestFunctionCall(unittest.TestCase):
             messages=messages, tools=tools, tool_choice="auto")
         print(process_messages.to_dict())
 
+    def test_message_process_no_system(self):
+        """"""
+        messages = [
+            UserMessage(content="你好"),
+        ]
+        process_messages = ProcessMessages(
+            messages=messages, tools=tools, tool_choice="auto")
+        print(process_messages.to_dict())
+
     def test_empty_message(self):
         """"""
         messages = []
@@ -67,6 +76,7 @@ class TestParseFunctionCall(unittest.TestCase):
     def test_to_chat_completion_message(self):
         """"""
         content = """get_current_weather\n{"location": "San Francisco, CA", "format": "celsius"}"""
+        content = """get_current_weather"""
         parse_function = ParseFunctionCall(tools=tools, content=content)
         chat_completion_message = parse_function.to_chat_completion_message()
         print(chat_completion_message)

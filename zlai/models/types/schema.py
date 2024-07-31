@@ -53,6 +53,8 @@ class StreamInferenceGenerateConfig(BaseModel):
     do_sample: Optional[bool] = True
     temperature: Optional[float] = 0.8
     stream: Optional[bool] = False
+    tool_choice: Optional[ChatCompletionToolChoiceOptionParam] = Field(default='none', description="")
+    tools: Optional[Union[Iterable[ChatCompletionToolParam], List[Dict]]] = Field(default=None, description="")
 
     def stream_generate_config(self) -> Dict:
         gen_config = self.model_dump()
