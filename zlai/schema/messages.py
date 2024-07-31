@@ -1,6 +1,6 @@
-from dataclasses import dataclass
-from typing import Union, Dict, List, Any, Optional
+from typing import Union, Dict, List, Any
 from pydantic import BaseModel, Field, field_validator
+from ..types.messages import *
 
 
 __all__ = [
@@ -13,7 +13,6 @@ __all__ = [
     "ObservationPrompt",
     "ImagePrompt",
     "Message",
-    "Messages",
     "SystemMessage",
     "UserMessage",
     "AssistantMessage",
@@ -32,12 +31,6 @@ class Role(BaseModel):
 
 
 role = Role()
-
-
-class Message(BaseModel):
-    """"""
-    role: str = Field(default="", description="角色")
-    content: str = Field(default="", description="对话内容")
 
 
 class SystemPrompt(Message):
@@ -199,85 +192,3 @@ class Tools(BaseModel):
         "properties": {},
         "required": ['symbol'],
     }
-
-
-class Messages(BaseModel):
-    """"""
-    messages: List[Message] = Field(default=[Message()], description="对话内容")
-
-
-class SystemMessage(Message):
-    """"""
-    role: str = Field("system", description="角色")
-    content: str = Field(..., description="对话内容")
-
-    @field_validator("role")
-    def validate_role(cls, role):
-        if role not in ["system"]:
-            raise ValueError(f"role must in ['system'], your role: `{role}`.")
-        return role
-
-
-class ToolsMessage(Message):
-    """"""
-    role: str = Field(default="tool", description="角色")
-    content: str = Field(default="", description="对话内容")
-    tool_call_id: Optional[Union[int, str, dict]] = Field(default=None, description="id")
-
-    @field_validator("role")
-    def validate_role(cls, role):
-        if role not in ["tool"]:
-            raise ValueError(f"role must in ['tool'], your role: `{role}`.")
-        return role
-
-
-class ChatMessage(Message):
-    """
-    desc: 对话格式
-    """
-    role: str = Field(..., description="角色")
-    content: str = Field(..., description="对话内容")
-
-    @field_validator("role")
-    def validate_role(cls, role):
-        if role not in ["user", "assistant", "observation"]:
-            raise ValueError(f"role must in ['user', 'assistant', 'observation'], your role: `{role}`.")
-        return role
-
-
-class ObservationMessage(Message):
-    """
-    desc: 对话格式
-    """
-    role: str = Field("observation", description="角色")
-    content: str = Field(..., description="对话内容")
-
-    @field_validator("role")
-    def validate_role(cls, role):
-        if role not in ["observation"]:
-            raise ValueError(f"role must in ['observation'], your role: `{role}`.")
-        return role
-
-
-class UserMessage(Message):
-    """"""
-    role: str = Field("user", description="角色")
-    content: str = Field(..., description="对话内容")
-
-    @field_validator("role")
-    def validate_role(cls, role):
-        if role not in ["user"]:
-            raise ValueError(f"role must in ['user'], your role: `{role}`.")
-        return role
-
-
-class AssistantMessage(Message):
-    """"""
-    role: str = Field("assistant", description="角色")
-    content: str = Field(..., description="对话内容")
-
-    @field_validator("role")
-    def validate_role(cls, role):
-        if role not in ["assistant",]:
-            raise ValueError(f"role must in ['assistant'], your role: `{role}`.")
-        return role
