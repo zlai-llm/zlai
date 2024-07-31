@@ -157,4 +157,5 @@ local = ["fastapi", "uvicorn", "transformers", "click", "sentence-transformers",
 
 [tool.poetry.scripts]
 zlai_models = "zlai.models.app:models"
-zlai_pages = "zlai.streamlit.web.run:run_streamlit_app"
+zlai_agent = "zlai.streamlit.web.run:run_streamlit_app"
+zlai_chat = "zlai.streamlit.web.run:run_streamlit_app"
