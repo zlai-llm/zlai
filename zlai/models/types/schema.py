@@ -1,16 +1,17 @@
-from typing import Union, List, Dict, Literal, Optional, Iterable
+from typing import Type, List, Dict, Literal, Optional, Iterable
 from pydantic import BaseModel, Field, ConfigDict
 from openai.types.chat.completion_create_params import Function, FunctionCall
 from openai.types.chat.chat_completion_tool_param import ChatCompletionToolParam
 from openai.types.chat.chat_completion_tool_choice_option_param import ChatCompletionToolChoiceOptionParam
 from zlai.types.messages import TypeMessage
+from .generate_config import *
 
 
 __all__ = [
     "Message",
     "ModelConfig",
     "ChatCompletionRequest",
-    "StreamInferenceGenerateConfig",
+    "ToolsConfig",
 ]
 
 ChatModel = Literal[
@@ -44,24 +45,10 @@ class ChatCompletionRequest(BaseModel):
     top_p: Optional[float] = Field(default=None, description="")
 
 
-class StreamInferenceGenerateConfig(BaseModel):
+class ToolsConfig(BaseModel):
     """"""
-    max_length: Optional[int] = 1024
-    max_new_tokens: Optional[int] = None
-    top_k: Optional[int] = 20
-    top_p: Optional[float] = 0.8
-    do_sample: Optional[bool] = True
-    temperature: Optional[float] = 0.8
-    stream: Optional[bool] = False
     tool_choice: Optional[ChatCompletionToolChoiceOptionParam] = Field(default='none', description="")
     tools: Optional[Union[Iterable[ChatCompletionToolParam], List[Dict]]] = Field(default=None, description="")
-
-    def stream_generate_config(self) -> Dict:
-        gen_config = self.model_dump()
-        for key in ['model', 'messages', 'stream']:
-            if key in gen_config:
-                _ = gen_config.pop(key)
-        return gen_config
 
 
 class ModelConfig(BaseModel):
@@ -72,3 +59,14 @@ class ModelConfig(BaseModel):
     model_type: Optional[str] = Field(default=None, description="")
     load_method: Optional[str] = Field(default=None, description="")
     max_memory: Optional[Dict[Union[str, int], str]] = Field(default={0: "20GB"}, description="")
+    generate_method: Optional[Union[str, Type[TypeInferenceGenerateConfig]]] = Field(default=None, description="")
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        if isinstance(self.generate_method, str):
+            generate_config_method = inference_generate_config_mapping.get(self.generate_method)
+            if generate_config_method is not None:
+                self.generate_method = generate_config_method
+
+        if self.generate_method is None or isinstance(self.generate_method, str):
+            self.generate_method = InferenceGenerateConfig
