@@ -11,8 +11,6 @@ class TestModels(unittest.TestCase):
             model="Qwen2-0.5B-Instruct",
             messages=[
                 UserMessage(content="Hello").model_dump(),
-                UserMessage(content="Hello").model_dump(),
-                # {"role": "user", "content": "Hello"},
             ],
             stream=False
         )
