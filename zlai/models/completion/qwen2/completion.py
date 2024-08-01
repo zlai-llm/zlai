@@ -1,5 +1,6 @@
 from typing import List
 from zlai.types.messages import TypeMessage
+from ...utils import trans_messages
 
 
 __all__ = [
@@ -13,7 +14,7 @@ def completion_qwen_2(
         messages: List[TypeMessage],
 ) -> str:
     """"""
-    messages = [message.model_dump() for message in messages]
+    messages = trans_messages(messages=messages)
     text = tokenizer.apply_chat_template(
         messages,
         tokenize=False,
