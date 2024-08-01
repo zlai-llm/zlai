@@ -162,10 +162,13 @@ class ProcessMessages:
         if self.tool_choice != "none":
             tools = self.filter_tools(tools=self.tools, tool_choice=self.tool_choice)
             new_system_message = SystemToolsMessage(content=origin_system_content, tools=tools)
+            if new_system_message.content or new_system_message.tools:
+                self.processed_messages.append(new_system_message)
         else:
             new_system_message = SystemMessage(content=origin_system_content)
+            if new_system_message.content:
+                self.processed_messages.append(new_system_message)
 
-        self.processed_messages.append(new_system_message)
         if isinstance(self.tool_choice, dict) and self.tools:
             self.processed_messages.append(
                 AssistantWithMetadataMessage(
@@ -177,7 +180,9 @@ class ProcessMessages:
         """"""
         self._add_system_and_tools()
         for message in self.messages:
-            if message.role == "function":
+            if isinstance(message, ImageMessage):
+                self.processed_messages.append(message)
+            elif message.role == "function":
                 self.processed_messages.append(FunctionMessage(content=message.content))
             elif message.role == "tool":
                 self.processed_messages.append(ToolMessage(content=message.content))

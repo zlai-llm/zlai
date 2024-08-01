@@ -30,8 +30,13 @@ def get_device_max_memory(max_memory: Optional[Dict] = None) -> Dict:
 def trans_messages(messages: List[TypeMessage]) -> List[Dict]:
     """"""
     _messages = []
-    for message in messages:
+    image_idx = []
+    for i, message in enumerate(messages):
         if isinstance(message, ImageMessage):
             message.split_image()
+            image_idx.append(i)
         _messages.append(message.model_dump())
+    if len(image_idx) > 1:
+        for _id in image_idx[:-1]:
+            _ = _messages[_id].pop("image")
     return _messages

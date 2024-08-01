@@ -126,12 +126,8 @@ class ImageMessage(Message):
         """"""
         response = requests.get(url)
         if response.status_code == 200:
-            filename = url.split('/')[-1]
-            self._validate_image_path()
-            file_path = os.path.join(pkg_config.cache_path, "image", filename)
-            with open(file_path, 'wb') as f:
-                f.write(response.content)
-            self.read_image(path=file_path)
+            image_base64 = base64.b64encode(response.content)
+            self.image = image_base64.decode('utf-8')
 
     def read_image(self, path: str):
         """"""
