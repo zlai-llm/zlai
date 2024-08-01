@@ -1,6 +1,6 @@
 import unittest
 from openai import OpenAI
-from zlai.types import ImageMessage
+from zlai.types import ImageMessage, UserMessage
 
 
 class TestModels(unittest.TestCase):
@@ -10,7 +10,9 @@ class TestModels(unittest.TestCase):
         response = client.chat.completions.create(
             model="Qwen2-0.5B-Instruct",
             messages=[
-                {"role": "user", "content": "Hello"},
+                UserMessage(content="Hello").model_dump(),
+                UserMessage(content="Hello").model_dump(),
+                # {"role": "user", "content": "Hello"},
             ],
             stream=False
         )
@@ -41,6 +43,7 @@ class TestModels(unittest.TestCase):
         response = client.chat.completions.create(
             model="Qwen2-0.5B-Instruct",
             messages=[
+                UserMessage(content="介绍图片"),
                 ImageMessage(content="介绍图片").add_image(url="https://picx.zhimg.com/80/v2-0aea2c883dc1c8b8ca566eb8a8b38c70_720w.png")
             ],
             stream=False

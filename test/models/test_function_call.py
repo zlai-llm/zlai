@@ -1,6 +1,7 @@
 import time
 import unittest
 from zlai.models.completion.glm4 import *
+from zlai.models.utils import trans_messages
 from zlai.types import *
 
 
@@ -59,6 +60,19 @@ class TestFunctionCall(unittest.TestCase):
         process_messages = ProcessMessages(
             messages=messages, tools=tools, tool_choice="auto")
         print(process_messages.to_dict())
+
+    def test_image_message(self):
+        """"""
+        url = "https://picx.zhimg.com/80/v2-0aea2c883dc1c8b8ca566eb8a8b38c70_720w.png"
+        messages = [
+            UserMessage(content="你好"),
+            ImageMessage(content="介绍图片").add_image(url=url),
+        ]
+        process_messages = ProcessMessages(
+            messages=messages, tools=None, tool_choice="none")
+        messages = process_messages.to_messages()
+        messages = trans_messages(messages=messages)
+        print(messages)
 
     def test_function_call(self):
         """"""

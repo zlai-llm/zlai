@@ -1,7 +1,5 @@
 import unittest
-from typing import Optional
-from pydantic import BaseModel, Field
-from zlai.types.messages import Message, ImageMessage, UserMessage
+from zlai.types.messages import ImageMessage
 
 
 class TestImageMessage(unittest.TestCase):
@@ -13,9 +11,6 @@ class TestImageMessage(unittest.TestCase):
 
     def test_image_message_path(self):
         """"""
-        import base64
-        with open(self.path, 'rb') as image_file:
-            image_base64 = base64.b64encode(image_file.read())
         image_message = ImageMessage(content="介绍这个图片").add_image(path=self.path)
         for key, val in image_message.model_dump().items():
             print(key, len(val))
