@@ -4,8 +4,9 @@ import base64
 import requests
 from PIL import Image
 from io import BytesIO
+from PIL.Image import Image as TypeImage
 from typing import List, Dict, Union, Literal, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from zlai.utils import pkg_config
 from .function_call import *
 
@@ -93,8 +94,9 @@ class ToolsMessage(Message):
 
 class ImageMessage(Message):
     """"""
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     role: Optional[str] = Field(default="user", description="角色")
-    image: Optional[str] = Field(default=None, description="图片")
+    image: Optional[Union[str, TypeImage]] = Field(default=None, description="图片")
 
     def parse_content(self):
         """"""
@@ -163,7 +165,8 @@ class ImageMessage(Message):
         pattern = r"<image: (.*?)>"
         match = re.search(pattern, self.content)
         if match:
-            self.image = match.group(1)
+            image_bytes = base64.b64decode(match.group(1))
+            self.image = Image.open(BytesIO(image_bytes)).convert('RGB')
             self.content = re.sub(pattern, "", self.content)
         return self
 

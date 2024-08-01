@@ -27,6 +27,3 @@ def completion_qwen_2(
     ]
     content = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
     return content
-
-
-

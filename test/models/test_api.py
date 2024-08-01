@@ -1,5 +1,6 @@
 import unittest
 from openai import OpenAI
+from zlai.types import ImageMessage
 
 
 class TestModels(unittest.TestCase):
@@ -33,3 +34,16 @@ class TestModels(unittest.TestCase):
             answer += content
             print(content)
         print(answer)
+
+    def test_image_message(self):
+        """"""
+        client = OpenAI(api_key="1234", base_url="http://127.0.0.1:8000/")
+        response = client.chat.completions.create(
+            model="Qwen2-0.5B-Instruct",
+            messages=[
+                ImageMessage(content="介绍图片").add_image(url="https://picx.zhimg.com/80/v2-0aea2c883dc1c8b8ca566eb8a8b38c70_720w.png")
+            ],
+            stream=False
+        )
+        print(response)
+

@@ -5,7 +5,7 @@ from typing import Any, List, Dict, Union, Optional, Callable
 from openai.types.chat.chat_completion_chunk import ChoiceDelta, Choice, ChatCompletionChunk
 from transformers import TextIteratorStreamer
 
-from zlai.types.messages import TypeMessage
+from zlai.types.messages import TypeMessage, ImageMessage
 from zlai.utils.mixin import LoggerMixin
 from ..types import *
 from .load import *
@@ -69,6 +69,13 @@ class LoadModelCompletion(LoggerMixin):
             self.model_path = self.model_config.get("model_path")
             self.load_method = self.model_config.get("load_method")
 
+    def _get_user_content(self, messages: List[TypeMessage]) -> str:
+        """"""
+        user_message = messages[-1]
+        if isinstance(user_message, ImageMessage):
+            user_message.split_image()
+        return user_message.content
+
     def load_model(self):
         """"""
         self._logger(msg=f"[{__class__.__name__}] Loading model...", color="blue")
@@ -100,7 +107,7 @@ class LoadModelCompletion(LoggerMixin):
     def completion(self, messages: List[TypeMessage]) -> str:
         """"""
         self._logger(msg=f"[{__class__.__name__}] Generating...", color="green")
-        self._logger(msg=f"[{__class__.__name__}] User Question: {messages[-1].content}", color="green")
+        self._logger(msg=f"[{__class__.__name__}] User Question: {self._get_user_content(messages=messages)}", color="green")
         if self.model_name in self.qwen_2_completion_model:
             content = completion_qwen_2(model=self.model, tokenizer=self.tokenizer, messages=messages)
         elif self.model_name in self.glm_4_completion_model:
