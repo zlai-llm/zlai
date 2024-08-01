@@ -1,5 +1,12 @@
+import os
+import re
+import base64
+import requests
+from PIL import Image
+from io import BytesIO
 from typing import List, Dict, Union, Literal, Optional
 from pydantic import BaseModel, Field
+from zlai.utils import pkg_config
 from .function_call import *
 
 
@@ -15,6 +22,7 @@ __all__ = [
     "FunctionMessage",
     "ToolMessage",
     "ToolsMessage",
+    "ImageMessage",
     "ChatCompletionMessage",
     "TypeMessage",
 ]
@@ -83,6 +91,83 @@ class ToolsMessage(Message):
     tool_call_id: Optional[Union[int, str, dict]] = Field(default=None, description="id")
 
 
+class ImageMessage(Message):
+    """"""
+    role: Optional[str] = Field(default="user", description="角色")
+    image: Optional[str] = Field(default=None, description="图片")
+
+    def parse_content(self):
+        """"""
+        from bs4 import BeautifulSoup
+        if self.content:
+            soup = BeautifulSoup(self.content, 'html.parser')
+            img_tags = soup.find_all('img')
+            if img_tags:
+                self.image = img_tags[-1].get('src')
+                self.content = soup.get_text()
+
+    def load_path(self, ) -> bool:
+        """"""
+        if self.image is not None and os.path.exists(self.image):
+            self.read_image(path=self.image)
+            return True
+        else:
+            return False
+
+    def _validate_image_path(self):
+        """"""
+        _image_path = os.path.join(pkg_config.cache_path, "image")
+        if not os.path.exists(_image_path):
+            os.makedirs(_image_path)
+
+    def load_url(self, url: str):
+        """"""
+        response = requests.get(url)
+        if response.status_code == 200:
+            filename = url.split('/')[-1]
+            self._validate_image_path()
+            file_path = os.path.join(pkg_config.cache_path, "image", filename)
+            with open(file_path, 'wb') as f:
+                f.write(response.content)
+            self.read_image(path=file_path)
+
+    def read_image(self, path: str):
+        """"""
+        with open(path, 'rb') as image_file:
+            image_base64 = base64.b64encode(image_file.read())
+        self.image = image_base64.decode('utf-8')
+
+    def write_image(self, data: str, path: str):
+        """"""
+        binary_data = base64.b64decode(data)
+        image = Image.open(BytesIO(binary_data))
+        image.save(path)
+
+    def add_image(
+            self,
+            path: Optional[str] = None,
+            url: Optional[str] = None,
+    ):
+        """"""
+        if path is not None:
+            self.read_image(path=path)
+        elif url is not None:
+            self.load_url(url=url)
+        else:
+            raise ValueError("Either path or url must be provided.")
+        self.content = f"{self.content}<image: {self.image}>"
+        return self
+
+    def split_image(self):
+        """"""
+        pattern = r"<image: (.*?)>"
+        match = re.search(pattern, self.content)
+        if match:
+            self.image = match.group(1)
+            self.content = re.sub(pattern, "", self.content)
+        return self
+
+
 class ChatCompletionMessage(BaseModel):
     """"""
     role: Literal["user", "assistant", "system", "tool"] = Field(..., description="""The role of the author of this message.""")
@@ -109,5 +194,6 @@ TypeMessage = Union[
     FunctionMessage,
     ToolMessage,
     ToolsMessage,
+    ImageMessage,
     ChatCompletionMessage,
 ]
