@@ -1,13 +1,17 @@
 import yaml
+import time
 import torch
-from typing import List, Dict, Optional
+from typing import List, Dict, Literal, Optional
 from zlai.types import TypeMessage, ImageMessage
+from openai.types.chat.chat_completion_chunk import Choice, ChoiceDelta, ChatCompletionChunk
 
 
 __all__ = [
     "load_model_config",
     "get_device_max_memory",
     "trans_messages",
+    "stream_chunk",
+    "stream_message_chunk",
 ]
 
 
@@ -40,3 +44,23 @@ def trans_messages(messages: List[TypeMessage]) -> List[Dict]:
         for _id in image_idx[:-1]:
             _ = _messages[_id].pop("image")
     return _messages
+
+
+def stream_chunk(_id: int, choice: Choice) -> ChatCompletionChunk:
+    """"""
+    chunk = ChatCompletionChunk(
+        id=str(_id), object="chat.completion.chunk", created=int(time.time()),
+        model="blah", choices=[choice],
+    )
+    return chunk
+
+
+def stream_message_chunk(
+        content: str,
+        finish_reason: Optional[Literal["stop", "length", "tool_calls", "content_filter", "function_call"]] = None,
+        _id: Optional[int] = 0,
+) -> ChatCompletionChunk:
+    """"""
+    choice = Choice(index=0, finish_reason=finish_reason, delta=ChoiceDelta(content=content))
+    chunk = stream_chunk(_id, choice)
+    return chunk
