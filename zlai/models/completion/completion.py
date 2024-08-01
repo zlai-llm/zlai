@@ -1,13 +1,11 @@
 import time
 from logging import Logger
-from threading import Thread
-from typing import Any, List, Dict, Union, Optional, Callable
-from openai.types.chat.chat_completion_chunk import ChoiceDelta, Choice, ChatCompletionChunk
-from transformers import TextIteratorStreamer
+from typing import Any, List, Dict, Iterable, Optional, Callable
 
 from zlai.types.messages import TypeMessage, ImageMessage
 from zlai.utils.mixin import LoggerMixin
 from ..types import *
+from ..utils import *
 from .load import *
 from .glm4 import *
 from .qwen2 import *
@@ -30,7 +28,8 @@ class LoadModelCompletion(LoggerMixin):
             model_path: Optional[str] = None,
             models_config: Optional[List[Dict]] = None,
             model_name: Optional[str] = None,
-            generate_config: Optional[StreamInferenceGenerateConfig] = None,
+            generate_config: Optional[TypeInferenceGenerateConfig] = None,
+            tools_config: Optional[ToolsConfig] = None,
             load_method: Optional[str] = "auto",
             logger: Optional[Union[Logger, Callable]] = None,
             verbose: Optional[bool] = False,
@@ -41,6 +40,7 @@ class LoadModelCompletion(LoggerMixin):
         self.models_config = models_config
         self.model_name = model_name
         self.generate_config = generate_config
+        self.tools_config = tools_config
         self.logger = logger
         self.verbose = verbose
         self.load_method = load_method
@@ -109,57 +109,59 @@ class LoadModelCompletion(LoggerMixin):
         self._logger(msg=f"[{__class__.__name__}] Generating...", color="green")
         self._logger(msg=f"[{__class__.__name__}] User Question: {self._get_user_content(messages=messages)}", color="green")
         if self.model_name in self.qwen_2_completion_model:
-            content = completion_qwen_2(model=self.model, tokenizer=self.tokenizer, messages=messages)
+            content = completion_qwen_2(
+                model=self.model, tokenizer=self.tokenizer, messages=messages,
+                generate_config=self.generate_config,
+            )
         elif self.model_name in self.glm_4_completion_model:
             content = completion_glm_4(
                 model=self.model, tokenizer=self.tokenizer, messages=messages,
-                validate=True, tools=self.generate_config.tools,
-                tool_choice=self.generate_config.tool_choice)
+                validate=True, tools=self.tools_config.tools,
+                tool_choice=self.tools_config.tool_choice)
         else:
             content = f"Not find completion method: {self.model_name}"
         self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")
         self._logger(msg=f"[{__class__.__name__}] Completion content: {content}", color="green")
         return content
 
-    def _get_chunk(self, _id: int, choice: Choice) -> ChatCompletionChunk:
-        """"""
-        chunk = ChatCompletionChunk(
-            id=str(_id), object="chat.completion.chunk", created=int(time.time()),
-            model="blah", choices=[choice],
-        )
-        return chunk
-
-    async def stream_completion(self, messages: List[TypeMessage]) -> str:
+    async def stream_completion(self, messages: List[TypeMessage]) -> Iterable[str]:
         """"""
         self._logger(msg=f"[{__class__.__name__}] Generating...", color="green")
         self._logger(msg=f"[{__class__.__name__}] User Question: {messages[-1].content}", color="green")
         try:
-            streamer = TextIteratorStreamer(self.tokenizer)
-            inputs = self.tokenizer.apply_chat_template(
-                messages, add_generation_prompt=True, return_tensors="pt").to(self.model.device)
+            if self.model_name in self.qwen_2_completion_model:
+                streamer = stream_completion_qwen_2(
+                        model=self.model, tokenizer=self.tokenizer,
+                        messages=messages, generate_config=self.generate_config,
+                )
+            elif self.model_name in self.glm_4_completion_model:
+                streamer = stream_completion_glm_4(
+                        model=self.model, tokenizer=self.tokenizer,
+                        messages=messages, generate_config=self.generate_config,
+                        validate=True, tools=self.tools_config.tools,
+                        tool_choice=self.tools_config.tool_choice,
+                )
+            else:
+                streamer = None
+                content = f"Not find stream completion method: {self.model_name}"
+                chunk = stream_message_chunk(content=content)
+                yield chunk
 
-            gen_config = {
-                "inputs": inputs, "streamer": streamer,
-                **self.generate_config.stream_generate_config(),
-            }
-            thread = Thread(target=self.model.generate, kwargs=gen_config)
-            thread.start()
-            answer = ""
-            for i, response in enumerate(streamer):
-                if i > 0:
-                    content = response.replace(self.tokenizer.eos_token, '')
-                    answer += content
-                    choice = Choice(index=0, finish_reason=None, delta=ChoiceDelta(content=content))
-                    chunk = self._get_chunk(i - 1, choice)
+            if streamer is not None:
+                i = 0
+                answer = ""
+                for delta_content in streamer:
+                    chunk = stream_message_chunk(content=delta_content, finish_reason=None, _id=i)
+                    answer += delta_content
+                    i += 1
                     yield f"data: {chunk.model_dump_json()}\n\n"
+                chunk = stream_message_chunk(content="", finish_reason="stop", _id=i)
+                yield f"data: {chunk.model_dump_json()}\n\n"
+                self._logger(msg=f"[{__class__.__name__}] Completion content: {answer}", color="green")
 
-            choice = Choice(index=0, finish_reason="stop", delta=ChoiceDelta(content=""))
-            chunk = self._get_chunk(i, choice)
-            yield f"data: {chunk.model_dump_json()}\n\n"
             self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")
-            self._logger(msg=f"[{__class__.__name__}] Completion content: {answer}", color="green")
+
         except Exception as error:
-            choice = Choice(index=0, finish_reason="stop", delta=ChoiceDelta(content=f'Inference ERROR: {error}.'))
-            chunk = self._get_chunk(i, choice)
+            chunk = stream_message_chunk(content=f'Inference ERROR: {error}.', finish_reason="stop", _id=0)
             yield f"data: {chunk.model_dump_json()}\n\n"
             self._logger(msg=f"[{__class__.__name__}] Inference ERROR: {error}.", color="red")
