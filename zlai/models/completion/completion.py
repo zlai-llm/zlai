@@ -2,8 +2,9 @@ import time
 from logging import Logger
 from typing import Any, List, Dict, Iterable, Optional, Callable
 
-from zlai.types.messages import TypeMessage, ImageMessage, ChatCompletionMessage
-from zlai.types.chat_completion import Choice, ChatCompletion
+from zlai.types import *
+from zlai.types.chat_completion import Choice as ChatChoice
+from zlai.types.chat_completion_chunk import Choice as ChunkChoice
 from zlai.utils.mixin import LoggerMixin
 from ..types import *
 from ..utils import *
@@ -105,6 +106,45 @@ class LoadModelCompletion(LoggerMixin):
         vectors = self.model.encode(text, normalize_embeddings=True).to_list()
         return vectors
 
+    def parse_tools_call(self, content: str) -> ChatCompletion:
+        """"""
+        if self.tools_config.tools:
+            parse_function_call = ParseFunctionCall(content=content, tools=self.tools_config.tools)
+            chat_completion_message = parse_function_call.to_chat_completion_message()
+            if chat_completion_message.content is None and chat_completion_message.tool_calls:
+                finish_reason = "tool_calls"
+            else:
+                finish_reason = "stop"
+        else:
+            chat_completion_message = ChatCompletionMessage(role="assistant", content=content)
+            finish_reason = "stop"
+
+        choice = ChatChoice(finish_reason=finish_reason, index=0, message=chat_completion_message)
+        chat_completion = ChatCompletion(
+            id=generate_id(prefix="chat", k=16), created=int(time.time()), model=self.model_name, choices=[choice]
+        )
+        return chat_completion
+
+    def parse_stream_tools_call(self, content: str, _id: str) -> ChatCompletionChunk:
+        """"""
+        if self.tools_config.tools:
+            parse_function_call = ParseFunctionCall(content=content, tools=self.tools_config.tools)
+            chat_completion_message = parse_function_call.to_chat_completion_message()
+            choice_delta = ChoiceDelta.model_validate(chat_completion_message.model_dump())
+            if choice_delta.content is None and choice_delta.tool_calls:
+                finish_reason = "tool_calls"
+            else:
+                finish_reason = "stop"
+        else:
+            choice_delta = ChoiceDelta(role="assistant", content="")
+            finish_reason = "stop"
+
+        chunk_choice = ChunkChoice(finish_reason=finish_reason, index=0, delta=choice_delta)
+        chat_completion_chunk = ChatCompletionChunk(
+            id=_id, created=int(time.time()), model=self.model_name, choices=[chunk_choice]
+        )
+        return chat_completion_chunk
+
     def completion(self, messages: List[TypeMessage]) -> ChatCompletion:
         """"""
         self._logger(msg=f"[{__class__.__name__}] Generating...", color="green")
@@ -125,27 +165,14 @@ class LoadModelCompletion(LoggerMixin):
         self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")
         self._logger(msg=f"[{__class__.__name__}] Completion content: {content}", color="green")
 
-        if self.tools_config.tools:
-            parse_function_call = ParseFunctionCall(content=content, tools=self.tools_config.tools)
-            chat_completion_message = parse_function_call.to_chat_completion_message()
-            if chat_completion_message.content is None and chat_completion_message.tool_calls:
-                finish_reason = "tool_calls"
-            else:
-                finish_reason = "stop"
-        else:
-            chat_completion_message = ChatCompletionMessage(role="assistant", content=content)
-            finish_reason = "stop"
-
-        choice = Choice(finish_reason=finish_reason, index=0, message=chat_completion_message)
-        chat_completion = ChatCompletion(
-            id=generate_id(prefix="chat", k=16), created=int(time.time()), model=self.model_name, choices=[choice]
-        )
+        chat_completion = self.parse_tools_call(content=content)
         return chat_completion
 
     async def stream_completion(self, messages: List[TypeMessage]) -> Iterable[str]:
         """"""
         self._logger(msg=f"[{__class__.__name__}] Generating...", color="green")
         self._logger(msg=f"[{__class__.__name__}] User Question: {messages[-1].content}", color="green")
+        _id = generate_id(prefix="chunk-chat", k=16)
         try:
             if self.model_name in self.qwen_2_completion_model:
                 streamer = stream_completion_qwen_2(
@@ -162,24 +189,24 @@ class LoadModelCompletion(LoggerMixin):
             else:
                 streamer = None
                 content = f"Not find stream completion method: {self.model_name}"
-                chunk = stream_message_chunk(content=content)
+                chunk = stream_message_chunk(content=content, finish_reason="stop", model=self.model_name, _id=_id)
                 yield chunk
 
             if streamer is not None:
-                i = 0
                 answer = ""
                 for delta_content in streamer:
-                    chunk = stream_message_chunk(content=delta_content, finish_reason=None, _id=i)
+                    chunk = stream_message_chunk(
+                        content=delta_content, finish_reason=None, model=self.model_name, _id=_id)
                     answer += delta_content
-                    i += 1
                     yield f"data: {chunk.model_dump_json()}\n\n"
-                chunk = stream_message_chunk(content="", finish_reason="stop", _id=i)
+                chunk = self.parse_stream_tools_call(content=answer, _id=_id)
                 yield f"data: {chunk.model_dump_json()}\n\n"
                 self._logger(msg=f"[{__class__.__name__}] Completion content: {answer}", color="green")
 
             self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")
 
         except Exception as error:
-            chunk = stream_message_chunk(content=f'Inference ERROR: {error}.', finish_reason="stop", _id=0)
+            chunk = stream_message_chunk(
+                content=f'Inference ERROR: {error}.', finish_reason="stop", model=self.model_name, _id=_id)
             yield f"data: {chunk.model_dump_json()}\n\n"
             self._logger(msg=f"[{__class__.__name__}] Inference ERROR: {error}.", color="red")

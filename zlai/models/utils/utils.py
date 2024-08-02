@@ -5,7 +5,8 @@ import string
 import random
 from typing import List, Dict, Literal, Optional
 from zlai.types import TypeMessage, ImageMessage
-from openai.types.chat.chat_completion_chunk import Choice, ChoiceDelta, ChatCompletionChunk
+from zlai.types.chat_completion_chunk import Choice as ChunkChoice
+from zlai.types.chat_completion_chunk import ChoiceDelta, ChatCompletionChunk
 
 
 __all__ = [
@@ -49,23 +50,24 @@ def trans_messages(messages: List[TypeMessage]) -> List[Dict]:
     return _messages
 
 
-def stream_chunk(_id: int, choice: Choice) -> ChatCompletionChunk:
+def stream_chunk(_id: str, choice: ChunkChoice, model: str) -> ChatCompletionChunk:
     """"""
     chunk = ChatCompletionChunk(
-        id=str(_id), object="chat.completion.chunk", created=int(time.time()),
-        model="blah", choices=[choice],
+        id=_id, object="chat.completion.chunk", created=int(time.time()),
+        model=model, choices=[choice],
     )
     return chunk
 
 
 def stream_message_chunk(
         content: str,
-        finish_reason: Optional[Literal["stop", "length", "tool_calls", "content_filter", "function_call"]] = None,
-        _id: Optional[int] = 0,
+        finish_reason: Optional[Literal["stop", "length", "tool_calls", "content_filter", "function_call"]],
+        model: Optional[str],
+        _id: Optional[str],
 ) -> ChatCompletionChunk:
     """"""
-    choice = Choice(index=0, finish_reason=finish_reason, delta=ChoiceDelta(content=content))
-    chunk = stream_chunk(_id, choice)
+    choice = ChunkChoice(index=0, finish_reason=finish_reason, delta=ChoiceDelta(content=content))
+    chunk = stream_chunk(_id, choice, model=model)
     return chunk
 
 
