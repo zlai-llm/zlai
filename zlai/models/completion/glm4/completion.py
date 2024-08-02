@@ -14,6 +14,20 @@ __all__ = [
 ]
 
 
+def glm_4_messages_process(
+        messages: List[TypeMessage],
+        validate: bool = False,
+        tools: Optional[List[Dict]] = None,
+        tool_choice: Optional[Union[dict, str]] = "none",
+) -> List[Dict]:
+    """"""
+    if validate and tools is not None and tool_choice != 'none':
+        process_messages = ProcessMessages(messages, tools, tool_choice)
+        messages = process_messages.to_messages()
+    messages = trans_messages(messages=messages)
+    return messages
+
+
 def completion_glm_4(
         model,
         tokenizer,
@@ -24,11 +38,7 @@ def completion_glm_4(
         generate_config: Optional[TypeInferenceGenerateConfig] = None,
 ) -> str:
     """"""
-    if validate and tools is not None and tool_choice != 'none':
-        process_messages = ProcessMessages(messages, tools, tool_choice)
-        messages = process_messages.to_messages()
-
-    messages = trans_messages(messages=messages)
+    messages = glm_4_messages_process(messages, validate, tools, tool_choice)
     inputs = tokenizer.apply_chat_template(
         messages, add_generation_prompt=True, tokenize=True, return_tensors="pt", return_dict=True
     ).to(model.device)
@@ -49,17 +59,19 @@ def stream_completion_glm_4(
         generate_config: Optional[TypeInferenceGenerateConfig] = None,
 ):
     """"""
+    messages = glm_4_messages_process(messages, validate, tools, tool_choice)
+
     streamer = TextIteratorStreamer(tokenizer)
     inputs = tokenizer.apply_chat_template(
         messages, add_generation_prompt=True, return_tensors="pt").to(model.device)
+    gen_config = {"inputs": inputs, "streamer": streamer, **generate_config.gen_kwargs()}
 
-    gen_config = {
-        "inputs": inputs, "streamer": streamer,
-        **generate_config.gen_kwargs(),
-    }
     thread = Thread(target=model.generate, kwargs=gen_config)
     thread.start()
+    output_mark = False
     for i, response in enumerate(streamer):
-        if i > 0:
-            content = response.replace(tokenizer.eos_token, '')
+        content = str(response)
+        if content.strip() == "<|assistant|>":
+            output_mark = True
+        if output_mark and content.strip() not in tokenizer.special_tokens_map.get("additional_special_tokens", []):
             yield content

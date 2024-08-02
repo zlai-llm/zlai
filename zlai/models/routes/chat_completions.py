@@ -7,7 +7,7 @@ from zlai.types import *
 from zlai.models.types.schema import *
 from zlai.utils.config import pkg_config
 from ..completion import *
-from ..utils import load_model_config
+from ..utils import load_model_config, generate_id
 from ...models import app, logger
 from ..completion.glm4.utils import ParseFunctionCall
 
@@ -65,24 +65,19 @@ async def chat_completions(request: ChatCompletionRequest):
                 media_type="application/x-ndjson")
         else:
             resp_content = model_completion.completion(messages=request.messages)
+            if request.tools:
+                parse_function_call = ParseFunctionCall(content=resp_content, tools=request.tools)
+                chat_completion_message = parse_function_call.to_chat_completion_message()
+                if chat_completion_message.content is None and chat_completion_message.tool_calls:
+                    finish_reason = "tool_calls"
+                else:
+                    finish_reason = "stop"
+            else:
+                chat_completion_message = ChatCompletionMessage(role="assistant", content=resp_content)
+                finish_reason = "stop"
 
-    if request.tools:
-        parse_function_call = ParseFunctionCall(content=resp_content, tools=request.tools)
-        chat_completion_message = parse_function_call.to_chat_completion_message()
-        if chat_completion_message.content is None and chat_completion_message.tool_calls:
-            finish_reason = "tool_calls"
-        else:
-            finish_reason = "stop"
-    else:
-        chat_completion_message = ChatCompletionMessage(role="assistant", content=resp_content)
-        finish_reason = "stop"
-
-    choice = Choice(finish_reason=finish_reason, index=0, message=chat_completion_message)
-    chat_completion = ChatCompletion(
-        id="1337",
-        object="chat.completion",
-        created=int(time.time()),
-        model=request.model,
-        choices=[choice]
-    )
-    return chat_completion
+            choice = Choice(finish_reason=finish_reason, index=0, message=chat_completion_message)
+            chat_completion = ChatCompletion(
+                id=generate_id(prefix="chat", k=16), created=int(time.time()), model=request.model, choices=[choice]
+            )
+            return chat_completion

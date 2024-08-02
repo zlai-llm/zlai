@@ -1,5 +1,5 @@
 from typing import List, Literal, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from openai.types.chat.chat_completion import ChoiceLogprobs
 from .messages import ChatCompletionMessage
 from .completion_usage import CompletionUsage
@@ -48,7 +48,7 @@ class ChatCompletion(BaseModel):
     model: str
     """The model used for the chat completion."""
 
-    object: Literal["chat.completion"]
+    object: Literal["chat.completion"] = Field(default="chat.completion")
     """The object type, which is always `chat.completion`."""
 
     system_fingerprint: Optional[str] = None

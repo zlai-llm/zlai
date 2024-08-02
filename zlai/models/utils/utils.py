@@ -1,6 +1,8 @@
 import yaml
 import time
 import torch
+import string
+import random
 from typing import List, Dict, Literal, Optional
 from zlai.types import TypeMessage, ImageMessage
 from openai.types.chat.chat_completion_chunk import Choice, ChoiceDelta, ChatCompletionChunk
@@ -12,6 +14,7 @@ __all__ = [
     "trans_messages",
     "stream_chunk",
     "stream_message_chunk",
+    "generate_id",
 ]
 
 
@@ -64,3 +67,9 @@ def stream_message_chunk(
     choice = Choice(index=0, finish_reason=finish_reason, delta=ChoiceDelta(content=content))
     chunk = stream_chunk(_id, choice)
     return chunk
+
+
+def generate_id(prefix: str, k: int = 29) -> str:
+    """"""
+    suffix = ''.join(random.choices(string.ascii_letters + string.digits, k=k))
+    return f"{prefix}{suffix}"
