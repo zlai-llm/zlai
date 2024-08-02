@@ -117,7 +117,7 @@ class ChatCompletionChunk(BaseModel):
     model: str
     """The model to generate the completion."""
 
-    object: Literal["chat.completion.chunk"]
+    object: Literal["chat.completion.chunk"] = "chat.completion.chunk"
     """The object type, which is always `chat.completion.chunk`."""
 
     system_fingerprint: Optional[str] = None
