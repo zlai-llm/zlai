@@ -63,15 +63,18 @@ def stream_completion_glm_4(
 
     streamer = TextIteratorStreamer(tokenizer)
     inputs = tokenizer.apply_chat_template(
-        messages, add_generation_prompt=True, return_tensors="pt").to(model.device)
-    gen_config = {"inputs": inputs, "streamer": streamer, **generate_config.gen_kwargs()}
-
+        messages, add_generation_prompt=True, tokenize=True, return_tensors="pt", return_dict=True
+    ).to(model.device)
+    drop_tokens = tokenizer.special_tokens_map.get("additional_special_tokens")
+    gen_config = {**inputs, "streamer": streamer, **generate_config.gen_kwargs()}
     thread = Thread(target=model.generate, kwargs=gen_config)
     thread.start()
-    output_mark = False
+
     for i, response in enumerate(streamer):
         content = str(response)
-        if content.strip() == "<|assistant|>":
-            output_mark = True
-        if output_mark and content.strip() not in tokenizer.special_tokens_map.get("additional_special_tokens", []):
+        if "[gMASK]" in content and i == 0:
+            drop_tokens.insert(0, content)
+        for t in drop_tokens:
+            content = content.replace(t, "")
+        if content:
             yield content

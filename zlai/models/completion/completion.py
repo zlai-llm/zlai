@@ -129,8 +129,7 @@ class LoadModelCompletion(LoggerMixin):
         """"""
         if self.tools_config.tools:
             parse_function_call = ParseFunctionCall(content=content, tools=self.tools_config.tools)
-            chat_completion_message = parse_function_call.to_chat_completion_message()
-            choice_delta = ChoiceDelta.model_validate(chat_completion_message.model_dump())
+            choice_delta = parse_function_call.to_stream_completion_delta()
             if choice_delta.content is None and choice_delta.tool_calls:
                 finish_reason = "tool_calls"
             else:

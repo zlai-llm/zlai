@@ -40,6 +40,7 @@ class TestFunctionCall(unittest.TestCase):
         messages = [
             SystemMessage(content="You are a helpful assistant."),
             UserMessage(content="你好"),
+            AssistantMessage(content="你好"),
         ]
         process_messages = ProcessMessages(
             messages=messages, tools=tools, tool_choice="auto")

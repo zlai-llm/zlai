@@ -5,6 +5,7 @@ import string
 from typing import List, Dict, Union, Optional
 from zlai.types.messages import *
 from zlai.types.function_call import *
+from zlai.types.chat_completion_chunk import ChoiceDelta, ChoiceDeltaToolCallFunction, ChoiceDeltaToolCall
 
 
 __all__ = [
@@ -114,6 +115,29 @@ class ParseFunctionCall:
         )
         return response_message
 
+    def to_stream_completion_delta(self) -> ChoiceDelta:
+        """"""
+        function_call = self.parse()
+        if isinstance(function_call, FunctionCall):
+            function = ChoiceDeltaToolCallFunction.model_validate(function_call.model_dump())
+            tool_calls = [
+                ChoiceDeltaToolCall(
+                    index=0,
+                    id=self.generate_id('call_', 24),
+                    function=function,
+                    type="function"
+                )
+            ]
+        else:
+            tool_calls = None
+        response_message = ChoiceDelta(
+            role="assistant",
+            content=None if tool_calls else self.content,
+            function_call=None,
+            tool_calls=tool_calls,
+        )
+        return response_message
+
 
 class ProcessMessages:
     """"""
@@ -187,7 +211,7 @@ class ProcessMessages:
             elif message.role == "tool":
                 self.processed_messages.append(ToolMessage(content=message.content))
             elif message.role == "assistant":
-                if message.tool_calls:
+                if hasattr(message, "tool_calls") and message.tool_calls:
                     for tool_call in message.tool_calls:
                         self.processed_messages.append(
                             AssistantWithMetadataMessage(
