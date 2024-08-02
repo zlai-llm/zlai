@@ -2,7 +2,8 @@ import time
 from logging import Logger
 from typing import Any, List, Dict, Iterable, Optional, Callable
 
-from zlai.types.messages import TypeMessage, ImageMessage
+from zlai.types.messages import TypeMessage, ImageMessage, ChatCompletionMessage
+from zlai.types.chat_completion import Choice, ChatCompletion
 from zlai.utils.mixin import LoggerMixin
 from ..types import *
 from ..utils import *
@@ -104,7 +105,7 @@ class LoadModelCompletion(LoggerMixin):
         vectors = self.model.encode(text, normalize_embeddings=True).to_list()
         return vectors
 
-    def completion(self, messages: List[TypeMessage]) -> str:
+    def completion(self, messages: List[TypeMessage]) -> ChatCompletion:
         """"""
         self._logger(msg=f"[{__class__.__name__}] Generating...", color="green")
         self._logger(msg=f"[{__class__.__name__}] User Question: {self._get_user_content(messages=messages)}", color="green")
@@ -120,9 +121,26 @@ class LoadModelCompletion(LoggerMixin):
                 tool_choice=self.tools_config.tool_choice)
         else:
             content = f"Not find completion method: {self.model_name}"
+
         self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")
         self._logger(msg=f"[{__class__.__name__}] Completion content: {content}", color="green")
-        return content
+
+        if self.tools_config.tools:
+            parse_function_call = ParseFunctionCall(content=content, tools=self.tools_config.tools)
+            chat_completion_message = parse_function_call.to_chat_completion_message()
+            if chat_completion_message.content is None and chat_completion_message.tool_calls:
+                finish_reason = "tool_calls"
+            else:
+                finish_reason = "stop"
+        else:
+            chat_completion_message = ChatCompletionMessage(role="assistant", content=content)
+            finish_reason = "stop"
+
+        choice = Choice(finish_reason=finish_reason, index=0, message=chat_completion_message)
+        chat_completion = ChatCompletion(
+            id=generate_id(prefix="chat", k=16), created=int(time.time()), model=self.model_name, choices=[choice]
+        )
+        return chat_completion
 
     async def stream_completion(self, messages: List[TypeMessage]) -> Iterable[str]:
         """"""

@@ -5,6 +5,28 @@ from zlai.llms.generate_config.zhipu import *
 
 class TestMokeZhipuModels(unittest.TestCase):
     """"""
+    def setUp(self):
+        """"""
+        self.tools = [
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_legal_person",
+                    "description": "根据提供的公司名称，查询该公司对应的法人代表。",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "company_name": {
+                                "type": "string",
+                                "description": "公司名称",
+                            }
+                        },
+                        "required": ["company_name"],
+                    },
+                }
+            }
+        ]
+
     def test_loop_config(self):
         """"""
         config = [
@@ -67,29 +89,20 @@ class TestMokeZhipuModels(unittest.TestCase):
 
     def test_tools(self):
         """"""
-        tools = [
-            {
-                "type": "function",
-                "function": {
-                    "name": "get_legal_person",
-                    "description": "根据提供的公司名称，查询该公司对应的法人代表。",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "company_name": {
-                                "type": "string",
-                                "description": "公司名称",
-                            }
-                        },
-                        "required": ["company_name"],
-                    },
-                }
-            }
-        ]
-        llm = Zhipu(generate_config=GLM4FlashGenerateConfig(tools=tools))
+        llm = Zhipu(generate_config=GLM4FlashGenerateConfig(tools=self.tools))
         completion = llm.generate(query="我想要联系广州发展集团股份有限公司公司的法人代表，请问他的名字是什么？")
         print(completion)
         print(completion.choices[0].message.tool_calls[0].id)
+
+    def test_tools_stream(self):
+        """"""
+        llm = Zhipu(generate_config=GLM4GenerateConfig(tools=self.tools, stream=True))
+        output = llm.generate(query="我想要联系广州发展集团股份有限公司公司的法人代表，请问他的名字是什么？")
+        answer = ''
+        for out in output:
+            print(out)
+            answer += out.choices[0].delta.content
+            print(answer)
 
 
 class TestZhipu(unittest.TestCase):

@@ -64,20 +64,4 @@ async def chat_completions(request: ChatCompletionRequest):
                 model_completion.stream_completion(messages=request.messages),
                 media_type="application/x-ndjson")
         else:
-            resp_content = model_completion.completion(messages=request.messages)
-            if request.tools:
-                parse_function_call = ParseFunctionCall(content=resp_content, tools=request.tools)
-                chat_completion_message = parse_function_call.to_chat_completion_message()
-                if chat_completion_message.content is None and chat_completion_message.tool_calls:
-                    finish_reason = "tool_calls"
-                else:
-                    finish_reason = "stop"
-            else:
-                chat_completion_message = ChatCompletionMessage(role="assistant", content=resp_content)
-                finish_reason = "stop"
-
-            choice = Choice(finish_reason=finish_reason, index=0, message=chat_completion_message)
-            chat_completion = ChatCompletion(
-                id=generate_id(prefix="chat", k=16), created=int(time.time()), model=request.model, choices=[choice]
-            )
-            return chat_completion
+            return model_completion.completion(messages=request.messages)
