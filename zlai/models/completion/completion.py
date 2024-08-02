@@ -144,10 +144,15 @@ class LoadModelCompletion(LoggerMixin):
         )
         return chat_completion_chunk
 
-    def completion(self, messages: List[TypeMessage]) -> ChatCompletion:
+    def _start_logger(self, messages: List[TypeMessage]) -> None:
         """"""
         self._logger(msg=f"[{__class__.__name__}] Generating...", color="green")
-        self._logger(msg=f"[{__class__.__name__}] User Question: {self._get_user_content(messages=messages)}", color="green")
+        self._logger(msg=f"[{__class__.__name__}] User Question: {self._get_user_content(messages=messages)}",
+                     color="green")
+
+    def completion(self, messages: List[TypeMessage]) -> ChatCompletion:
+        """"""
+        self._start_logger(messages=messages)
         if self.model_name in self.qwen_2_completion_model:
             content = completion_qwen_2(
                 model=self.model, tokenizer=self.tokenizer, messages=messages,
@@ -169,8 +174,7 @@ class LoadModelCompletion(LoggerMixin):
 
     async def stream_completion(self, messages: List[TypeMessage]) -> Iterable[str]:
         """"""
-        self._logger(msg=f"[{__class__.__name__}] Generating...", color="green")
-        self._logger(msg=f"[{__class__.__name__}] User Question: {messages[-1].content}", color="green")
+        self._start_logger(messages=messages)
         _id = generate_id(prefix="chunk-chat", k=16)
         try:
             if self.model_name in self.qwen_2_completion_model:
