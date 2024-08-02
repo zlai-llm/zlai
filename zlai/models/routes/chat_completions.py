@@ -1,15 +1,12 @@
 import os
-import time
 from fastapi import HTTPException
 from starlette.responses import StreamingResponse
 from typing import List, Dict, Union
-from zlai.types import *
 from zlai.models.types.schema import *
 from zlai.utils.config import pkg_config
 from ..completion import *
-from ..utils import load_model_config, generate_id
+from ..utils import load_model_config
 from ...models import app, logger
-from ..completion.glm4.utils import ParseFunctionCall
 
 
 __all__ = [
