@@ -54,10 +54,13 @@ async def chat_completions(request: ChatCompletionRequest):
         generate_config = model_config.generate_method.model_validate(request.model_dump())
         logger.info(f"[ChatCompletion] Generate kwargs: {generate_config.gen_kwargs()}")
 
-        model_completion = LoadModelCompletion(
-            models_config=models_config, model_name=request.model,
-            generate_config=generate_config, tools_config=tools_config,
-            logger=logger)
+        try:
+            model_completion = LoadModelCompletion(
+                models_config=models_config, model_name=request.model,
+                generate_config=generate_config, tools_config=tools_config,
+                logger=logger)
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"Load Model Error: {e}")
 
         if request.stream:
             return StreamingResponse(
