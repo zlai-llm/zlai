@@ -10,7 +10,7 @@ __all__ = [
 class InferenceGenerateConfig(BaseModel):
     """"""
     max_length: Optional[int] = Field(default=None)
-    max_new_tokens: Optional[int] = Field(default=1024)
+    max_new_tokens: Optional[int] = Field(default=None)
     top_k: Optional[int] = Field(default=None)
     top_p: Optional[float] = Field(default=None)
     do_sample: Optional[bool] = Field(default=True)
