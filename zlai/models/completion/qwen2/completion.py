@@ -16,7 +16,7 @@ def completion_qwen_2(
         model,
         tokenizer,
         messages: List[TypeMessage],
-        generate_config: Optional[TypeInferenceGenerateConfig] = None,
+        generate_config: Optional[TypeInferenceGenerateConfig],
 ) -> str:
     """"""
     messages = trans_messages(messages=messages)
@@ -38,7 +38,7 @@ def stream_completion_qwen_2(
         model,
         tokenizer,
         messages: List[TypeMessage],
-        generate_config: Optional[TypeInferenceGenerateConfig] = None,
+        generate_config: Optional[TypeInferenceGenerateConfig],
         **kwargs: Any,
 ) -> Iterable[str]:
     messages = trans_messages(messages=messages)
