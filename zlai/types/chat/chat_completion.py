@@ -1,8 +1,8 @@
 from typing import List, Literal, Optional
 from pydantic import BaseModel, Field
 from openai.types.chat.chat_completion import ChoiceLogprobs
-from .messages import ChatCompletionMessage
-from .completion_usage import CompletionUsage
+from zlai.types.messages import ChatCompletionMessage
+from zlai.types.completion_usage import CompletionUsage
 
 
 __all__ = [

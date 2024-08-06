@@ -1,7 +1,7 @@
 from typing import List, Optional
 from typing_extensions import Literal
 from pydantic import BaseModel
-from .completion_usage import CompletionUsage
+from zlai.types.completion_usage import CompletionUsage
 from .chat_completion_token_logprob import ChatCompletionTokenLogprob
 
 

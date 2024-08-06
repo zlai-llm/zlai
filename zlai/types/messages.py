@@ -24,6 +24,7 @@ __all__ = [
     "ToolMessage",
     "ToolsMessage",
     "ImageMessage",
+    "ZhipuImageMessage",
     "ChatCompletionMessage",
     "TypeMessage",
 ]
@@ -92,22 +93,8 @@ class ToolsMessage(Message):
     tool_call_id: Optional[Union[int, str, dict]] = Field(default=None, description="id")
 
 
-class ImageMessage(Message):
+class ImageMixin(Message):
     """"""
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-    role: Optional[str] = Field(default="user", description="角色")
-    image: Optional[Union[str, TypeImage]] = Field(default=None, description="图片")
-
-    def parse_content(self):
-        """"""
-        from bs4 import BeautifulSoup
-        if self.content:
-            soup = BeautifulSoup(self.content, 'html.parser')
-            img_tags = soup.find_all('img')
-            if img_tags:
-                self.image = img_tags[-1].get('src')
-                self.content = soup.get_text()
-
     def load_path(self, ) -> bool:
         """"""
         if self.image is not None and os.path.exists(self.image):
@@ -122,24 +109,33 @@ class ImageMessage(Message):
         if not os.path.exists(_image_path):
             os.makedirs(_image_path)
 
-    def load_url(self, url: str):
+    def load_url(self, url: str) -> Union[str, None]:
         """"""
         response = requests.get(url)
         if response.status_code == 200:
             image_base64 = base64.b64encode(response.content)
-            self.image = image_base64.decode('utf-8')
+            image = image_base64.decode('utf-8')
+            return image
 
-    def read_image(self, path: str):
+    def read_image(self, path: str) -> Union[str, None]:
         """"""
         with open(path, 'rb') as image_file:
             image_base64 = base64.b64encode(image_file.read())
-        self.image = image_base64.decode('utf-8')
+        image = image_base64.decode('utf-8')
+        return image
 
     def write_image(self, data: str, path: str):
         """"""
         binary_data = base64.b64decode(data)
         image = Image.open(BytesIO(binary_data))
         image.save(path)
+
+
+class ImageMessage(ImageMixin):
+    """"""
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    role: Optional[str] = Field(default="user", description="角色")
+    image: Optional[Union[str, TypeImage]] = Field(default=None, description="图片")
 
     def add_image(
             self,
@@ -148,9 +144,9 @@ class ImageMessage(Message):
     ):
         """"""
         if path is not None:
-            self.read_image(path=path)
+            self.image = self.read_image(path=path)
         elif url is not None:
-            self.load_url(url=url)
+            self.image = self.load_url(url=url)
         else:
             raise ValueError("Either path or url must be provided.")
         self.content = f"{self.content}<image: {self.image}>"
@@ -164,6 +160,35 @@ class ImageMessage(Message):
             image_bytes = base64.b64decode(match.group(1))
             self.image = Image.open(BytesIO(image_bytes)).convert('RGB')
             self.content = re.sub(pattern, "", self.content)
+        return self
+
+
+class ZhipuImageMessage(ImageMixin):
+    """"""
+    role: str = Field(default="user", description="""The role of the author of this message.""")
+    content: Optional[Union[str, List[Dict]]] = Field(default=None, description="""The content of the message.""")
+
+    def add_image(
+            self,
+            path: Optional[str] = None,
+            url: Optional[str] = None,
+    ):
+        """"""
+        if path is not None:
+            image = self.read_image(path=path)
+        elif url is not None:
+            image = self.load_url(url=url)
+        else:
+            raise ValueError("Either path or url must be provided.")
+        if isinstance(self.content, str):
+            self.content = [
+                {"type": "text", "text": self.content,},
+                {"type": "image_url", "image_url": {"url": image,}}
+            ]
+        elif isinstance(self.content, list):
+            self.content.append({"type": "image_url", "image_url": {"url": image,}})
+        else:
+            raise ValueError("Invalid content type.")
         return self
 
 
@@ -194,5 +219,6 @@ TypeMessage = Union[
     ToolMessage,
     ToolsMessage,
     ImageMessage,
+    ZhipuImageMessage,
     ChatCompletionMessage,
 ]
