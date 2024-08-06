@@ -15,6 +15,7 @@ __all__ = [
     "GLM3TurboGenerateConfig",
     "CodeGeexGenerateConfig",
     "GLM4AllToolsGenerateConfig",
+    "GLM4VGenerateConfig",
 ]
 
 
@@ -103,6 +104,13 @@ class GLM4AllToolsGenerateConfig(ZhipuGenerateConfig):
     model: str = "glm-4-alltools"
 
 
+class GLM4VGenerateConfig(ZhipuGenerateConfig):
+    """"""
+    model: str = "glm-4v"
+    temperature: Optional[float] = 0.8
+    top_p: Optional[float] = 0.6
+
+
 TypeZhipuGenerate = Union[
     ZhipuGenerateConfig,
     GLM4GenerateConfig,
@@ -114,7 +122,5 @@ TypeZhipuGenerate = Union[
     GLM3TurboGenerateConfig,
     CodeGeexGenerateConfig,
     GLM4AllToolsGenerateConfig,
+    GLM4VGenerateConfig
 ]
-
-
-# todo: 增加 CodeGeex
