@@ -62,7 +62,7 @@ def get_es_con(
 
 def create_index(
         index_name: str,
-        field_schema: Document,
+        field_schema: Type[Document],
         reset: bool = False,
         con: Elasticsearch = None,
         disp: bool = True,
