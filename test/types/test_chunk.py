@@ -1,6 +1,6 @@
 import time
 import unittest
-from zlai.types.chat_completion_chunk import *
+from zlai.types.chat.chat_completion_chunk import *
 from zlai.models.completion.glm4 import ParseFunctionCall
 
 tools = [

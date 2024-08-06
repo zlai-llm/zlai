@@ -1,6 +1,7 @@
 import unittest
 from zlai.llms.zhipu import *
 from zlai.llms.generate_config.zhipu import *
+from zlai.types.messages import *
 
 
 class TestMokeZhipuModels(unittest.TestCase):
@@ -155,3 +156,21 @@ class TestZhipu(unittest.TestCase):
         print(llm.parse_info)
         print(f"解析后数据类型: {type(output[0])}")
         print(f"解析结果: {output[0]}")
+
+
+class TestGLM4V(unittest.TestCase):
+    """"""
+    def setUp(self):
+        self.url = "https://img1.baidu.com/it/u=1369931113,3388870256&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1703696400&t=f3028c7a1dca43a080aeb8239f09cc2f"
+
+    def test_message(self):
+        """"""
+        message = ZhipuImageMessage(content="介绍这个图片").add_image(url=self.url)
+        print(message)
+
+    def test_generate(self):
+        """"""
+        llm = Zhipu(generate_config=GLM4VGenerateConfig())
+        messages = [ZhipuImageMessage(content="介绍这个图片").add_image(url=self.url)]
+        completion = llm.generate(messages=messages)
+        print(completion.choices[0].message.content)

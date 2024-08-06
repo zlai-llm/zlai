@@ -9,7 +9,7 @@ class TestSparse(unittest.TestCase):
     """"""
     def setUp(self):
         """"""
-        with open("../test_data/sparse.json") as f:
+        with open("../test_data/db/sparse.json") as f:
             self.data = json.loads(f.read())
 
     def test_load_data(self):
@@ -58,7 +58,7 @@ class TestSparseDict(unittest.TestCase):
     def setUp(self):
         """"""
         self.sparse = ParseString()
-        with open("../test_data/sparse.json") as f:
+        with open("../test_data/db/sparse.json") as f:
             self.data = json.loads(f.read())
 
         self.eval_cases = []
