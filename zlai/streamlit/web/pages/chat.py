@@ -1,8 +1,11 @@
+from PIL import Image
+from io import BytesIO
 from pydantic import BaseModel
 import streamlit as st
 from zlai.llms import *
 from zlai.agent import *
 from zlai.streamlit import *
+from zlai.streamlit.web.pages.utils.chat import *
 
 
 class PageConfig(BaseModel):
@@ -20,22 +23,6 @@ st.set_page_config(
 st.title(page_config.page_name)
 
 
-# llm = Zhipu(generate_config=ZhipuGLM3Turbo())
-# llm = LocalLLMAPI(generate_config=Qwen15Chat14BGenerateConfig())
-
-def sidebar() -> TypeLLM:
-    """"""
-    models = [
-        GLM4GenerateConfig(stream=True),
-        GLM4AirGenerateConfig(stream=True),
-        GLM4FlashGenerateConfig(stream=True),
-    ]
-    options = [model.model for model in models]
-    select_box = st.sidebar.selectbox(label="选择对话大模型", index=1, options=options,)
-    llm = Zhipu(generate_config=models[options.index(select_box)])
-    return llm
-
-
 def clear_page_config():
     """"""
     if st.session_state.get('page_name') != page_config.page_name:
@@ -46,6 +33,19 @@ def clear_page_config():
 def main():
     clear_page_config()
     llm = sidebar()
+
+    uploaded_image = st.file_uploader(
+        "上传图片",
+        type=["png", "jpg", "jpeg", "bmp", "tiff", "webp"],
+        accept_multiple_files=False,
+    )
+    if uploaded_image:
+        data: bytes = uploaded_image.read()
+        image = Image.open(BytesIO(data)).convert("RGB")
+        st.session_state.uploaded_image = image
+    else:
+        st.session_state.uploaded_image = None
+
     messages, show_messages = init_chat_history(
         init_message="你好，我是Chat，有什么可以帮助你的吗？")
     if question := st.chat_input("Shift + Enter 换行, Enter 发送"):
