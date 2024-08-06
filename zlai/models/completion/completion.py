@@ -3,8 +3,8 @@ from logging import Logger
 from typing import Any, List, Dict, Iterable, Optional, Callable
 
 from zlai.types import *
-from zlai.types.chat_completion import Choice as ChatChoice
-from zlai.types.chat_completion_chunk import Choice as ChunkChoice
+from zlai.types.chat.chat_completion import Choice as ChatChoice
+from zlai.types.chat.chat_completion_chunk import Choice as ChunkChoice
 from zlai.utils.mixin import LoggerMixin
 from ..types import *
 from ..utils import *

@@ -5,8 +5,8 @@ import string
 import random
 from typing import List, Dict, Literal, Optional
 from zlai.types import TypeMessage, ImageMessage
-from zlai.types.chat_completion_chunk import Choice as ChunkChoice
-from zlai.types.chat_completion_chunk import ChoiceDelta, ChatCompletionChunk
+from zlai.types.chat.chat_completion_chunk import Choice as ChunkChoice
+from zlai.types.chat.chat_completion_chunk import ChoiceDelta, ChatCompletionChunk
 
 
 __all__ = [

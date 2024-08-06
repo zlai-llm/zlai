@@ -5,7 +5,7 @@ import string
 from typing import List, Dict, Union, Optional
 from zlai.types.messages import *
 from zlai.types.function_call import *
-from zlai.types.chat_completion_chunk import ChoiceDelta, ChoiceDeltaToolCallFunction, ChoiceDeltaToolCall
+from zlai.types.chat.chat_completion_chunk import ChoiceDelta, ChoiceDeltaToolCallFunction, ChoiceDeltaToolCall
 
 
 __all__ = [
