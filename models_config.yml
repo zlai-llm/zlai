@@ -48,6 +48,13 @@ models_config:
     generate_method: GLM4V9BInferenceGenerateConfig
     max_memory:
       0: "32GB"
+  - model_name: mini_cpm-v2_6
+    model_path: /home/models/openbmb/MiniCPM-V-2_6
+    model_type: completion
+    load_method: load_mini_cpm
+    generate_method: MiniCPMInferenceGenerateConfig
+    max_memory:
+      0: "32GB"
   - model_name: bge-m3
     model_path: /home/models/BAAI/bge-m3
     model_type: embedding
