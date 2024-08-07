@@ -26,7 +26,7 @@ __all__ = [
 
 # TODO: LLM标签筛选机制
 
-TypeScript = Literal["python", "sql", "json"]
+TypeScript = Literal["python", "sql", "json", "markdown"]
 
 
 class RePattern(BaseModel):
