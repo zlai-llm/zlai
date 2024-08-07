@@ -13,6 +13,8 @@ def tree_chart(
         title: str = 'TreeGraph',
         orient: Literal["BT", "TB", "LR", "RL"] = "LR",
         layout: Optional[Literal["radial"]] = None,
+        width: Optional[str] = "1200px",
+        height: Optional[str] = "900px",
         show_title: bool = True,
         show_legend: bool = True,
 ):
@@ -23,7 +25,7 @@ def tree_chart(
         label_opts = {"position": "bottom", "horizontal_align": "center", "vertical_align": "middle", "rotate": 0, }
 
     c = (
-        Tree()
+        Tree(init_opts=opts.InitOpts(width=width, height=height))
         .add(
             "graph",
             data,

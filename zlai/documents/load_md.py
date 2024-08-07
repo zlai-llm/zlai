@@ -1,10 +1,11 @@
 import pandas as pd
-from typing import Any, List, Tuple, Optional
+from typing import Any, List, Tuple, Optional, Literal, Union
 from zlai.types.documents.markdown import MarkdownLine
 
 
 __all__ = [
     "ParseMarkdown",
+    "get_node_source",
 ]
 
 
@@ -79,6 +80,10 @@ class ParseMarkdown:
     def _detect_source(self, cur_line: MarkdownLine, src_line: MarkdownLine):
         """"""
         new_src_line = src_line.model_copy(deep=True)
+
+        if not src_line.level <= cur_line.level and src_line.src != "root":
+            src_line = self._find_last_line(level=cur_line.level - 1, _type="title")
+
         if src_line.src == "root" and cur_line.level == 1:
             cur_line.src = src_line.src
             new_src_line = cur_line
@@ -108,7 +113,7 @@ class ParseMarkdown:
         src_line = self._detect_source(markdown_line, src_line)
         return markdown_line, src_line
 
-    def split_text(self, text: Optional[str] = None) -> List[MarkdownLine]:
+    def split_text(self, text: Optional[str] = None):
         """"""
         if text is None:
             text = self.text
@@ -131,3 +136,17 @@ class ParseMarkdown:
         if fix_level:
             df_table["level"] = df_table["level"] - int(df_table.level.min() - 1)
         return df_table
+
+
+def get_node_source(
+        df: pd.DataFrame,
+        node: str,
+) -> Union[str, dict]:
+    """"""
+    node_level = df[df["dst"] == node]["level"].values[0]
+    pre_node = df[df["dst"] == node]["src"].values[0]
+    curr_level_nodes = df.loc[df.src == pre_node, "dst"].tolist()
+    content = f"{'#' * (node_level - 1)} {pre_node}"
+    for node in curr_level_nodes:
+        content += f"\n- {node}"
+    return content
