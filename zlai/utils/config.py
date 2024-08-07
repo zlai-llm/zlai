@@ -1,7 +1,8 @@
 import os
-import pathlib
 import sys
+import pathlib
 from pydantic import BaseModel
+from typing import Union, Tuple
 
 
 __all__ = [
@@ -17,7 +18,7 @@ headers = {
 
 class Config(BaseModel):
     cache_path: str = os.path.join(pathlib.Path.home(), ".zlai")
-    python_version: str = str(sys.version_info)
+    python_version: Union[str, Tuple] = tuple(sys.version_info)
 
 
 pkg_config = Config()
