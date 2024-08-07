@@ -1,5 +1,5 @@
 from pandas import DataFrame
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union, Optional
 from .charts import graph_chart
 
 
@@ -23,19 +23,24 @@ class GraphData:
     def __init__(
             self,
             df: DataFrame = None,
-            symbol_size: int = 20,
+            symbol_size_name: Optional[str] = None,
+            default_symbol_size: int = 20,
             src: str = 'src',
             dst: str = 'dst',
             **kwargs: Any,
     ):
         super().__init__(**kwargs)
+        self.df = df
+        self.src = src
+        self.dst = dst
+        self.symbol_size_name = symbol_size_name
+        self.default_symbol_size = default_symbol_size
+
         self.links = []
         self.nodes = []
         self.categories = []
         self.categories_map = dict()
         self.nodes_name = list(set(sum([df[src].tolist(), df[dst].tolist()], [])))
-        self.symbol_size = symbol_size
-        self.df = df
         self._gen_name_id()
         self.gen_categories()
         self.gen_nodes()
@@ -70,11 +75,19 @@ class GraphData:
 
     def gen_nodes(self, ):
         """"""
+        size_mapping = None
+        if isinstance(self.symbol_size_name, str):
+            size_mapping = dict(zip(self.df[self.src], self.df[self.symbol_size_name]))
+
         for node_name in self.nodes_name:
+            if size_mapping is not None:
+                symbol_size = size_mapping.get(node_name, self.default_symbol_size)
+            else:
+                symbol_size = self.default_symbol_size
             node = {
                 'id': self.name_id.get(node_name),
                 "name": node_name,
-                "symbolSize": self.symbol_size,
+                "symbolSize": symbol_size,
                 "category": self.categories_map.get(node_name)
             }
             self.nodes.append(node)
