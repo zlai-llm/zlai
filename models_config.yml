@@ -55,6 +55,13 @@ models_config:
     generate_method: MiniCPMInferenceGenerateConfig
     max_memory:
       0: "32GB"
+  - model_name: kolors_diffusers
+    model_path: /home/models/Kwai-Kolors/Kolors-diffusers
+    model_type: images_generations
+    load_method: load_kolors_diffusers
+    generate_method: KolorsDiffusersInferenceGenerateConfig
+    max_memory:
+      0: "32GB"
   - model_name: bge-m3
     model_path: /home/models/BAAI/bge-m3
     model_type: embedding

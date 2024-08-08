@@ -3,7 +3,7 @@ import time
 import torch
 import string
 import random
-from typing import List, Dict, Literal, Optional
+from typing import List, Dict, Union, Literal, Optional
 from zlai.types import TypeMessage, ImageMessage
 from zlai.types.chat.chat_completion_chunk import Choice as ChunkChoice
 from zlai.types.chat.chat_completion_chunk import ChoiceDelta, ChatCompletionChunk
@@ -16,6 +16,7 @@ __all__ = [
     "stream_chunk",
     "stream_message_chunk",
     "generate_id",
+    "get_model_config",
 ]
 
 
@@ -75,3 +76,14 @@ def generate_id(prefix: str, k: int = 29) -> str:
     """"""
     suffix = ''.join(random.choices(string.ascii_letters + string.digits, k=k))
     return f"{prefix}{suffix}"
+
+
+def get_model_config(
+        model_name: str,
+        models_config: List[Dict],
+) -> Union[Dict, None]:
+    """"""
+    for config in models_config:
+        if config["model_name"] == model_name:
+            return config
+    return None
