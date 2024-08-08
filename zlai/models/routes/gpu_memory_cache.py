@@ -7,7 +7,7 @@ __all__ = [
 ]
 
 
-@app.post("cache/clear_gpu_memory")
+@app.post("/cache/clear_gpu_memory")
 def gpu_memory_cache():
     """
     Clear GPU memory cache
