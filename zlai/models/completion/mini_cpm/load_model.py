@@ -1,3 +1,4 @@
+import torch
 from typing import Any, Dict, Tuple, Optional
 from transformers import AutoModel, AutoTokenizer
 from zlai.models.utils import get_device_max_memory

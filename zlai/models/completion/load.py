@@ -1,8 +1,10 @@
 import torch
-from typing import Any, Dict, Tuple, Optional
+from typing import Dict, Optional
 from functools import lru_cache
-from transformers import AutoModelForCausalLM, AutoTokenizer
 from sentence_transformers import SentenceTransformer
+from .glm4 import load_glm4
+from .qwen2 import load_qwen2
+from .mini_cpm import load_mini_cpm
 
 
 __all__ = [
@@ -24,43 +26,6 @@ def get_device_max_memory(max_memory: Optional[Dict] = None) -> Dict:
 
 
 @lru_cache()
-def load_qwen2(
-        model_path: str,
-        max_memory: Optional[Dict] = None
-) -> Tuple[Any, Any]:
-    """"""
-    max_memory = get_device_max_memory(max_memory)
-    model = AutoModelForCausalLM.from_pretrained(
-        pretrained_model_name_or_path=model_path,
-        torch_dtype="auto",
-        device_map="auto",
-        max_memory=max_memory,
-    )
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
-    return model, tokenizer
-
-
-@lru_cache()
-def load_glm4(
-        model_path: str,
-        max_memory: Optional[Dict] = None
-) -> Tuple[Any, Any]:
-    """"""
-    max_memory = get_device_max_memory(max_memory)
-    device = "cuda"
-    tokenizer = AutoTokenizer.from_pretrained(
-        pretrained_model_name_or_path=model_path, trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained(
-        pretrained_model_name_or_path=model_path,
-        torch_dtype=torch.bfloat16,
-        low_cpu_mem_usage=True,
-        trust_remote_code=True,
-        max_memory=max_memory,
-    ).to(device).eval()
-    return model, tokenizer
-
-
-@lru_cache()
 def load_embedding(model_path: str):
     """"""
     model = SentenceTransformer(model_path)
@@ -70,5 +35,6 @@ def load_embedding(model_path: str):
 load_method_mapping = {
     "load_qwen2": load_qwen2,
     "load_glm4": load_glm4,
+    "load_mini_cpm": load_mini_cpm,
     "load_embedding": load_embedding,
 }
