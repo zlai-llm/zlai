@@ -1,28 +1,16 @@
 import os
 from fastapi import HTTPException
 from starlette.responses import StreamingResponse
-from typing import List, Dict, Union
 from zlai.models.types.schema import *
 from zlai.utils.config import pkg_config
+from zlai.models.utils import load_model_config, get_model_config
 from ..completion import *
-from ..utils import load_model_config
 from ...models import app, logger
 
 
 __all__ = [
     "chat_completions"
 ]
-
-
-def get_model_config(
-        model_name: str,
-        models_config: List[Dict],
-) -> Union[Dict, None]:
-    """"""
-    for config in models_config:
-        if config["model_name"] == model_name:
-            return config
-    return None
 
 
 @app.post("/chat/completions")
