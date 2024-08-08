@@ -140,13 +140,13 @@ class ParseMarkdown:
 
 def get_node_source(
         df: pd.DataFrame,
-        node: str,
+        node_name: str,
 ) -> Union[str, dict]:
     """"""
-    node_level = df[df["dst"] == node]["level"].values[0]
-    pre_node = df[df["dst"] == node]["src"].values[0]
+    node_level = df[df["dst"] == node_name]["level"].values[0]
+    pre_node = df[df["dst"] == node_name]["src"].values[0]
     curr_level_nodes = df.loc[df.src == pre_node, "dst"].tolist()
     content = f"{'#' * (node_level - 1)} {pre_node}"
-    for node in curr_level_nodes:
-        content += f"\n- {node}"
+    for node_name in curr_level_nodes:
+        content += f"\n- {node_name}"
     return content
