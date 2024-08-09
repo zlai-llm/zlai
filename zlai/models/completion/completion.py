@@ -66,10 +66,19 @@ class LoadModelCompletion(LoggerMixin):
 
     def _get_user_content(self, messages: List[TypeMessage]) -> str:
         """"""
+        question = ""
         user_message = messages[-1]
         if isinstance(user_message, ImageMessage):
-            user_message.split_image()
-        return user_message.content
+            if isinstance(user_message.content, str):
+                question = user_message.content
+            else:
+                for content in user_message.content:
+                    if isinstance(content, TextContent):
+                        question = content.text
+                        break
+        else:
+            question = user_message.content
+        return question
 
     def load_model(self):
         """"""

@@ -157,7 +157,7 @@ class ImageMessage(ImageMixin):
     """"""
     model_config = ConfigDict(arbitrary_types_allowed=True)
     role: str = Field(default="user", description="""The role of the author of this message.""")
-    content: Optional[Union[str, List[Dict], List[Union[TextContent, ImageContent]]]] = Field(
+    content: Optional[Union[str, List[Union[TextContent, ImageContent]]]] = Field(
         default=None, description="""The content of the message.""")
 
     def __init__(
@@ -170,10 +170,13 @@ class ImageMessage(ImageMixin):
 
         if isinstance(self.content, str):
             _content = [self._add_content(self.content)]
-            for url in images_url:
-                _content.append(self._add_url(url))
-            for path in images_path:
-                _content.append(self._add_path(path))
+
+            if images_url:
+                for url in images_url:
+                    _content.append(self._add_url(url))
+            if images_path:
+                for path in images_path:
+                    _content.append(self._add_path(path))
 
         elif isinstance(self.content, list):
             _content = self.content
