@@ -141,7 +141,7 @@ all = [
     "streamlit", "bs4",
     "unstructured",
     "fastapi", "uvicorn", "transformers", "click", "sentence-transformers", "torch", "accelerate",
-    "diffusers",
+#    "diffusers",
 ]
 tiny = ["openai", "zhipuai"]
 api = ["zhipuai", "openai", "dashscope", "tencentcloud-sdk-python", "qianfan"]
@@ -152,7 +152,10 @@ database = ["pyspark", "sqlalchemy"]
 echarts = ["pyecharts"]
 streamlit = ["streamlit", "bs4"]
 unstructured = ["unstructured"]
-local = ["fastapi", "uvicorn", "transformers", "click", "sentence-transformers", "torch", "accelerate", "diffusers"]
+local = [
+    "fastapi", "uvicorn", "transformers", "click", "sentence-transformers", "torch", "accelerate",
+#    "diffusers"
+]
 
 
 [tool.poetry.urls]

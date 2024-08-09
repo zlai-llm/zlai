@@ -768,7 +768,7 @@ develop = false
 [package.dependencies]
 filelock = "*"
 huggingface-hub = ">=0.23.2"
-importlib-metadata = "*"
+importlib_metadata = "*"
 numpy = "*"
 Pillow = "*"
 regex = "!=2019.12.17"
@@ -776,7 +776,7 @@ requests = "*"
 safetensors = ">=0.3.1"
 
 [package.extras]
-dev = ["GitPython (<3.1.19)", "Jinja2", "accelerate (>=0.31.0)", "compel (==0.1.8)", "datasets", "hf-doc-builder (>=0.3.0)", "invisible-watermark (>=0.2.0)", "isort (>=5.5.4)", "k-diffusion (>=0.0.12)", "librosa", "parameterized", "peft (>=0.6.0)", "protobuf (>=3.20.3,<4)", "pytest", "pytest-timeout", "pytest-xdist", "requests-mock (==1.10.0)", "ruff (==0.1.5)", "safetensors (>=0.3.1)", "scipy", "sentencepiece (>=0.1.91,!=0.1.92)", "tensorboard", "torch (>=1.4)", "torchvision", "transformers (>=4.41.2)", "urllib3 (<=2.0.0)"]
+dev = ["GitPython (<3.1.19)", "Jinja2", "Jinja2", "accelerate (>=0.31.0)", "accelerate (>=0.31.0)", "compel (==0.1.8)", "datasets", "datasets", "hf-doc-builder (>=0.3.0)", "hf-doc-builder (>=0.3.0)", "invisible-watermark (>=0.2.0)", "isort (>=5.5.4)", "k-diffusion (>=0.0.12)", "librosa", "parameterized", "peft (>=0.6.0)", "protobuf (>=3.20.3,<4)", "pytest", "pytest-timeout", "pytest-xdist", "requests-mock (==1.10.0)", "ruff (==0.1.5)", "safetensors (>=0.3.1)", "scipy", "sentencepiece (>=0.1.91,!=0.1.92)", "tensorboard", "torch (>=1.4)", "torchvision", "transformers (>=4.41.2)", "urllib3 (<=2.0.0)"]
 docs = ["hf-doc-builder (>=0.3.0)"]
 quality = ["hf-doc-builder (>=0.3.0)", "isort (>=5.5.4)", "ruff (==0.1.5)", "urllib3 (<=2.0.0)"]
 test = ["GitPython (<3.1.19)", "Jinja2", "compel (==0.1.8)", "datasets", "invisible-watermark (>=0.2.0)", "k-diffusion (>=0.0.12)", "librosa", "parameterized", "pytest", "pytest-timeout", "pytest-xdist", "requests-mock (==1.10.0)", "safetensors (>=0.3.1)", "scipy", "sentencepiece (>=0.1.91,!=0.1.92)", "torchvision", "transformers (>=4.41.2)"]
@@ -787,7 +787,7 @@ training = ["Jinja2", "accelerate (>=0.31.0)", "datasets", "peft (>=0.6.0)", "pr
 type = "git"
 url = "https://github.com/huggingface/diffusers.git"
 reference = "HEAD"
-resolved_reference = "cee7c1b0fba6862e406537ef9875522eb19993c9"
+resolved_reference = "65e30907b5df1338ae65a20b78866c87e061c952"
 
 [[package]]
 name = "dill"
@@ -6256,12 +6256,12 @@ doc = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.linke
 test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more-itertools", "pytest (>=6,!=8.1.*)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-ignore-flaky", "pytest-mypy", "pytest-ruff (>=0.2.1)"]
 
 [extras]
-all = ["accelerate", "bs4", "click", "dashscope", "elasticsearch", "elasticsearch-dsl", "fastapi", "httpx", "langchain-core", "langchain-experimental", "openai", "pyecharts", "pymilvus", "pyspark", "qianfan", "selenium", "sentence-transformers", "sqlalchemy", "streamlit", "tencentcloud-sdk-python", "torch", "transformers", "unstructured", "uvicorn", "zhipuai"]
+all = ["accelerate", "bs4", "click", "dashscope", "diffusers", "elasticsearch", "elasticsearch-dsl", "fastapi", "httpx", "langchain-core", "langchain-experimental", "openai", "pyecharts", "pymilvus", "pyspark", "qianfan", "selenium", "sentence-transformers", "sqlalchemy", "streamlit", "tencentcloud-sdk-python", "torch", "transformers", "unstructured", "uvicorn", "zhipuai"]
 api = ["dashscope", "openai", "qianfan", "tencentcloud-sdk-python", "zhipuai"]
 database = ["pyspark", "sqlalchemy"]
 echarts = ["pyecharts"]
 langchain = ["langchain-core", "langchain-experimental"]
-local = ["accelerate", "click", "fastapi", "sentence-transformers", "torch", "transformers", "uvicorn"]
+local = ["accelerate", "click", "diffusers", "fastapi", "sentence-transformers", "torch", "transformers", "uvicorn"]
 streamlit = ["bs4", "streamlit"]
 tiny = ["openai", "zhipuai"]
 unstructured = ["unstructured"]
@@ -6271,4 +6271,4 @@ web = ["httpx", "selenium"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.9.7 || >3.9.7,<4.0"
-content-hash = "96c50271c0cd8a4254b1a9f6957283c18c6a31a9ed952ac3460a597f5c0e0b15"
+content-hash = "4569df6ec6f34ea1e0bca280c688e1616036e12d03ab3ed3d28d95793d30f959"
