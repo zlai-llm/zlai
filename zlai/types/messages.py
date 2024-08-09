@@ -1,14 +1,12 @@
 import os
-import re
 import base64
 import requests
 from PIL import Image
 from io import BytesIO
 from PIL.Image import Image as TypeImage
-from typing import List, Dict, Union, Literal, Optional, Any
+from typing import List, Dict, Union, Literal, Optional
 from pydantic import BaseModel, Field, ConfigDict
-from pydantic.main import IncEx
-
+from zlai.utils.image import trans_bs64_to_image
 from zlai.utils import pkg_config
 from .function_call import *
 
@@ -145,7 +143,8 @@ class TextContent(BaseModel):
 
 class ImageUrl(BaseModel):
     """"""
-    url: Optional[str] = None
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    url: Optional[Union[str, TypeImage]] = None
 
 
 class ImageContent(BaseModel):
@@ -156,6 +155,7 @@ class ImageContent(BaseModel):
 
 class ImageMessage(ImageMixin):
     """"""
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     role: str = Field(default="user", description="""The role of the author of this message.""")
     content: Optional[Union[str, List[Dict], List[Union[TextContent, ImageContent]]]] = Field(
         default=None, description="""The content of the message.""")
@@ -195,6 +195,43 @@ class ImageMessage(ImageMixin):
         """"""
         image = self.read_image(path=path)
         return ImageContent(image_url=ImageUrl(url=image))
+
+    def convert_image(self):
+        """"""
+        if isinstance(self.content, str):
+            raise TypeError("content must be list")
+        elif isinstance(self.content, list):
+            for i, content in enumerate(self.content):
+                if isinstance(content, ImageContent) and isinstance(content.image_url.url, str):
+                    self.content[i].image_url.url = trans_bs64_to_image(content.image_url.url)
+        else:
+            raise TypeError(f"content must be str or list, but got {type(self.content)}")
+
+    def to_message(self, _type: Literal["mini_cpm"] = "mini_cpm") -> Dict:
+        """"""
+        if _type == "mini_cpm":
+            _content = []
+            if isinstance(self.content, str):
+                _content.append(self.content)
+            elif isinstance(self.content, list):
+                question = ""
+                for item in self.content:
+                    if isinstance(item, TextContent):
+                        question = item.text
+                    if isinstance(item, ImageContent):
+                        if isinstance(item.image_url.url, str):
+                            _content.append(trans_bs64_to_image(item.image_url.url))
+                        elif isinstance(item.image_url.url, TypeImage):
+                            _content.append(item.image_url.url)
+                        else:
+                            raise TypeError(f"Url type error, but got {type(item.image_url.url)}")
+                _content.append(question)
+            else:
+                raise TypeError(f"content must be str or list, but got {type(self.content)}")
+
+            return {"role": self.role, "content": _content}
+        else:
+            raise ValueError(f"Unknown message type {_type}")
 
 
 class ChatCompletionMessage(BaseModel):
