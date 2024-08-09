@@ -11,17 +11,16 @@ class TestImageMessage(unittest.TestCase):
 
     def test_image_message_path(self):
         """"""
-        image_message = ImageMessage(content="介绍这个图片").add_image(path=self.path)
-        for key, val in image_message.model_dump().items():
-            print(key, len(val))
-        image_message.split_image()
-        print(image_message)
-        # image_message.write_image(data=image_message.image, path="./test.png")
+        image_message = ImageMessage(content="介绍这个图片", images_url=[self.url], images_path=[self.path])
+        for k, v in image_message.model_dump().items():
+            print(k, len(v))
+        print(type(image_message.content))
+        for item in image_message.content:
+            if item.type == "image_url":
+                print(item.type, len(item.image_url.url))
+            else:
+                print(item)
 
-    def test_image_message_url(self):
-        """"""
-        image_message = ImageMessage(content="介绍这个图片").add_image(url=self.url)
-        for key, val in image_message.model_dump().items():
-            print(key, len(val))
-
-
+    def test_image_mini_cpm_message(self):
+        image_message = ImageMessage(content="介绍这个图片", images_url=[self.url], images_path=[self.path])
+        print(image_message.to_message())
