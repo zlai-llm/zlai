@@ -1,10 +1,11 @@
-from typing import Type, List, Dict, Literal, Optional, Iterable
+from typing import Type, List, Dict, Union, Literal, Optional, Iterable
 from pydantic import BaseModel, Field, ConfigDict
 from openai.types.chat.completion_create_params import Function, FunctionCall
 from openai.types.chat.chat_completion_tool_param import ChatCompletionToolParam
 from openai.types.chat.chat_completion_tool_choice_option_param import ChatCompletionToolChoiceOptionParam
 from zlai.types.messages import TypeMessage
 from .generate_config import *
+from .images_generations import *
 
 
 __all__ = [
@@ -59,14 +60,25 @@ class ModelConfig(BaseModel):
     model_type: Optional[str] = Field(default=None, description="")
     load_method: Optional[str] = Field(default=None, description="")
     max_memory: Optional[Dict[Union[str, int], str]] = Field(default={0: "20GB"}, description="")
-    generate_method: Optional[Union[str, Type[TypeInferenceGenerateConfig]]] = Field(default=None, description="")
+    generate_method: Optional[Union[str, Type[TypeInferenceGenerateConfig], Type[TypeImageGenerateConfig]]] = Field(
+        default=None, description="")
 
     def __init__(self, **data):
         super().__init__(**data)
+
+        if self.model_type == "completion":
+            base_method = InferenceGenerateConfig
+            generate_config_mapping = inference_generate_config_mapping
+        elif self.model_type == "diffuser":
+            base_method = ImageGenerateConfig
+            generate_config_mapping = images_generate_config_mapping
+        else:
+            raise ValueError(f"Unsupported model type: {self.model_type}")
+
         if isinstance(self.generate_method, str):
-            generate_config_method = inference_generate_config_mapping.get(self.generate_method)
+            generate_config_method = generate_config_mapping.get(self.generate_method)
             if generate_config_method is not None:
                 self.generate_method = generate_config_method
 
         if self.generate_method is None or isinstance(self.generate_method, str):
-            self.generate_method = InferenceGenerateConfig
+            self.generate_method = base_method

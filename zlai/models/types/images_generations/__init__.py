@@ -10,3 +10,8 @@ TypeImageGenerateConfig = Union[
     ImageGenerateConfig,
     KolorsImageGenerateConfig,
 ]
+
+
+images_generate_config_mapping = {
+    "KolorsImageGenerateConfig": KolorsImageGenerateConfig,
+}

@@ -57,9 +57,9 @@ models_config:
       0: "32GB"
   - model_name: kolors_diffusers
     model_path: /home/models/Kwai-Kolors/Kolors-diffusers
-    model_type: images_generations
+    model_type: diffuser
     load_method: load_kolors_diffusers
-    generate_method: KolorsDiffusersInferenceGenerateConfig
+    generate_method: KolorsImageGenerateConfig
     max_memory:
       0: "32GB"
   - model_name: bge-m3

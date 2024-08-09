@@ -79,11 +79,11 @@ class LoadModelDiffusers(LoggerMixin):
         self._logger(msg=f"[{__class__.__name__}] Generating...", color="green")
         self._logger(msg=f"[{__class__.__name__}] Prompt: {prompt}", color="green")
 
-    def diffusers(self, generate_config: ImageGenerateConfig) -> str:
+    def diffusers(self) -> str:
         """"""
-        self._start_logger(prompt=generate_config.prompt)
+        self._start_logger(prompt=self.generate_config.prompt)
         if self.model_name in self.kolors_diffusers_model:
-            b64_img = kolors_generation(self.pipe, generate_config=generate_config)
+            b64_img = kolors_generation(self.pipe, generate_config=self.generate_config)
         else:
             b64_img = f"Not find completion method: {self.model_name}"
         self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")

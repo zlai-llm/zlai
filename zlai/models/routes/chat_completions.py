@@ -21,8 +21,9 @@ async def chat_completions(request: ChatCompletionRequest):
 
     models_config_path = os.path.join(pkg_config.cache_path, "models_config.yml")
     if not os.path.exists(models_config_path):
-        logger.error(f"[ChatCompletion] Models config path: {models_config_path} not exists.")
-        resp_content = "Error: Models config path not exists."
+        resp_content = f"[ChatCompletion] Models config path: {models_config_path} not exists."
+        logger.error(resp_content)
+        raise HTTPException(status_code=400, detail=resp_content)
     else:
         logger.info(f"[ChatCompletion] Models config path: {models_config_path}")
         models_config = load_model_config(path=models_config_path)
