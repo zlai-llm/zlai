@@ -6,7 +6,7 @@ from io import BytesIO
 from PIL.Image import Image as TypeImage
 from typing import List, Dict, Union, Literal, Optional
 from pydantic import BaseModel, Field, ConfigDict
-from zlai.utils.image import trans_bs64_to_image
+from zlai.utils.image import *
 from zlai.utils import pkg_config
 from .function_call import *
 
@@ -162,6 +162,7 @@ class ImageMessage(ImageMixin):
 
     def __init__(
             self,
+            images: Optional[List[TypeImage]] = None,
             images_url: Optional[List[str]] = None,
             images_path: Optional[List[str]] = None,
             **kwargs
@@ -170,6 +171,10 @@ class ImageMessage(ImageMixin):
         _content = None
         if isinstance(self.content, str):
             _content = [self._add_content(self.content)]
+
+            if images:
+                for image in images:
+                    _content.append(self._add_image(image))
 
             if images_url:
                 for url in images_url:
@@ -186,6 +191,11 @@ class ImageMessage(ImageMixin):
     def _add_content(self, content: str) -> TextContent:
         """"""
         return TextContent(text=content)
+
+    def _add_image(self, image: TypeImage) -> ImageContent:
+        """"""
+        url = trans_image_to_bs64(image)
+        return ImageContent(image_url=ImageUrl(url=url))
 
     def _add_url(self, url: str) -> ImageContent:
         """"""
