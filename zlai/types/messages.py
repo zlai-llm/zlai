@@ -5,8 +5,10 @@ import requests
 from PIL import Image
 from io import BytesIO
 from PIL.Image import Image as TypeImage
-from typing import List, Dict, Union, Literal, Optional
+from typing import List, Dict, Union, Literal, Optional, Any
 from pydantic import BaseModel, Field, ConfigDict
+from pydantic.main import IncEx
+
 from zlai.utils import pkg_config
 from .function_call import *
 
@@ -23,8 +25,10 @@ __all__ = [
     "FunctionMessage",
     "ToolMessage",
     "ToolsMessage",
+    "TextContent",
+    "ImageUrl",
+    "ImageContent",
     "ImageMessage",
-    "ZhipuImageMessage",
     "ChatCompletionMessage",
     "TypeMessage",
 ]
@@ -116,6 +120,8 @@ class ImageMixin(Message):
             image_base64 = base64.b64encode(response.content)
             image = image_base64.decode('utf-8')
             return image
+        else:
+            raise Exception(f"Failed to load image from url: {url}")
 
     def read_image(self, path: str) -> Union[str, None]:
         """"""
@@ -131,65 +137,64 @@ class ImageMixin(Message):
         image.save(path)
 
 
+class TextContent(BaseModel):
+    """"""
+    type: str = "text"
+    text: Optional[str] = None
+
+
+class ImageUrl(BaseModel):
+    """"""
+    url: Optional[str] = None
+
+
+class ImageContent(BaseModel):
+    """"""
+    type: str = "image_url"
+    image_url: Optional[ImageUrl] = None
+
+
 class ImageMessage(ImageMixin):
     """"""
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-    role: Optional[str] = Field(default="user", description="角色")
-    image: Optional[Union[str, TypeImage]] = Field(default=None, description="图片")
-
-    def add_image(
-            self,
-            path: Optional[str] = None,
-            url: Optional[str] = None,
-    ):
-        """"""
-        if path is not None:
-            self.image = self.read_image(path=path)
-        elif url is not None:
-            self.image = self.load_url(url=url)
-        else:
-            raise ValueError("Either path or url must be provided.")
-        self.content = f"{self.content}<image: {self.image}>"
-        return self
-
-    def split_image(self):
-        """"""
-        pattern = r"<image: (.*?)>"
-        match = re.search(pattern, self.content)
-        if match:
-            image_bytes = base64.b64decode(match.group(1))
-            self.image = Image.open(BytesIO(image_bytes)).convert('RGB')
-            self.content = re.sub(pattern, "", self.content)
-        return self
-
-
-class ZhipuImageMessage(ImageMixin):
-    """"""
     role: str = Field(default="user", description="""The role of the author of this message.""")
-    content: Optional[Union[str, List[Dict]]] = Field(default=None, description="""The content of the message.""")
+    content: Optional[Union[str, List[Dict], List[Union[TextContent, ImageContent]]]] = Field(
+        default=None, description="""The content of the message.""")
 
-    def add_image(
+    def __init__(
             self,
-            path: Optional[str] = None,
-            url: Optional[str] = None,
+            images_url: Optional[List[str]] = None,
+            images_path: Optional[List[str]] = None,
+            **kwargs
     ):
-        """"""
-        if path is not None:
-            image = self.read_image(path=path)
-        elif url is not None:
-            image = self.load_url(url=url)
-        else:
-            raise ValueError("Either path or url must be provided.")
+        super().__init__(**kwargs)
+
         if isinstance(self.content, str):
-            self.content = [
-                {"type": "text", "text": self.content,},
-                {"type": "image_url", "image_url": {"url": image,}}
-            ]
+            _content = [self._add_content(self.content)]
+            for url in images_url:
+                _content.append(self._add_url(url))
+            for path in images_path:
+                _content.append(self._add_path(path))
+
         elif isinstance(self.content, list):
-            self.content.append({"type": "image_url", "image_url": {"url": image,}})
+            _content = self.content
         else:
-            raise ValueError("Invalid content type.")
-        return self
+            raise TypeError("content must be str or list")
+
+        self.content = _content
+
+    def _add_content(self, content: str) -> TextContent:
+        """"""
+        return TextContent(text=content)
+
+    def _add_url(self, url: str) -> ImageContent:
+        """"""
+        image = self.load_url(url=url)
+        return ImageContent(image_url=ImageUrl(url=image))
+
+    def _add_path(self, path: str) -> ImageContent:
+        """"""
+        image = self.read_image(path=path)
+        return ImageContent(image_url=ImageUrl(url=image))
 
 
 class ChatCompletionMessage(BaseModel):
@@ -219,6 +224,5 @@ TypeMessage = Union[
     ToolMessage,
     ToolsMessage,
     ImageMessage,
-    ZhipuImageMessage,
     ChatCompletionMessage,
 ]
