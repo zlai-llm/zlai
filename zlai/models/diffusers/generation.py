@@ -43,7 +43,7 @@ class LoadModelDiffusers(LoggerMixin):
         self.set_model_path()
         self.load_model()
         self.kolors_diffusers_model: List[str] = [
-            "Kolors-diffusers",
+            "kolors_diffusers",
         ]
 
     def set_model_path(self):
