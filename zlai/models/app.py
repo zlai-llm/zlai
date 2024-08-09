@@ -19,11 +19,13 @@ __all__ = [
 @click.option("--host", "-h", default="localhost", type=str, required=False, help="host")
 @click.option("--port", "-p", default=8000, type=int, required=False, help="port")
 @click.option("--reload", "-r", default=True, type=bool, required=False, help="reload")
+@click.option("--init_models", "-r", default=False, type=bool, required=False, help="reload")
 def models(
         config_path: Optional[str] = None,
         host: Optional[str] = "localhost",
         port: Union[int, str] = 8000,
         reload: Union[int, bool] = True,
+        init_models: bool = False,
 ) -> None:
     """"""
     if config_path is not None:

@@ -1,4 +1,5 @@
 import torch
+from functools import lru_cache
 from typing import Any, Dict, Tuple, Optional
 from transformers import AutoModel, AutoTokenizer
 from zlai.models.utils import get_device_max_memory
@@ -9,6 +10,7 @@ __all__ = [
 ]
 
 
+@lru_cache()
 def load_mini_cpm(
         model_path: str,
         max_memory: Optional[Dict] = None
@@ -23,5 +25,4 @@ def load_mini_cpm(
     model = model.eval().cuda()
     tokenizer = AutoTokenizer.from_pretrained(
         pretrained_model_name_or_path=model_path, trust_remote_code=True)
-
     return model, tokenizer

@@ -12,5 +12,3 @@ from zlai.models.routes import *
 
 
 # todo: 增加 API-embedding 的接口
-# todo: 增加 GLM-stream
-# todo: 增加 GLM-FunctionCall-stream

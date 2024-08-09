@@ -165,6 +165,10 @@ class LoadModelCompletion(LoggerMixin):
                 model=self.model, tokenizer=self.tokenizer, messages=messages,
                 generate_config=self.generate_config, validate=True,
                 tools=self.tools_config.tools, tool_choice=self.tools_config.tool_choice)
+        elif self.model_name in self.mini_cpm_model:
+            content = completion_mini_cpm(
+                model=self.model, tokenizer=self.tokenizer, messages=messages,
+            )
         else:
             content = f"Not find completion method: {self.model_name}"
 
@@ -181,15 +185,19 @@ class LoadModelCompletion(LoggerMixin):
         try:
             if self.model_name in self.qwen_2_completion_model:
                 streamer = stream_completion_qwen_2(
-                        model=self.model, tokenizer=self.tokenizer,
-                        messages=messages, generate_config=self.generate_config,
+                    model=self.model, tokenizer=self.tokenizer,
+                    messages=messages, generate_config=self.generate_config,
                 )
             elif self.model_name in self.glm_4_completion_model:
                 streamer = stream_completion_glm_4(
-                        model=self.model, tokenizer=self.tokenizer,
-                        messages=messages, generate_config=self.generate_config,
-                        validate=True, tools=self.tools_config.tools,
-                        tool_choice=self.tools_config.tool_choice,
+                    model=self.model, tokenizer=self.tokenizer,
+                    messages=messages, generate_config=self.generate_config,
+                    validate=True, tools=self.tools_config.tools,
+                    tool_choice=self.tools_config.tool_choice,
+                )
+            elif self.model_name in self.mini_cpm_model:
+                streamer = stream_completion_mini_cpm(
+                    model=self.model, tokenizer=self.tokenizer, messages=messages,
                 )
             else:
                 streamer = None
