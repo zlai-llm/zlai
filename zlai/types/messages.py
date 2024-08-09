@@ -207,7 +207,7 @@ class ImageMessage(ImageMixin):
         else:
             raise TypeError(f"content must be str or list, but got {type(self.content)}")
 
-    def to_message(self, _type: Literal["mini_cpm"] = "mini_cpm") -> Dict:
+    def to_message(self, _type: Literal["mini_cpm", "glm4v"] = "mini_cpm") -> Dict:
         """"""
         if _type == "mini_cpm":
             _content = []
@@ -230,6 +230,21 @@ class ImageMessage(ImageMixin):
                 raise TypeError(f"content must be str or list, but got {type(self.content)}")
 
             return {"role": self.role, "content": _content}
+
+        elif _type == "glm4v":
+            question = ""
+            image = None
+            for item in self.content:
+                if isinstance(item, TextContent):
+                    question = item.text
+                if isinstance(item, ImageContent):
+                    if isinstance(item.image_url.url, str):
+                        image = trans_bs64_to_image(item.image_url.url)
+            message = dict(role=self.role, content=question)
+            if image:
+                message["image"] = image
+            return message
+
         else:
             raise ValueError(f"Unknown message type {_type}")
 

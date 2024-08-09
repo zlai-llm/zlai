@@ -2,9 +2,8 @@ import torch
 from typing import List, Dict, Union, Optional
 from threading import Thread
 from transformers import TextIteratorStreamer
-from zlai.types.messages import TypeMessage
+from zlai.types.messages import TypeMessage, ImageMessage
 from .utils import ProcessMessages
-from ...utils import trans_messages
 from ...types import TypeInferenceGenerateConfig
 
 
@@ -12,6 +11,20 @@ __all__ = [
     "completion_glm_4",
     "stream_completion_glm_4",
 ]
+
+
+def trans_messages(messages: List[TypeMessage]) -> List[Dict]:
+    """"""
+    _messages = []
+    image_idx = []
+    for i, message in enumerate(messages):
+        if isinstance(message, ImageMessage):
+            image_idx.append(i)
+        _messages.append(message.model_dump())
+    if len(image_idx) > 1:
+        for _id in image_idx[:-1]:
+            _ = _messages[_id].pop("image")
+    return _messages
 
 
 def glm_4_messages_process(

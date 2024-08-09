@@ -1,8 +1,7 @@
-from typing import Any, List, Iterable, Optional
+from typing import Any, Dict, List, Iterable, Optional
 from threading import Thread
 from transformers import TextIteratorStreamer
 from zlai.types.messages import TypeMessage
-from ...utils import trans_messages
 from ...types import TypeInferenceGenerateConfig
 
 
@@ -10,6 +9,12 @@ __all__ = [
     "completion_qwen_2",
     "stream_completion_qwen_2",
 ]
+
+
+def trans_messages(messages: List[TypeMessage]) -> List[Dict]:
+    """"""
+    _messages = [message.model_dump() for message in messages]
+    return _messages
 
 
 def completion_qwen_2(

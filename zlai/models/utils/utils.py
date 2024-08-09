@@ -4,7 +4,6 @@ import torch
 import string
 import random
 from typing import List, Dict, Union, Literal, Optional
-from zlai.types import TypeMessage, ImageMessage
 from zlai.types.chat.chat_completion_chunk import Choice as ChunkChoice
 from zlai.types.chat.chat_completion_chunk import ChoiceDelta, ChatCompletionChunk
 
@@ -12,7 +11,6 @@ from zlai.types.chat.chat_completion_chunk import ChoiceDelta, ChatCompletionChu
 __all__ = [
     "load_model_config",
     "get_device_max_memory",
-    "trans_messages",
     "stream_chunk",
     "stream_message_chunk",
     "generate_id",
@@ -34,21 +32,6 @@ def get_device_max_memory(max_memory: Optional[Dict] = None) -> Dict:
     else:
         max_memory = None
     return max_memory
-
-
-def trans_messages(messages: List[TypeMessage]) -> List[Dict]:
-    """"""
-    _messages = []
-    image_idx = []
-    for i, message in enumerate(messages):
-        if isinstance(message, ImageMessage):
-            message.split_image()
-            image_idx.append(i)
-        _messages.append(message.model_dump())
-    if len(image_idx) > 1:
-        for _id in image_idx[:-1]:
-            _ = _messages[_id].pop("image")
-    return _messages
 
 
 def stream_chunk(_id: str, choice: ChunkChoice, model: str) -> ChatCompletionChunk:
