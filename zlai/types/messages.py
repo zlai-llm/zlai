@@ -175,7 +175,6 @@ class ImageMessage(ImageMixin):
             if images:
                 for image in images:
                     _content.append(self._add_image(image))
-
             if images_url:
                 for url in images_url:
                     _content.append(self._add_url(url))
