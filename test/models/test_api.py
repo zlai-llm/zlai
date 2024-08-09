@@ -37,12 +37,12 @@ class TestModels(unittest.TestCase):
 
     def test_image_message(self):
         """"""
+        url = "https://picx.zhimg.com/80/v2-0aea2c883dc1c8b8ca566eb8a8b38c70_720w.png"
         client = OpenAI(api_key="1234", base_url="http://127.0.0.1:8000/")
         response = client.chat.completions.create(
-            model="Qwen2-0.5B-Instruct",
+            model="glm-4v-9b",
             messages=[
-                UserMessage(content="介绍图片"),
-                ImageMessage(content="介绍图片").add_image(url="https://picx.zhimg.com/80/v2-0aea2c883dc1c8b8ca566eb8a8b38c70_720w.png")
+                ImageMessage(content="介绍图片", images_url=[url]).model_dump(),
             ],
             stream=False
         )

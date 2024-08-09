@@ -1,5 +1,6 @@
 import unittest
-from zlai.types.messages import ImageMessage
+from typing import List
+from zlai.types.messages import *
 
 
 class TestImageMessage(unittest.TestCase):
