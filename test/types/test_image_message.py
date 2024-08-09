@@ -23,4 +23,5 @@ class TestImageMessage(unittest.TestCase):
 
     def test_image_mini_cpm_message(self):
         image_message = ImageMessage(content="介绍这个图片", images_url=[self.url], images_path=[self.path])
-        print(image_message.to_message())
+        print(image_message.to_message(_type="mini_cpm"))
+        print(image_message.to_message(_type="glm4v"))
