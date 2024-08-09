@@ -127,7 +127,7 @@ uvicorn = "^0.30.3"
 transformers = "^4.43.3"
 sentence-transformers = "^3.0.1"
 accelerate = "^0.33.0"
-diffusers = {git = "https://github.com/huggingface/diffusers.git"}
+#diffusers = {git = "https://github.com/huggingface/diffusers.git"}
 
 
 [tool.poetry.extras]
