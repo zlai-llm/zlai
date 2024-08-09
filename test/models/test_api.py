@@ -48,3 +48,25 @@ class TestModels(unittest.TestCase):
         )
         print(response)
 
+    def test_function_call_messages(self):
+        messages = [{'role': 'user',
+          'content': "What's the Celsius temperature in San Francisco?"},
+         {'content': None,
+          'role': 'assistant',
+          'function_call': None,
+          'tool_calls': [{'id': 'call_dmfp59bEO3P12J5N1sBFSsxO',
+                          'function': {'arguments': '{"location": "San Francisco, CA", "format": "celsius"}',
+                                       'name': 'get_current_weather'},
+                          'type': 'function'}]},
+         {'role': 'observation',
+          'content': '{San Francisco, CA: {celsius: 15}}',
+          'function_call': True}]
+
+        client = OpenAI(api_key="1234", base_url="http://127.0.0.1:8000/")
+        response = client.chat.completions.create(
+            model="glm-4-9b-chat",
+            messages=messages,
+            stream=False
+        )
+        print(response)
+

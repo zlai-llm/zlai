@@ -1,5 +1,5 @@
 import unittest
-from typing import List
+from typing import List, Dict
 from zlai.types.messages import *
 
 
@@ -26,3 +26,19 @@ class TestImageMessage(unittest.TestCase):
         image_message = ImageMessage(content="介绍这个图片", images_url=[self.url], images_path=[self.path])
         print(image_message.to_message(_type="mini_cpm"))
         print(image_message.to_message(_type="glm4v"))
+
+        def trans_messages(messages: List[TypeMessage]) -> List[Dict]:
+            """"""
+            _messages = []
+            image_idx = []
+            for i, message in enumerate(messages):
+                if isinstance(message, ImageMessage):
+                    image_idx.append(i)
+                    _messages.append(message.to_message(_type="glm4v"))
+                else:
+                    _messages.append(message.model_dump())
+            if len(image_idx) > 1:
+                for _id in image_idx[:-1]:
+                    _ = _messages[_id].pop("image")
+            return _messages
+        print(trans_messages([image_message]))
