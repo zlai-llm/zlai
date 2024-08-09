@@ -167,7 +167,7 @@ class ImageMessage(ImageMixin):
             **kwargs
     ):
         super().__init__(**kwargs)
-
+        _content = None
         if isinstance(self.content, str):
             _content = [self._add_content(self.content)]
 
@@ -180,8 +180,6 @@ class ImageMessage(ImageMixin):
 
         elif isinstance(self.content, list):
             _content = self.content
-        else:
-            raise TypeError("content must be str or list")
 
         self.content = _content
 
@@ -207,8 +205,6 @@ class ImageMessage(ImageMixin):
             for i, content in enumerate(self.content):
                 if isinstance(content, ImageContent) and isinstance(content.image_url.url, str):
                     self.content[i].image_url.url = trans_bs64_to_image(content.image_url.url)
-        else:
-            raise TypeError(f"content must be str or list, but got {type(self.content)}")
 
     def to_message(self, _type: Literal["mini_cpm", "glm4v"] = "mini_cpm") -> Dict:
         """"""
@@ -229,8 +225,6 @@ class ImageMessage(ImageMixin):
                         else:
                             raise TypeError(f"Url type error, but got {type(item.image_url.url)}")
                 _content.append(question)
-            else:
-                raise TypeError(f"content must be str or list, but got {type(self.content)}")
 
             return {"role": self.role, "content": _content}
 
