@@ -11,6 +11,7 @@ from ..utils import *
 from .load import *
 from .glm4 import *
 from .qwen2 import *
+from .mini_cpm import *
 
 
 __all__ = [
@@ -50,17 +51,9 @@ class LoadModelCompletion(LoggerMixin):
         self.kwargs = kwargs
         self.set_model_path()
         self.load_model()
-        self.qwen_2_completion_model: List[str] = [
-            "Qwen2-0.5B-Instruct",
-            "Qwen2-1.5B-Instruct",
-            "Qwen2-7B-Instruct",
-            "Qwen2-57B-A14B-Instruct-GPTQ-Int4",
-        ]
-        self.glm_4_completion_model: List[str] = [
-            "glm-4-9b-chat",
-            "glm-4-9b-chat-1m",
-            "glm-4v-9b",
-        ]
+        self.qwen_2_completion_model = qwen_2_completion_model
+        self.glm_4_completion_model = glm_4_completion_model
+        self.mini_cpm_model = mini_cpm_model
 
     def set_model_path(self):
         """"""
