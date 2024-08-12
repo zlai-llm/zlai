@@ -51,3 +51,12 @@ def images_generations(
             raise HTTPException(status_code=400, detail=f"Generate Image Error: {e}")
 
     return ImagesResponse(created=int(time.time()), data=[Image(b64_json=b64_img, revised_prompt="b64_json")])
+
+
+@app.post("/images/edits")
+def images_edits(request: ImagesEditsRequest):
+    """
+    Edit images
+    """
+    return ImagesResponse(created=int(time.time()), data=[Image(b64_json="b64_json", revised_prompt="b64_json")])
+
