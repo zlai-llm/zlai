@@ -84,7 +84,7 @@ class LoadModelDiffusers(LoggerMixin):
             if isinstance(self.generate_config, KolorsImageGenerateConfig):
                 b64_img = kolors_generation(self.pipe, generate_config=self.generate_config)
             elif isinstance(self.generate_config, KolorsImage2ImageGenerateConfig):
-                b64_img = load_kolors_image2image(self.pipe, generate_config=self.generate_config)
+                b64_img = kolors_img2img_generation(self.pipe, generate_config=self.generate_config)
             else:
                 b64_img = f"Not find completion method: {self.model_name}"
         else:

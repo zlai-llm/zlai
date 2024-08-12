@@ -68,7 +68,7 @@ models_config:
       0: "32GB"
   - model_name: kolors_image2image
     model_path: /home/models/Kwai-Kolors/Kolors-diffusers
-    model_type: diffuser_image2image
+    model_type: diffuser
     load_method: load_kolors_image2image
     generate_method: KolorsImage2ImageGenerateConfig
     max_memory:

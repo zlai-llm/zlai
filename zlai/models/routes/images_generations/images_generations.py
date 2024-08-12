@@ -1,6 +1,7 @@
 import os
 import io
 import time
+import traceback
 from typing import Optional, Literal
 from PIL.Image import open
 from fastapi import HTTPException, File, Form, UploadFile
@@ -97,11 +98,11 @@ async def images_edits(
                 models_config=models_config, model_name=request.model,
                 generate_config=generate_config, logger=logger)
         except Exception as e:
-            raise HTTPException(status_code=400, detail=f"Load Model Error: {e}")
+            raise HTTPException(status_code=400, detail=f"Load Model Error: {e}\n\n{traceback.format_exc()}")
 
         try:
             b64_img = model_diffusers.diffusers()
         except Exception as e:
-            raise HTTPException(status_code=400, detail=f"Generate Image Error: {e}")
+            raise HTTPException(status_code=400, detail=f"Generate Image Error: {e}\n\n{traceback.format_exc()}")
 
     return ImagesResponse(created=int(time.time()), data=[Image(b64_json=b64_img, revised_prompt="b64_json")])

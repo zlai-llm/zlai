@@ -1,12 +1,13 @@
 import torch
 import base64
 from io import BytesIO
-from typing import Any, Union
+from typing import Any
 from zlai.models.types.images_generations import *
 
 
 __all__ = [
-    "kolors_generation"
+    "kolors_generation",
+    "kolors_img2img_generation"
 ]
 
 
