@@ -1,7 +1,8 @@
 import torch
 from typing import Dict, Optional
-from functools import lru_cache
+from cachetools import cached, TTLCache
 from sentence_transformers import SentenceTransformer
+from zlai.models.config import cache_config
 from .glm4 import load_glm4
 from .qwen2 import load_qwen2
 from .mini_cpm import load_mini_cpm
@@ -25,7 +26,7 @@ def get_device_max_memory(max_memory: Optional[Dict] = None) -> Dict:
     return max_memory
 
 
-@lru_cache()
+@cached(cache=TTLCache(**cache_config.model_dump()))
 def load_embedding(model_path: str):
     """"""
     model = SentenceTransformer(model_path)

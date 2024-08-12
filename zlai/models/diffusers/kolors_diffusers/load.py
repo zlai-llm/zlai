@@ -1,7 +1,8 @@
 import torch
-from functools import lru_cache
+from cachetools import cached, TTLCache
 from diffusers import KolorsPipeline
 from typing import Optional, Dict
+from zlai.models.config import cache_config
 
 
 __all__ = [
@@ -9,7 +10,7 @@ __all__ = [
 ]
 
 
-@lru_cache()
+@cached(cache=TTLCache(**cache_config.model_dump()))
 def load_kolors_diffusers(
     model_path: str,
     max_memory: Optional[Dict] = None,

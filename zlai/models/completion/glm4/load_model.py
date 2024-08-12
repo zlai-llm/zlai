@@ -1,8 +1,9 @@
 import torch
 from typing import Any, Dict, Tuple, Optional
-from functools import lru_cache
+from cachetools import cached, TTLCache
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from zlai.models.utils import get_device_max_memory
+from zlai.models.config import cache_config
 
 
 __all__ = [
@@ -10,7 +11,7 @@ __all__ = [
 ]
 
 
-@lru_cache()
+@cached(cache=TTLCache(**cache_config.model_dump()))
 def load_glm4(
         model_path: str,
         max_memory: Optional[Dict] = None
