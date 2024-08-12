@@ -1,9 +1,9 @@
 import time
 from logging import Logger
-from typing import Any, List, Dict, Union, Optional, Callable
+from typing import Any, List, Dict, Optional, Callable
 
 from zlai.utils.mixin import LoggerMixin
-from zlai.models.types.images_generations import ImageGenerateConfig
+from zlai.models.types.images_generations import *
 from .load_model import *
 from .kolors_diffusers import *
 
@@ -81,7 +81,12 @@ class LoadModelDiffusers(LoggerMixin):
         """"""
         self._start_logger(prompt=self.generate_config.prompt)
         if self.model_name in self.kolors_diffusers_model:
-            b64_img = kolors_generation(self.pipe, generate_config=self.generate_config)
+            if isinstance(self.generate_config, KolorsImageGenerateConfig):
+                b64_img = kolors_generation(self.pipe, generate_config=self.generate_config)
+            elif isinstance(self.generate_config, KolorsImage2ImageGenerateConfig):
+                b64_img = load_kolors_image2image(self.pipe, generate_config=self.generate_config)
+            else:
+                b64_img = f"Not find completion method: {self.model_name}"
         else:
             b64_img = f"Not find completion method: {self.model_name}"
         self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")

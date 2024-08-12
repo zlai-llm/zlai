@@ -1,6 +1,6 @@
 from PIL.Image import Image as TypeImage
 from typing import Optional
-from pydantic import Field
+from pydantic import Field, ConfigDict
 from .base import ImageGenerateConfig
 
 
@@ -31,6 +31,7 @@ class KolorsImageGenerateConfig(ImageGenerateConfig):
 
 class KolorsImage2ImageGenerateConfig(ImageGenerateConfig):
     """"""
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     image: TypeImage = Field(description="The image to use as the input for the image-to-image generation.")
     height: Optional[int] = Field(default=1024, description="The height of the image to generate.")
     width: Optional[int] = Field(default=1024, description="The width of the image to generate.")

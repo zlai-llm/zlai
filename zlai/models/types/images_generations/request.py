@@ -1,10 +1,13 @@
-from pydantic import BaseModel
-from typing import Any, Literal, Optional
+from PIL.Image import Image as TypeImage
+from pydantic import BaseModel, ConfigDict
+from typing import Any, Union, Literal, Optional
+from openai._types import FileTypes
 
 
 __all__ = [
     "ImagesGenerationsRequest",
     "ImagesEditsRequest",
+    "ImagesVariationsRequest",
 ]
 
 
@@ -45,17 +48,43 @@ class ImagesGenerationsRequest(BaseModel):
 
 class ImagesEditsRequest(BaseModel):
     """"""
-    image: Any
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    image: Union[TypeImage, FileTypes]
     """The image to edit. Must be a valid PNG file, less than 4MB, and square. If mask is not provided, 
     image must have transparency, which will be used as the mask."""
 
     prompt: str
     """A text description of the desired image(s). The maximum length is 1000 characters."""
 
-    mask: Optional[Any] = None
-    """An additional image whose fully transparent areas (e.g. where alpha is zero) indicate 
+    mask: Optional[Union[TypeImage, FileTypes]] = None
+    """An additional image whose fully transparent areas (e.g. where alpha is zero) indicate
     where image should be edited. Must be a valid PNG file, less than 4MB, and have the same dimensions as image.
     """
+
+    model: Optional[str] = "dall-e-2"
+    """The model to use for image generation."""
+
+    n: Optional[int] = 1
+    """The number of images to generate. Must be between 1 and 10. For dall-e-3, only n=1 is supported."""
+
+    size: Optional[Literal["256x256", "512x512", "1024x1024", "1792x1024", "1024x1792"]] = "1024x1024"
+    """The size of the generated images. Must be one of 256x256, 512x512, or 1024x1024 for dall-e-2.
+    Must be one of 1024x1024, 1792x1024, or 1024x1792 for dall-e-3 models."""
+
+    response_format: Optional[Literal["url", "b64_json"]] = "b64_json"
+    """The format in which the generated images are returned. Must be one of url or b64_json.
+    URLs are only valid for 60 minutes after the image has been generated."""
+
+    user: Optional[str] = None
+    """A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse."""
+
+
+class ImagesVariationsRequest(BaseModel):
+    """"""
+    image: Any
+    """The image to edit. Must be a valid PNG file, less than 4MB, and square. If mask is not provided, 
+    image must have transparency, which will be used as the mask."""
 
     model: Optional[str] = "dall-e-2"
     """The model to use for image generation."""
