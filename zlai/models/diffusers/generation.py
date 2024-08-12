@@ -42,9 +42,7 @@ class LoadModelDiffusers(LoggerMixin):
         self.kwargs = kwargs
         self.set_model_path()
         self.load_model()
-        self.kolors_diffusers_model: List[str] = [
-            "kolors_diffusers",
-        ]
+        self.kolors_diffusers_model: List[str] = kolors_diffusers_model
 
     def set_model_path(self):
         """"""

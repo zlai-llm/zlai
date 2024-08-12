@@ -9,9 +9,11 @@ from typing import Union
 TypeImageGenerateConfig = Union[
     ImageGenerateConfig,
     KolorsImageGenerateConfig,
+    KolorsImage2ImageGenerateConfig,
 ]
 
 
 images_generate_config_mapping = {
     "KolorsImageGenerateConfig": KolorsImageGenerateConfig,
+    "KolorsImage2ImageGenerateConfig": KolorsImage2ImageGenerateConfig,
 }
