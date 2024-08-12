@@ -83,7 +83,8 @@ click = {version = "^8.1.7", optional = true}
 sentence-transformers = {version = "^3.0.1", optional = true}
 torch = {version = "2.0.1", optional = true}
 accelerate = {version = "^0.33.0", optional = true}
-# diffusers = {git = "https://github.com/huggingface/diffusers.git", optional = true}
+diffusers = {version = "0.30.0", optional = true}
+cachetools = "^5.4.0"
 
 
 [tool.poetry.group.streamlit.dependencies]
@@ -127,7 +128,7 @@ uvicorn = "^0.30.3"
 transformers = "^4.43.3"
 sentence-transformers = "^3.0.1"
 accelerate = "^0.33.0"
-# diffusers = {git = "https://github.com/huggingface/diffusers.git"}
+diffusers = "0.30.0"
 
 
 [tool.poetry.extras]
@@ -141,7 +142,7 @@ all = [
     "streamlit", "bs4",
     "unstructured",
     "fastapi", "uvicorn", "transformers", "click", "sentence-transformers", "torch", "accelerate",
-#    "diffusers",
+    "diffusers",
 ]
 tiny = ["openai", "zhipuai"]
 api = ["zhipuai", "openai", "dashscope", "tencentcloud-sdk-python", "qianfan"]
@@ -154,7 +155,7 @@ streamlit = ["streamlit", "bs4"]
 unstructured = ["unstructured"]
 local = [
     "fastapi", "uvicorn", "transformers", "click", "sentence-transformers", "torch", "accelerate",
-#    "diffusers"
+    "diffusers"
 ]
 
 
