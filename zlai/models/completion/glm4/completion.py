@@ -1,8 +1,9 @@
 import torch
-from typing import List, Dict, Union, Optional
+from typing import List, Dict, Union, Tuple, Iterable, Optional
 from threading import Thread
 from transformers import TextIteratorStreamer
 from zlai.types.messages import TypeMessage, ImageMessage
+from zlai.types.completion_usage import CompletionUsage
 from .utils import ProcessMessages
 from ...types import TypeInferenceGenerateConfig
 
@@ -51,7 +52,7 @@ def completion_glm_4(
         tools: Optional[List[Dict]] = None,
         tool_choice: Optional[Union[dict, str]] = "none",
         generate_config: Optional[TypeInferenceGenerateConfig] = None,
-) -> str:
+) -> Tuple[str, CompletionUsage]:
     """"""
     messages = glm_4_messages_process(messages, validate, tools, tool_choice)
     inputs = tokenizer.apply_chat_template(
@@ -61,7 +62,11 @@ def completion_glm_4(
         outputs = model.generate(**inputs, **generate_config.gen_kwargs())
         outputs = outputs[:, inputs['input_ids'].shape[1]:]
         content = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    return content
+    completion_tokens = outputs.shape[1]
+    prompt_tokens = inputs.get("input_ids").shape[1]
+    total_tokens = completion_tokens + prompt_tokens
+    usage = CompletionUsage(completion_tokens=completion_tokens, prompt_tokens=prompt_tokens, total_tokens=total_tokens)
+    return content, usage
 
 
 def stream_completion_glm_4(
@@ -72,24 +77,28 @@ def stream_completion_glm_4(
         tools: Optional[List[Dict]] = None,
         tool_choice: Optional[Union[dict, str]] = "none",
         generate_config: Optional[TypeInferenceGenerateConfig] = None,
-):
+) -> Iterable[Tuple[str, CompletionUsage]]:
     """"""
     messages = glm_4_messages_process(messages, validate, tools, tool_choice)
+    usage = CompletionUsage(completion_tokens=0, prompt_tokens=0, total_tokens=0)
 
     streamer = TextIteratorStreamer(tokenizer)
     inputs = tokenizer.apply_chat_template(
         messages, add_generation_prompt=True, tokenize=True, return_tensors="pt", return_dict=True
     ).to(model.device)
+    usage.prompt_tokens = inputs.get("input_ids").shape[1]
     drop_tokens = tokenizer.special_tokens_map.get("additional_special_tokens")
     gen_config = {**inputs, "streamer": streamer, **generate_config.gen_kwargs()}
     thread = Thread(target=model.generate, kwargs=gen_config)
     thread.start()
 
     for i, response in enumerate(streamer):
+        usage.completion_tokens += 1
+        usage.total_tokens = usage.prompt_tokens + usage.completion_tokens
         content = str(response)
         if "[gMASK]" in content and i == 0:
             drop_tokens.insert(0, content)
         for t in drop_tokens:
             content = content.replace(t, "")
         if content:
-            yield content
+            yield content, usage

@@ -108,7 +108,7 @@ class LoadModelCompletion(LoggerMixin):
         vectors = self.model.encode(text, normalize_embeddings=True).to_list()
         return vectors
 
-    def parse_tools_call(self, content: str) -> ChatCompletion:
+    def parse_tools_call(self, content: str, usage: CompletionUsage) -> ChatCompletion:
         """"""
         if self.tools_config.tools:
             parse_function_call = ParseFunctionCall(content=content, tools=self.tools_config.tools)
@@ -123,7 +123,8 @@ class LoadModelCompletion(LoggerMixin):
 
         choice = ChatChoice(finish_reason=finish_reason, index=0, message=chat_completion_message)
         chat_completion = ChatCompletion(
-            id=generate_id(prefix="chat", k=16), created=int(time.time()), model=self.model_name, choices=[choice]
+            id=generate_id(prefix="chat", k=16), created=int(time.time()), model=self.model_name,
+            choices=[choice], usage=usage,
         )
         return chat_completion
 
@@ -156,26 +157,27 @@ class LoadModelCompletion(LoggerMixin):
         """"""
         self._start_logger(messages=messages)
         if self.model_name in self.qwen_2_completion_model:
-            content = completion_qwen_2(
+            content, usage = completion_qwen_2(
                 model=self.model, tokenizer=self.tokenizer, messages=messages,
                 generate_config=self.generate_config,
             )
         elif self.model_name in self.glm_4_completion_model:
-            content = completion_glm_4(
+            content, usage = completion_glm_4(
                 model=self.model, tokenizer=self.tokenizer, messages=messages,
                 generate_config=self.generate_config, validate=True,
                 tools=self.tools_config.tools, tool_choice=self.tools_config.tool_choice)
         elif self.model_name in self.mini_cpm_model:
-            content = completion_mini_cpm(
+            content, usage = completion_mini_cpm(
                 model=self.model, tokenizer=self.tokenizer, messages=messages,
             )
         else:
             content = f"Not find completion method: {self.model_name}"
+            usage = None
 
         self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")
         self._logger(msg=f"[{__class__.__name__}] Completion content: {content}", color="green")
 
-        chat_completion = self.parse_tools_call(content=content)
+        chat_completion = self.parse_tools_call(content=content, usage=usage)
         return chat_completion
 
     async def stream_completion(self, messages: List[TypeMessage]) -> Iterable[str]:
@@ -207,9 +209,10 @@ class LoadModelCompletion(LoggerMixin):
 
             if streamer is not None:
                 answer = ""
-                for delta_content in streamer:
+                for delta_content, usage in streamer:
                     chunk = stream_message_chunk(
-                        content=delta_content, finish_reason=None, model=self.model_name, _id=_id)
+                        content=delta_content, finish_reason=None, model=self.model_name, _id=_id, usage=usage
+                    )
                     answer += delta_content
                     yield f"data: {chunk.model_dump_json()}\n\n"
                 chunk = self.parse_stream_tools_call(content=answer, _id=_id)

@@ -4,6 +4,7 @@ import torch
 import string
 import random
 from typing import List, Dict, Union, Literal, Optional
+from zlai.types.completion_usage import CompletionUsage
 from zlai.types.chat.chat_completion_chunk import Choice as ChunkChoice
 from zlai.types.chat.chat_completion_chunk import ChoiceDelta, ChatCompletionChunk
 
@@ -34,11 +35,13 @@ def get_device_max_memory(max_memory: Optional[Dict] = None) -> Dict:
     return max_memory
 
 
-def stream_chunk(_id: str, choice: ChunkChoice, model: str) -> ChatCompletionChunk:
+def stream_chunk(
+        _id: str, choice: ChunkChoice, model: str, usage: CompletionUsage
+) -> ChatCompletionChunk:
     """"""
     chunk = ChatCompletionChunk(
         id=_id, object="chat.completion.chunk", created=int(time.time()),
-        model=model, choices=[choice],
+        model=model, choices=[choice], usage=usage
     )
     return chunk
 
@@ -47,11 +50,12 @@ def stream_message_chunk(
         content: str,
         finish_reason: Optional[Literal["stop", "length", "tool_calls", "content_filter", "function_call"]],
         model: Optional[str],
-        _id: Optional[str],
+        usage: Optional[CompletionUsage] = None,
+        _id: Optional[str] = None,
 ) -> ChatCompletionChunk:
     """"""
     choice = ChunkChoice(index=0, finish_reason=finish_reason, delta=ChoiceDelta(content=content))
-    chunk = stream_chunk(_id, choice, model=model)
+    chunk = stream_chunk(_id, choice, model=model, usage=usage)
     return chunk
 
 

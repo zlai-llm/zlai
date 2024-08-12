@@ -1,5 +1,6 @@
-from typing import List, Dict, Iterable
+from typing import List, Dict, Tuple, Iterable
 from zlai.types.messages import *
+from zlai.types.completion_usage import CompletionUsage
 
 
 __all__ = [
@@ -28,11 +29,23 @@ def completion_mini_cpm(
         tokenizer,
         messages: List[TypeMessage],
         **kwargs,
-) -> str:
+) -> Tuple[str, CompletionUsage]:
     """"""
+    usage = CompletionUsage(completion_tokens=0, prompt_tokens=0, total_tokens=0)
+    for message in messages:
+        if isinstance(message.content, str):
+            usage.prompt_tokens += len(message.content)
+        elif isinstance(message.content, list):
+            for content in message.content:
+                if isinstance(content, str):
+                    usage.prompt_tokens += len(content)
+
     messages = mini_cpm_messages_process(messages)
     content = model.chat(image=None, msgs=messages, tokenizer=tokenizer)
-    return content
+
+    usage.completion_tokens = len(content)
+    usage.total_tokens = usage.prompt_tokens + usage.completion_tokens
+    return content, usage
 
 
 def stream_completion_mini_cpm(
@@ -40,9 +53,12 @@ def stream_completion_mini_cpm(
         tokenizer,
         messages: List[TypeMessage],
         **kwargs,
-) -> Iterable[str]:
+) -> Iterable[Tuple[str, CompletionUsage]]:
     """"""
+    usage = CompletionUsage(completion_tokens=0, prompt_tokens=0, total_tokens=0)
     messages = mini_cpm_messages_process(messages)
     completion = model.chat(image=None, msgs=messages, tokenizer=tokenizer, sampling=True, stream=True)
     for chunk_content in completion:
-        yield chunk_content
+        usage.completion_tokens += 1
+        usage.total_tokens = usage.prompt_tokens + usage.completion_tokens
+        yield chunk_content, usage
