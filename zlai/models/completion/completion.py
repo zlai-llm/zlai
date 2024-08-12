@@ -128,7 +128,7 @@ class LoadModelCompletion(LoggerMixin):
         )
         return chat_completion
 
-    def parse_stream_tools_call(self, content: str, _id: str) -> ChatCompletionChunk:
+    def parse_stream_tools_call(self, content: str, _id: str, usage: CompletionUsage) -> ChatCompletionChunk:
         """"""
         if self.tools_config.tools:
             parse_function_call = ParseFunctionCall(content=content, tools=self.tools_config.tools)
@@ -143,7 +143,8 @@ class LoadModelCompletion(LoggerMixin):
 
         chunk_choice = ChunkChoice(finish_reason=finish_reason, index=0, delta=choice_delta)
         chat_completion_chunk = ChatCompletionChunk(
-            id=_id, created=int(time.time()), model=self.model_name, choices=[chunk_choice]
+            id=_id, created=int(time.time()), model=self.model_name, choices=[chunk_choice],
+            usage=usage,
         )
         return chat_completion_chunk
 
@@ -209,13 +210,14 @@ class LoadModelCompletion(LoggerMixin):
 
             if streamer is not None:
                 answer = ""
+                usage = None
                 for delta_content, usage in streamer:
                     chunk = stream_message_chunk(
                         content=delta_content, finish_reason=None, model=self.model_name, _id=_id, usage=usage
                     )
                     answer += delta_content
                     yield f"data: {chunk.model_dump_json()}\n\n"
-                chunk = self.parse_stream_tools_call(content=answer, _id=_id)
+                chunk = self.parse_stream_tools_call(content=answer, _id=_id, usage=usage)
                 yield f"data: {chunk.model_dump_json()}\n\n"
                 self._logger(msg=f"[{__class__.__name__}] Completion content: {answer}", color="green")
 
