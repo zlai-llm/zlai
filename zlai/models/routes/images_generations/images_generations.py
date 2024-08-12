@@ -62,7 +62,7 @@ async def images_edits(
         image: UploadFile = File(...),
         prompt: str = Form(...),
         mask: Optional[UploadFile] = File(None),
-        model: Optional[str] = "dall-e-2",
+        model: Optional[str] = Form(...),
         n: Optional[int] = 1,
         size: Optional[Literal["256x256", "512x512", "1024x1024", "1792x1024", "1024x1792"]] = "1024x1024",
         response_format: Optional[Literal["url", "b64_json"]] = "b64_json",
@@ -74,7 +74,6 @@ async def images_edits(
         logger.error(f"[ImagesGenerations] Models config path: {models_config_path} not exists.")
         raise HTTPException(status_code=404, detail="Models config path not exists.")
     else:
-
         image = open(io.BytesIO(image.file.read())).convert("RGB")
         request = ImagesEditsRequest(
             image=image, prompt=prompt, mask=mask, model=model,
@@ -85,13 +84,11 @@ async def images_edits(
         models_config = load_model_config(path=models_config_path)
         models_config = models_config.get("models_config")
         model_config = get_model_config(model_name=request.model, models_config=models_config)
-
         if model_config is None:
             raise HTTPException(status_code=400, detail="Invalid request, model not exists.")
         else:
             logger.info(f"[ImagesGenerations] Model config: {model_config}")
             model_config = ModelConfig.model_validate(model_config)
-
         generate_config = model_config.generate_method.model_validate(request.model_dump())
         logger.info(f"[ImagesGenerations] Generate kwargs: {generate_config.gen_kwargs()}")
 
