@@ -4,3 +4,4 @@ from .chat_completions import *
 from .gpu_memory_cache import *
 from .text_embedding import *
 from .images_generations import *
+from .embedding import *
