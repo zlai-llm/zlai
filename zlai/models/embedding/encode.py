@@ -72,20 +72,21 @@ class LoadModelEmbedding(LoggerMixin):
 
     def _trans_vectors_to_embedding(self, vectors: List[List[float]]) -> List[Embedding]:
         """"""
-        return [Embedding(index=i, vector=vector) for i, vector in enumerate(vectors)]
+        return [Embedding(index=i, embedding=vector) for i, vector in enumerate(vectors)]
 
     def encode(self, text: List[str] | str) -> CreateEmbeddingResponse:
         """"""
-        usage, vectors = None, []
-        response = CreateEmbeddingResponse(model=self.model_name)
+        usage, vectors = Usage(), []
+        response = CreateEmbeddingResponse(model=self.model_name, usage=usage, data=vectors)
         if isinstance(text, str):
             text = [text]
 
         self._logger(msg=f"[{__class__.__name__}] Embedding {len(text)} sentences...", color="green")
         if self.model_name in self.bge_embedding_model:
             vectors, usage = encode(text=text, model=self.model)
-
-        response.data = self._trans_vectors_to_embedding(vectors=vectors)
-        response.usage = usage
-        self._logger(msg=f"[{__class__.__name__}] Embedding Done.", color="green")
-        return response
+            response.data = self._trans_vectors_to_embedding(vectors=vectors)
+            response.usage = usage
+            self._logger(msg=f"[{__class__.__name__}] Embedding Done.", color="green")
+            return response
+        else:
+            raise NotImplementedError(f"Embedding model {self.model_name} not found.")

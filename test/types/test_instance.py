@@ -1,25 +1,24 @@
 import unittest
-from zlai.models.types.images_generations import TypeImageGenerateConfig, ImageGenerateConfig
+from pydantic import BaseModel, Field
+from typing import List, Literal
 
 
 class TestImageGenerateConfig(unittest.TestCase):
     def test_image_generate_config(self):
-        class ImageGenerateConfig:
-            def __init__(self, width: int, height: int):
-                self.width = width
-                self.height = height
+        class Embedding(BaseModel):
+            embedding: List[float]
+            """The embedding vector, which is a list of floats.
 
-        class KolorsImageGenerateConfig:
-            def __init__(self, palette: list):
-                self.palette = palette
+            The length of vector depends on the model as listed in the
+            [embedding guide](https://platform.openai.com/docs/guides/embeddings).
+            """
 
-        from typing import Union
+            index: int
+            """The index of the embedding in the list of embeddings."""
 
-        TypeImageGenerateConfig = Union[ImageGenerateConfig, KolorsImageGenerateConfig]
+            object: Literal["embedding"] = Field(default="embedding")
+            """The object type, which is always "embedding"."""
 
-        image_config = ImageGenerateConfig(width=256, height=256)
-        colors_config = KolorsImageGenerateConfig(palette=['#FF0000', '#00FF00', '#0000FF'])
+        vectors = [[1, 1,], [2., 2]]
 
-        print(isinstance(image_config, TypeImageGenerateConfig))  # True
-        print(isinstance(colors_config, TypeImageGenerateConfig))  # True
-        # print(isinstance(ImageGenerateConfig(), TypeImageGenerateConfig))
+        [Embedding(e) for i, vector in enumerate(vectors)]

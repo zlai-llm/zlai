@@ -6,6 +6,7 @@ from openai.types.chat.chat_completion_tool_choice_option_param import ChatCompl
 from zlai.types.messages import TypeMessage
 from .generate_config import *
 from .images_generations import *
+from .embedding import *
 
 
 __all__ = [
@@ -72,6 +73,8 @@ class ModelConfig(BaseModel):
         elif self.model_type == "diffuser":
             base_method = ImageGenerateConfig
             generate_config_mapping = images_generate_config_mapping
+        elif self.model_type == "embedding":
+            generate_config_mapping = embedding_generate_config_mapping
         else:
             raise ValueError(f"Unsupported model type: {self.model_type}")
 
