@@ -1,6 +1,5 @@
 import unittest
 from openai import OpenAI
-# from openai.embeddings_utils import get_embedding, cosine_similarity
 
 
 class TestEmbedding(unittest.TestCase):
