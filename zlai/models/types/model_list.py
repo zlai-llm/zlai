@@ -25,6 +25,9 @@ class ModelList(BaseModel):
     glm_4_9b_chat: str = "glm-4-9b-chat"
     glm_4_9b_chat_1m: str = "glm-4-9b-chat-1m"
     glm_4_9b: str = "glm-4v-9b"
+    bge: str = "bge-m3"
+    kolors_diffusers: str = "kolors-diffusers"
+    mini_cpm: str = "mini_cpm-v2_6"
 
 
 _model_list = ModelList()
