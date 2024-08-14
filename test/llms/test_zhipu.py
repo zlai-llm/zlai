@@ -56,6 +56,13 @@ class TestMokeZhipuModels(unittest.TestCase):
         data = llm.generate(query="1+1=")
         print(data.choices[0].message.content)
 
+    def test_glm_4_long(self):
+        """"""
+        llm = Zhipu(generate_config=GLM4LongGenerateConfig())
+        completion = llm.generate(query="1+1=")
+        print(completion.model)
+        print(completion.choices[0].message.content)
+
     def test_glm_4_9b(self):
         """"""
         llm = Zhipu(generate_config=GLM49BGenerateConfig())
