@@ -41,7 +41,7 @@ class ChatCompletionRequest(BaseModel):
     stop: Union[Optional[str], List[str]] = Field(default=None, description="")
     stream: Optional[bool] = Field(default=False, description="")
     temperature: Optional[float] = Field(default=None, description="")
-    tool_choice: Optional[ChatCompletionToolChoiceOptionParam] = Field(default='none', description="")
+    tool_choice: Optional[ChatCompletionToolChoiceOptionParam] = Field(default='auto', description="")
     tools: Optional[Union[Iterable[ChatCompletionToolParam], List[Dict]]] = Field(default=None, description="")
     top_logprobs: Optional[int] = Field(default=None, description="")
     top_p: Optional[float] = Field(default=None, description="")
