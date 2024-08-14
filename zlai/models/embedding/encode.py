@@ -74,7 +74,7 @@ class LoadModelEmbedding(LoggerMixin):
         """"""
         return [Embedding(index=i, embedding=vector) for i, vector in enumerate(vectors)]
 
-    def encode(self, text: List[str] | str) -> CreateEmbeddingResponse:
+    def encode(self, text: Union[str, List[str]]) -> CreateEmbeddingResponse:
         """"""
         usage, vectors = Usage(), []
         response = CreateEmbeddingResponse(model=self.model_name, usage=usage, data=vectors)
