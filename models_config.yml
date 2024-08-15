@@ -73,6 +73,13 @@ models_config:
     generate_method: KolorsImage2ImageGenerateConfig
     max_memory:
       0: "32GB"
+  - model_name: CosyVoice-300M-SFT
+    model_path: /home/models/FunAudioLLM/CosyVoice-300M-SFT
+    model_type: audio
+    load_method: load_cosy_voice
+    generate_method: CosyVoiceGenerateConfig
+    max_memory:
+      0: "32GB"
   - model_name: bge-m3
     model_path: /home/models/BAAI/bge-m3
     model_type: embedding
