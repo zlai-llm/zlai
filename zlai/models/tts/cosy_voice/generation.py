@@ -16,6 +16,6 @@ def cosy_voice_generation(
 ) -> bytes:
     output = cosy_voice.inference_sft(tts_text=generate_config.input, spk_id=generate_config.voice)
     byte_io = io.BytesIO()
-    torchaudio.save(byte_io, output["tts_speech"], 22050)
+    torchaudio.save(byte_io, output["tts_speech"], 22050, format="wav")
     wav_binary = byte_io.getvalue()
     return wav_binary

@@ -79,7 +79,7 @@ class LoadModelAudio(LoggerMixin):
 
     def generate(self) -> str:
         """"""
-        self._start_logger(prompt=self.generate_config.prompt)
+        self._start_logger(prompt=self.generate_config.input)
         if self.model_name in self.cosy_voice_model:
             if isinstance(self.generate_config, CosyVoiceGenerateConfig):
                 wav_binary = cosy_voice_generation(self.pipe, generate_config=self.generate_config)

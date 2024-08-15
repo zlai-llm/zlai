@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 matcha_path = Path(__file__).parent
-sys.path.append(str(matcha_path))
+sys.path.insert(0, str(matcha_path))
 
 from .load import *
 from .generation import *

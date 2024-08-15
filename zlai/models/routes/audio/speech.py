@@ -2,7 +2,7 @@ import os
 from fastapi import HTTPException, Response
 from zlai.utils import pkg_config
 from zlai.models.utils import load_model_config, get_model_config
-
+from zlai.models.types.schema import ModelConfig
 from zlai.models.tts.generation import LoadModelAudio
 from zlai.models.types.audio import *
 from ....models import app, logger
@@ -32,9 +32,15 @@ def audio_speech(
             raise HTTPException(status_code=400, detail="Invalid request, model not exists.")
         else:
             logger.info(f"[AudioSpeech] Model config: {model_config}")
+            model_config = ModelConfig.model_validate(model_config)
+
+        generate_config = model_config.generate_method.model_validate(request.model_dump())
+        logger.info(f"[ChatCompletion] Generate kwargs: {generate_config.gen_kwargs()}")
+
         try:
             model = LoadModelAudio(
-                models_config=models_config, model_name=request.model, logger=logger)
+                models_config=models_config, model_name=request.model,
+                generate_config=generate_config, logger=logger,)
         except Exception as e:
             raise HTTPException(status_code=400, detail=f"Load Model Error: {e}")
         try:
