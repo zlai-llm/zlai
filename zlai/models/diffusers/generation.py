@@ -43,8 +43,6 @@ class LoadModelDiffusers(LoggerMixin):
         self.kwargs = kwargs
         self.set_model_path()
         self.load_model()
-        self.kolors_diffusers_model: List[str] = kolors_diffusers_model
-        self.flux_diffusers_model: List[str] = flux_diffusers_model
 
     def set_model_path(self):
         """"""
@@ -82,15 +80,12 @@ class LoadModelDiffusers(LoggerMixin):
     def diffusers(self) -> str:
         """"""
         self._start_logger(prompt=self.generate_config.prompt)
-        if self.model_name in self.kolors_diffusers_model:
-            if isinstance(self.generate_config, KolorsImageGenerateConfig):
-                b64_img = kolors_generation(self.pipe, generate_config=self.generate_config)
-            elif isinstance(self.generate_config, KolorsImage2ImageGenerateConfig):
-                b64_img = kolors_img2img_generation(self.pipe, generate_config=self.generate_config)
-            elif isinstance(self.generate_config, FLUXImageGenerateConfig):
-                bs4_img = flux_generation(self.pipe, generate_config=self.generate_config)
-            else:
-                b64_img = f"Not find completion method: {self.model_name}"
+        if isinstance(self.generate_config, KolorsImageGenerateConfig):
+            b64_img = kolors_generation(self.pipe, generate_config=self.generate_config)
+        elif isinstance(self.generate_config, KolorsImage2ImageGenerateConfig):
+            b64_img = kolors_img2img_generation(self.pipe, generate_config=self.generate_config)
+        elif isinstance(self.generate_config, FLUXImageGenerateConfig):
+            b64_img = flux_generation(self.pipe, generate_config=self.generate_config)
         else:
             b64_img = f"Not find completion method: {self.model_name}"
         self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")

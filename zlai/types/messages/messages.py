@@ -8,7 +8,7 @@ from typing import List, Dict, Union, Literal, Optional
 from pydantic import BaseModel, Field, ConfigDict
 from zlai.utils.image import *
 from zlai.utils import pkg_config
-from .function_call import *
+from zlai.types.function_call import *
 
 
 __all__ = [
