@@ -5,7 +5,8 @@ from typing import Any, List, Dict, Optional, Callable
 from zlai.utils.mixin import LoggerMixin
 from zlai.models.types.images_generations import *
 from .load_model import *
-from .kolors_diffusers import *
+from .kolors import *
+from .flux import *
 
 
 __all__ = [
@@ -43,6 +44,7 @@ class LoadModelDiffusers(LoggerMixin):
         self.set_model_path()
         self.load_model()
         self.kolors_diffusers_model: List[str] = kolors_diffusers_model
+        self.flux_diffusers_model: List[str] = flux_diffusers_model
 
     def set_model_path(self):
         """"""
@@ -85,6 +87,8 @@ class LoadModelDiffusers(LoggerMixin):
                 b64_img = kolors_generation(self.pipe, generate_config=self.generate_config)
             elif isinstance(self.generate_config, KolorsImage2ImageGenerateConfig):
                 b64_img = kolors_img2img_generation(self.pipe, generate_config=self.generate_config)
+            elif isinstance(self.generate_config, FLUXImageGenerateConfig):
+                bs4_img = flux_generation(self.pipe, generate_config=self.generate_config)
             else:
                 b64_img = f"Not find completion method: {self.model_name}"
         else:

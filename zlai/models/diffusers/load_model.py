@@ -1,4 +1,4 @@
-from .kolors_diffusers import *
+from .kolors import *
 
 __all__ = ["load_method_mapping"]
 
