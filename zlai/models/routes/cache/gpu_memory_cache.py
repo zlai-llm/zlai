@@ -5,6 +5,7 @@ from zlai.models.completion.load import load_method_mapping as load_completion
 from zlai.models.diffusers.load_model import load_method_mapping as load_diffusers
 from zlai.models.embedding.load_model import load_method_mapping as load_embedding
 from zlai.models.tts.load_model import load_method_mapping as load_tts
+from zlai.models.types.cache import DropModelRequest
 
 
 __all__ = [
@@ -48,13 +49,18 @@ def current_models():
 
 
 @app.post("/cache/drop_model")
-def drop_model(name: Union[str, List[str]]):
+def drop_model(request: DropModelRequest):
     """"""
-    if isinstance(name, str):
-        name = [name]
     load_method = get_load_method()
+    drop_methods = []
+    drop_path = []
     for load_name, method in load_method.items():
-        if load_name in name:
+        if load_name in request.method:
             method.cache.clear()
-            return {"message": f"Drop model <{load_name}: {list(method)}> cache success."}
-    return {"message": f"Not find model: {name}"}
+            drop_methods.append(load_name)
+        if len(list(method.cache)) != 0:
+            for path in request.path:
+                if (path, ) in list(method.cache):
+                    method.cache.pop((path, ))
+                    drop_path.append(path)
+    return {"method": drop_methods, "path": drop_path}
