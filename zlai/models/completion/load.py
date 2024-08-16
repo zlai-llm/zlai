@@ -8,6 +8,7 @@ from .mini_cpm import load_mini_cpm
 __all__ = [
     "load_qwen2",
     "load_glm4",
+    "load_mini_cpm",
     "load_method_mapping",
     "get_device_max_memory",
 ]
