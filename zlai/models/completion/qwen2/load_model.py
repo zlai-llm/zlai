@@ -7,6 +7,7 @@ from zlai.models.config import cache_config
 
 __all__ = [
     "load_qwen2",
+    "load_qwen2_audio",
 ]
 
 
@@ -25,3 +26,17 @@ def load_qwen2(
     )
     tokenizer = AutoTokenizer.from_pretrained(model_path)
     return model, tokenizer
+
+
+@cached(cache=TTLCache(**cache_config.model_dump()))
+def load_qwen2_audio(
+        model_path: str,
+        max_memory: Optional[Dict] = None
+) -> Tuple[Any, Any]:
+    """"""
+    from transformers import Qwen2AudioForConditionalGeneration, AutoProcessor
+    max_memory = get_device_max_memory(max_memory)
+    processor = AutoProcessor.from_pretrained(model_path)
+    model = Qwen2AudioForConditionalGeneration.from_pretrained(
+        model_path, device_map="auto", max_memory=max_memory)
+    return model, processor

@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Tuple, Iterable, Optional
 from threading import Thread
 from transformers import TextIteratorStreamer
-from zlai.types.messages import TypeMessage
+from zlai.types.messages import TypeMessage, AudioMessage
 from zlai.types.completion_usage import CompletionUsage
 from ...types import TypeInferenceGenerateConfig
 
@@ -72,3 +72,32 @@ def stream_completion_qwen_2(
         if i > 0:
             content = response.replace(tokenizer.eos_token, '')
             yield content, usage
+
+
+def trans_audio_messages(messages: List[TypeMessage], processor: Any) -> Tuple[str, List]:
+    """"""
+    audios = []
+    _messages = []
+    for message in messages:
+        if isinstance(message, AudioMessage):
+            audios.extend(message.get_audios(sr=processor.feature_extractor.sampling_rate))
+        _messages.append(message.model_dump())
+    text = processor.apply_chat_template(_messages, add_generation_prompt=True, tokenize=False)
+    return text, audios
+
+
+def completion_qwen_2_audio(
+        model,
+        processor,
+        messages: List[TypeMessage],
+        generate_config: Optional[TypeInferenceGenerateConfig],
+        **kwargs: Any,
+):
+    """"""
+    text, audios = trans_audio_messages(messages, processor)
+    inputs = processor(text=text, audios=audios, return_tensors="pt", padding=True)
+    inputs.input_ids = inputs.input_ids.to("cuda")
+    generate_ids = model.generate(**inputs, **generate_config.model_dump())
+    generate_ids = generate_ids[:, inputs.input_ids.size(1):]
+    response = processor.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+    return response

@@ -6,6 +6,7 @@ __all__ = [
     "Qwen2InstructInferenceGenerateConfig",
     "Qwen215BInstructInferenceGenerateConfig",
     "Qwen205BInstructInferenceGenerateConfig",
+    "Qwen2Audio7BInstructInferenceGenerateConfig",
 ]
 
 
@@ -25,4 +26,12 @@ class Qwen205BInstructInferenceGenerateConfig(Qwen2InstructInferenceGenerateConf
 class Qwen215BInstructInferenceGenerateConfig(Qwen2InstructInferenceGenerateConfig):
     repetition_penalty: Optional[float] = 1.1
 
-    
+
+class Qwen2Audio7BInstructInferenceGenerateConfig(InferenceGenerateConfig):
+    """"""
+    repetition_penalty: Optional[float] = 1.1
+    do_sample: Optional[bool] = True
+    max_length: int = 256
+    top_k: Optional[int] = 20,
+    top_p: Optional[float] = 0.5,
+    temperature: Optional[float] = 0.7

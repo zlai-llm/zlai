@@ -13,6 +13,7 @@ TypeInferenceGenerateConfig = Union[
     Qwen2InstructInferenceGenerateConfig,
     Qwen215BInstructInferenceGenerateConfig,
     Qwen205BInstructInferenceGenerateConfig,
+    Qwen2Audio7BInstructInferenceGenerateConfig,
 ]
 
 inference_generate_config_mapping = {
@@ -23,5 +24,6 @@ inference_generate_config_mapping = {
     "Qwen2InstructInferenceGenerateConfig": Qwen2InstructInferenceGenerateConfig,
     "Qwen215BInstructInferenceGenerateConfig": Qwen215BInstructInferenceGenerateConfig,
     "Qwen205BInstructInferenceGenerateConfig": Qwen205BInstructInferenceGenerateConfig,
+    "Qwen2Audio7BInstructInferenceGenerateConfig": Qwen2Audio7BInstructInferenceGenerateConfig,
 }
 
