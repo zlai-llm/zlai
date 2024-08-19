@@ -6,9 +6,3 @@ app = FastAPI(title="OpenAI-compatible API for ZLAI")
 LOGGING_CONFIG["formatters"]["default"]["fmt"] = "%(asctime)s %(levelprefix)s %(message)s"
 logger = logging.getLogger("uvicorn")
 logger.setLevel(logging.INFO)
-
-from zlai.models.app import *
-from zlai.models.routes import *
-
-
-# todo: 增加 API-embedding 的接口
