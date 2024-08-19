@@ -1,11 +1,11 @@
 import os
 from fastapi import HTTPException
 from starlette.responses import StreamingResponse
-from zlai.models.types.schema import *
+from zlai.models.types.completion import *
 from zlai.utils.config import pkg_config
 from zlai.models.utils import load_model_config, get_model_config
-from ..completion import *
-from ...models import app, logger
+from zlai.models.completion import *
+from zlai.models import app, logger
 
 
 __all__ = [

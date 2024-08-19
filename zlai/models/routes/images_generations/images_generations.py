@@ -5,8 +5,9 @@ import traceback
 from typing import Optional, Literal
 from PIL.Image import open
 from fastapi import HTTPException, File, Form, UploadFile
-from zlai.models.types.schema import *
+
 from zlai.utils.config import pkg_config
+from zlai.models.types.models_config import *
 from zlai.models.types.images_generations import *
 from zlai.models.diffusers import LoadModelDiffusers
 from zlai.models.utils import load_model_config, get_model_config

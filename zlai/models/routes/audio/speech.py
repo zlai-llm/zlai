@@ -2,7 +2,7 @@ import os
 from fastapi import HTTPException, Response
 from zlai.utils import pkg_config
 from zlai.models.utils import load_model_config, get_model_config
-from zlai.models.types.schema import ModelConfig
+from zlai.models.types.models_config import ModelConfig
 from zlai.models.tts.generation import LoadModelAudio
 from zlai.models.types.audio import *
 from ....models import app, logger
