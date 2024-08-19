@@ -2,7 +2,7 @@ import torch
 from cachetools import cached, TTLCache
 from diffusers import FluxPipeline
 from typing import Optional, Dict
-from zlai.models.config import cache_config
+from ..cache import *
 
 
 __all__ = [
