@@ -9,10 +9,15 @@ from ...embedding import *
 
 
 __all__ = [
-    "models"
+    "chat_completion_models",
+    "diffusers_models",
+    "audio_models",
+    "embedding_models",
+    "total_models",
 ]
 
-models = {
+
+chat_completion_models = {
     "Qwen2-0.5B-Instruct": ModelConfig(
         model_name="Qwen2-0.5B-Instruct",
         model_path="/home/models/Qwen/Qwen2-0.5B-Instruct",
@@ -77,6 +82,9 @@ models = {
         load_method=load_mini_cpm,
         max_memory={"0": "30GB"},
     ),
+}
+
+diffusers_models = {
     "Kolors-diffusers": ModelConfig(
         model_name="Kolors-diffusers",
         model_path="/home/models/Kwai-Kolors/Kolors-diffusers",
@@ -101,6 +109,9 @@ models = {
         load_method=load_flux_diffusers,
         max_memory={"0": "32GB"},
     ),
+}
+
+audio_models = {
     "CosyVoice-300M-SFT": ModelConfig(
         model_name="CosyVoice-300M-SFT",
         model_path="/home/models/FunAudioLLM/CosyVoice-300M-SFT",
@@ -109,6 +120,9 @@ models = {
         load_method=load_cosy_voice,
         max_memory={"0": "32GB"},
     ),
+}
+
+embedding_models = {
     "bge-m3": ModelConfig(
         model_name="CosyVoice-300M-SFT",
         model_path="/home/models/BAAI/bge-m3",
@@ -116,4 +130,11 @@ models = {
         load_method=load_embedding,
         max_memory={"0": "32GB"},
     ),
+}
+
+total_models = {
+    **chat_completion_models,
+    **diffusers_models,
+    **audio_models,
+    **embedding_models,
 }
