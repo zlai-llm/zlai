@@ -3,7 +3,7 @@ from threading import Thread
 from transformers import TextIteratorStreamer
 from zlai.types.messages import TypeMessage, AudioMessage
 from zlai.types.completion_usage import CompletionUsage
-from ...types import TypeInferenceGenerateConfig
+from zlai.models.types.generate_config import TypeInferenceGenerateConfig
 
 
 __all__ = [

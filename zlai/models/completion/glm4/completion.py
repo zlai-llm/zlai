@@ -4,8 +4,8 @@ from threading import Thread
 from transformers import TextIteratorStreamer
 from zlai.types.messages import TypeMessage, ImageMessage
 from zlai.types.completion_usage import CompletionUsage
+from zlai.models.types.generate_config import TypeInferenceGenerateConfig
 from .utils import ProcessMessages
-from ...types import TypeInferenceGenerateConfig
 
 
 __all__ = [

@@ -6,7 +6,8 @@ from zlai.types import *
 from zlai.types.chat.chat_completion import Choice as ChatChoice
 from zlai.types.chat.chat_completion_chunk import Choice as ChunkChoice
 from zlai.utils.mixin import LoggerMixin
-from ..types import *
+from zlai.models.types.models_config.models_config import ModelConfig, ToolsConfig
+from zlai.models.types.generate_config import TypeInferenceGenerateConfig
 from ..utils import *
 from .load import *
 from .glm4 import *
@@ -23,13 +24,14 @@ class LoadModelCompletion(LoggerMixin):
     """"""
     model: Any
     tokenizer: Any
-    model_config: Dict
-    load_method: str
+    model_config: Union[Dict, ModelConfig]
+    load_method: Union[str, Callable]
 
     def __init__(
             self,
             model_path: Optional[str] = None,
-            models_config: Optional[List[Dict]] = None,
+            models_config: Optional[Union[List[Dict], List[ModelConfig]]] = None,
+            model_config: Optional[ModelConfig] = None,
             model_name: Optional[str] = None,
             generate_config: Optional[TypeInferenceGenerateConfig] = None,
             tools_config: Optional[ToolsConfig] = None,
@@ -41,6 +43,7 @@ class LoadModelCompletion(LoggerMixin):
     ):
         self.model_path = model_path
         self.models_config = models_config
+        self.model_config = model_config
         self.model_name = model_name
         self.generate_config = generate_config
         self.tools_config = tools_config
@@ -60,9 +63,12 @@ class LoadModelCompletion(LoggerMixin):
         if self.model_path is not None:
             pass
         else:
-            self.model_config = self.get_model_config(model_name=self.model_name, models_config=self.models_config)
+            if self.model_config is None:
+                self.model_config = self.get_model_config(
+                    model_name=self.model_name, models_config=self.models_config)
             self.model_path = self.model_config.get("model_path")
             self.load_method = self.model_config.get("load_method")
+            print(self.model_config, self.model_path, self.load_method)
 
     def _get_user_content(self, messages: List[TypeMessage]) -> str:
         """"""
@@ -84,7 +90,11 @@ class LoadModelCompletion(LoggerMixin):
         """"""
         self._logger(msg=f"[{__class__.__name__}] Loading model...", color="blue")
         start_time = time.time()
-        model_attr = load_method_mapping.get(self.load_method)(self.model_path)
+        if isinstance(self.load_method, str):
+            model_attr = load_method_mapping.get(self.load_method)(self.model_path)
+        else:
+            model_attr = self.load_method(self.model_path)
+
         if isinstance(model_attr, tuple):
             self.model, self.tokenizer = model_attr
         else:
