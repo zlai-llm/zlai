@@ -1,5 +1,4 @@
 from .completion import *
-from .load_model import *
 
 
 mini_cpm_model = [

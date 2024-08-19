@@ -4,8 +4,8 @@ from typing import Any, List, Dict, Optional, Callable
 
 from zlai.utils.mixin import LoggerMixin
 from zlai.models.types.images_generations import *
-from zlai.models.types.models_config import *
-from .load_model import *
+from zlai.models.types.models_config.models_config import ModelConfig
+from zlai.models.load.diffusers import *
 from .kolors import *
 from .flux import *
 

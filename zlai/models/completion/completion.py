@@ -8,8 +8,8 @@ from zlai.types.chat.chat_completion_chunk import Choice as ChunkChoice
 from zlai.utils.mixin import LoggerMixin
 from zlai.models.types.models_config.models_config import ModelConfig, ToolsConfig
 from zlai.models.types.generate_config import TypeInferenceGenerateConfig
-from ..utils import *
-from .load import *
+from zlai.models.load.chat_completion import *
+from zlai.models.utils import generate_id, stream_message_chunk
 from .glm4 import *
 from .qwen2 import *
 from .mini_cpm import *

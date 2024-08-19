@@ -1,22 +1,13 @@
 import torch
 from cachetools import cached, TTLCache
 from typing import Optional, List, Tuple
-from zlai.models.config import cache_config
 from sentence_transformers import SentenceTransformer
 from zlai.models.types.embedding import *
 
 
 __all__ = [
-    "load_embedding",
     "encode",
 ]
-
-
-@cached(cache=TTLCache(**cache_config.model_dump()))
-def load_embedding(model_path: str):
-    """"""
-    model = SentenceTransformer(model_path)
-    return model
 
 
 def encode(

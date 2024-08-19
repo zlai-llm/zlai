@@ -1,5 +1,4 @@
 from .completion import *
-from .load_model import *
 
 
 qwen_2_completion_model = [

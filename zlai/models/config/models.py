@@ -1,11 +1,8 @@
-from .models_config import ModelConfig
-from ..generate_config import *
-from ..images_generations import *
-from ..audio import *
-from ...completion import *
-from ...diffusers import *
-from ...tts import *
-from ...embedding import *
+from zlai.models.load import *
+from zlai.models.types.models_config import ModelConfig
+from zlai.models.types.generate_config import *
+from zlai.models.types.images_generations import *
+from zlai.models.types.audio import *
 
 
 __all__ = [

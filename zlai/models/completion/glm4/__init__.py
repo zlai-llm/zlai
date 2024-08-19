@@ -1,6 +1,5 @@
 from .completion import *
 from .utils import *
-from .load_model import *
 
 
 glm_4_completion_model = [
