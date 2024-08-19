@@ -1,6 +1,7 @@
 from .base import *
 from .glm4 import *
 from .qwen2 import *
+from .mini_cpm import *
 from typing import Union
 
 
@@ -14,6 +15,7 @@ TypeInferenceGenerateConfig = Union[
     Qwen215BInstructInferenceGenerateConfig,
     Qwen205BInstructInferenceGenerateConfig,
     Qwen2Audio7BInstructInferenceGenerateConfig,
+    MiniCPMInferenceGenerateConfig,
 ]
 
 inference_generate_config_mapping = {
@@ -25,5 +27,5 @@ inference_generate_config_mapping = {
     "Qwen215BInstructInferenceGenerateConfig": Qwen215BInstructInferenceGenerateConfig,
     "Qwen205BInstructInferenceGenerateConfig": Qwen205BInstructInferenceGenerateConfig,
     "Qwen2Audio7BInstructInferenceGenerateConfig": Qwen2Audio7BInstructInferenceGenerateConfig,
+    "MiniCPMInferenceGenerateConfig": MiniCPMInferenceGenerateConfig
 }
-
