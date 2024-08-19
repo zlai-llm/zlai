@@ -16,7 +16,17 @@ __all__ = [
     "stream_message_chunk",
     "generate_id",
     "get_model_config",
+    "get_device_max_memory",
 ]
+
+
+def get_device_max_memory(max_memory: Optional[Dict] = None) -> Dict:
+    """"""
+    if max_memory is None and torch.cuda.is_available():
+        max_memory = {0: "20GB"}
+    else:
+        max_memory = None
+    return max_memory
 
 
 def load_model_config(path: str) -> Dict:
