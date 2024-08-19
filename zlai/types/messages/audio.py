@@ -100,12 +100,10 @@ class AudioMessage(Message):
 
     def get_audios(self, sr) -> Union[None, List]:
         """"""
-        if isinstance(self.content, str):
-            return None
-        elif isinstance(self.content, List):
-            audios = []
+        audios = []
+        if isinstance(self.content, List):
             for item in self.content:
                 if item.type == "audio":
-                    audio = librosa.load(item.audio_url, sr=sr)
+                    audio = librosa.load(item.audio_url, sr=sr)[0]
                     audios.append(audio)
-            return audios
+        return audios
