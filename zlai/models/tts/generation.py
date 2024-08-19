@@ -1,10 +1,10 @@
 import time
 from logging import Logger
-from typing import Any, List, Dict, Union, Optional, Callable
+from typing import Any, List, Dict, Optional, Callable
 
 from zlai.utils.mixin import LoggerMixin
 from zlai.models.types.audio import *
-from .load_model import *
+from zlai.models.load.audio import *
 from .cosy_voice import *
 
 

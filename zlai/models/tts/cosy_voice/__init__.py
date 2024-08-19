@@ -3,7 +3,6 @@ from pathlib import Path
 matcha_path = Path(__file__).parent
 sys.path.insert(0, str(matcha_path))
 
-from .load import *
 from .generation import *
 
 

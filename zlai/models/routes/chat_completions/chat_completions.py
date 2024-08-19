@@ -5,6 +5,7 @@ from zlai.models.types.completion import *
 from zlai.utils.config import pkg_config
 from zlai.models.utils import load_model_config, get_model_config
 from zlai.models.completion import *
+from zlai.models.types.models_config import *
 from zlai.models import app, logger
 
 

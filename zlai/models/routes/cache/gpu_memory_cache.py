@@ -1,10 +1,10 @@
 import torch
 from typing import Union, List
 from zlai.models import app, logger
-from zlai.models.completion.load import load_method_mapping as load_completion
-from zlai.models.diffusers.load_model import load_method_mapping as load_diffusers
-from zlai.models.embedding.load_model import load_method_mapping as load_embedding
-from zlai.models.tts.load_model import load_method_mapping as load_tts
+from zlai.models.load.chat_completion import load_method_mapping as load_completion
+from zlai.models.load.diffusers import load_method_mapping as load_diffusers
+from zlai.models.load.audio import load_method_mapping as load_tts
+from zlai.models.load.embedding import load_method_mapping as load_embedding
 from zlai.models.types.cache import DropModelRequest
 
 
