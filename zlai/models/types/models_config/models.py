@@ -42,6 +42,14 @@ chat_completion_models = {
         load_method=load_qwen2,
         max_memory={"0": "20GB"},
     ),
+    "Qwen2-Audio-7B-Instruct": ModelConfig(
+        model_name="Qwen2-Audio-7B-Instruct",
+        model_path="/home/models/Qwen/Qwen2-Audio-7B-Instruct",
+        model_type="completion",
+        generate_method=Qwen2Audio7BInstructInferenceGenerateConfig,
+        load_method=load_qwen2_audio,
+        max_memory={"0": "20GB"},
+    ),
     "Qwen2-57B-A14B-Instruct-GPTQ-Int4": ModelConfig(
         model_name="Qwen2-57B-A14B-Instruct-GPTQ-Int4",
         model_path="/home/models/Qwen/Qwen2-57B-A14B-Instruct-GPTQ-Int4",
