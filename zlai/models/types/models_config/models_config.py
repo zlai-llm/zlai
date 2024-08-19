@@ -9,15 +9,9 @@ from ..audio import TypeAudioGenerateConfig, VoiceGenerateConfig, audio_generate
 
 
 __all__ = [
-    "Message",
     "ModelConfig",
     "ToolsConfig",
 ]
-
-
-class Message(BaseModel):
-    role: str
-    content: str
 
 
 class ToolsConfig(BaseModel):
