@@ -35,6 +35,20 @@ class TestModels(unittest.TestCase):
             print(content)
         print(answer)
 
+    def test_completion_single_stream(self):
+        """"""
+        client = OpenAI(
+            api_key="fake-api-key",
+            base_url="http://localhost:8000/Qwen2-0.5B-Instruct"
+        )
+
+        response = client.chat.completions.create(
+            model="Qwen2-0.5B-Instruct",
+            messages=[{"role": "user", "content": "hi"}],
+            stream=False,
+        )
+        print(response)
+
     def test_image_message(self):
         """"""
         url = "https://picx.zhimg.com/80/v2-0aea2c883dc1c8b8ca566eb8a8b38c70_720w.png"
