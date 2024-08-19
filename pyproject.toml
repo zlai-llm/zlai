@@ -129,6 +129,9 @@ transformers = "^4.43.3"
 sentence-transformers = "^3.0.1"
 accelerate = "^0.33.0"
 diffusers = "0.30.0"
+onnxruntime = "^1.19.0"
+importlib-resources = "^6.4.3"
+
 
 [tool.poetry.group.cosy_voice.dependencies]
 torchaudio = "2.2.0"
@@ -167,6 +170,7 @@ local = [
 
 
 [tool.poetry.scripts]
-zlai_models = "zlai.models.app:models"
+zlai_models = "zlai.models.apps.app:models"
+zlai_model = "zlai.models.apps.completion:chat_completion_model"
 zlai_agent = "zlai.streamlit.web.run:run_streamlit_app"
 zlai_chat = "zlai.streamlit.web.run:run_streamlit_app"
