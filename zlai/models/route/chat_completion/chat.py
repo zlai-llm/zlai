@@ -1,10 +1,8 @@
-import os
-import pickle
 from fastapi import HTTPException
 from starlette.responses import StreamingResponse
 from zlai.models.types.models_config import *
 from zlai.models.types.completion import *
-from zlai.utils.config import pkg_config
+from ..utils import *
 from ...completion import *
 from ....models import app, logger
 
@@ -17,14 +15,7 @@ __all__ = [
 @app.post("/{model_name}/chat/completions")
 async def chat_completions(model_name: str, request: ChatCompletionRequest):
     """"""
-    model_config_path = os.path.join(pkg_config.cache_path, f"{model_name}_config.pkl")
-    if not os.path.exists(model_config_path):
-        resp_content = f"[ChatCompletion] Models config path: {model_config_path} not exists."
-        logger.error(resp_content)
-        raise HTTPException(status_code=400, detail=resp_content)
-    else:
-        with open(model_config_path, 'rb') as f:
-            model_config = pickle.load(f)
+    model_config = load_model_config(model_name=model_name, inference_name="ChatCompletion")
 
     if len(request.messages) < 1 or request.messages[-1].role == "assistant":
         raise HTTPException(status_code=400, detail="Invalid request, last message role must be user.")
