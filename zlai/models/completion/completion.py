@@ -164,11 +164,16 @@ class LoadModelCompletion(LoggerMixin):
                 chunk = stream_message_chunk(content=content, finish_reason="stop", model=self.model_name, _id=_id)
                 yield chunk
             else:
-                streamer = stream_completion_glm_4(
+                kwargs = dict()
+                if self.tools_config is not None:
+                    kwargs.update({
+                        "tools": self.tools_config.tools,
+                        "tool_choice": self.tools_config.tool_choice,
+                    })
+                streamer = completion_function(
                     model=self.model, tokenizer=self.tokenizer,
                     messages=messages, generate_config=self.generate_config,
-                    validate=True, tools=self.tools_config.tools,
-                    tool_choice=self.tools_config.tool_choice,
+                    validate=True, **kwargs
                 )
 
             if streamer is not None:
