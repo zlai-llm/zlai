@@ -3,10 +3,11 @@ from fastapi import HTTPException
 from starlette.responses import StreamingResponse
 from zlai.models.types.completion import *
 from zlai.utils.config import pkg_config
-from zlai.models.utils import load_model_config, get_model_config
+from zlai.models.utils import load_model_config, validate_model_path
 from zlai.models.completion import *
 from zlai.models.types.models_config import *
 from zlai.models import app, logger
+from zlai.models.config.models import chat_completion_models
 
 
 __all__ = [
@@ -27,14 +28,15 @@ async def chat_completions(request: ChatCompletionRequest):
         raise HTTPException(status_code=400, detail=resp_content)
     else:
         logger.info(f"[ChatCompletion] Models config path: {models_config_path}")
-        models_config = load_model_config(path=models_config_path)
-        models_config = models_config.get("models_config")
-        model_config = get_model_config(model_name=request.model, models_config=models_config)
+        models_config = load_model_config(path=models_config_path).get("models_config")
+        model_config = models_config.get(request.model)
+        base_config = chat_completion_models.get(request.model)
 
-        if model_config is None:
+        if model_config is None or base_config is None:
             raise HTTPException(status_code=400, detail="Invalid request, model not exists.")
         else:
             logger.info(f"[ChatCompletion] Model config: {model_config}")
+            model_config = validate_model_path(user_config=model_config, base_config=base_config)
             model_config = ModelConfig.model_validate(model_config)
 
         tools_config = ToolsConfig.model_validate(request.model_dump())

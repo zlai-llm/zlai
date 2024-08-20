@@ -24,6 +24,7 @@ def completion_codegeex_4(
         tokenizer,
         messages: List[TypeMessage],
         generate_config: Optional[TypeInferenceGenerateConfig],
+        **kwargs,
 ) -> Tuple[str, CompletionUsage]:
     """"""
     messages = trans_messages(messages=messages)

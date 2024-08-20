@@ -17,7 +17,15 @@ __all__ = [
     "generate_id",
     "get_model_config",
     "get_device_max_memory",
+    "validate_model_path",
 ]
+
+
+def validate_model_path(user_config: Dict, base_config: Dict) -> Dict:
+    """"""
+    if user_config.get("model_path") is not None:
+        base_config["model_path"] = user_config["model_path"]
+    return base_config
 
 
 def get_device_max_memory(max_memory: Optional[Dict] = None) -> Dict:

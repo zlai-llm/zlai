@@ -35,6 +35,7 @@ def glm_4_messages_process(
         validate: bool = False,
         tools: Optional[List[Dict]] = None,
         tool_choice: Optional[Union[dict, str]] = "none",
+        **kwargs: Any,
 ) -> List[Dict]:
     """"""
     if validate and tools is not None and tool_choice != 'none':
@@ -52,6 +53,7 @@ def completion_glm_4(
         tools: Optional[List[Dict]] = None,
         tool_choice: Optional[Union[dict, str]] = "none",
         generate_config: Optional[TypeInferenceGenerateConfig] = None,
+        **kwargs: Any,
 ) -> Tuple[str, CompletionUsage]:
     """"""
     messages = glm_4_messages_process(messages, validate, tools, tool_choice)

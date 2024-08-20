@@ -87,6 +87,30 @@ chat_completion_models = {
         load_method=load_mini_cpm,
         max_memory={"0": "30GB"},
     ),
+    "DeepSeek-V2-Lite-Chat": ModelConfig(
+        model_name="DeepSeek-V2-Lite-Chat",
+        model_path="/home/models/deepseek-ai/DeepSeek-V2-Lite-Chat",
+        model_type="completion",
+        generate_method=MiniCPMInferenceGenerateConfig,
+        load_method=load_mini_cpm,
+        max_memory={"0": "30GB"},
+    ),
+    "DeepSeek-Coder-V2-Lite-Instruct": ModelConfig(
+        model_name="DeepSeek-Coder-V2-Lite-Instruct",
+        model_path="/home/models/deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct",
+        model_type="completion",
+        generate_method=MiniCPMInferenceGenerateConfig,
+        load_method=load_mini_cpm,
+        max_memory={"0": "30GB"},
+    ),
+    "codegeex4-all-9b": ModelConfig(
+        model_name="codegeex4-all-9b",
+        model_path="/home/models/THUDM/codegeex4-all-9b",
+        model_type="completion",
+        generate_method=MiniCPMInferenceGenerateConfig,
+        load_method=load_mini_cpm,
+        max_memory={"0": "30GB"},
+    ),
 }
 
 diffusers_models = {

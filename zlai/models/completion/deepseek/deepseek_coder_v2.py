@@ -23,6 +23,7 @@ def completion_deepseek_coder_v2(
         tokenizer,
         messages: List[TypeMessage],
         generate_config: Optional[TypeInferenceGenerateConfig],
+        **kwargs: Any,
 ) -> Tuple[str, CompletionUsage]:
     """"""
     messages = trans_messages(messages=messages)

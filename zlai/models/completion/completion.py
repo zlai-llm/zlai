@@ -10,6 +10,7 @@ from zlai.models.types.models_config.models_config import ModelConfig, ToolsConf
 from zlai.models.types.generate_config import TypeInferenceGenerateConfig
 from zlai.models.load.chat_completion import *
 from zlai.models.utils import generate_id, stream_message_chunk
+from zlai.models.completion.completion_mapping import *
 from .glm4 import *
 from .qwen2 import *
 from .mini_cpm import *
@@ -30,7 +31,6 @@ class LoadModelCompletion(LoggerMixin):
     def __init__(
             self,
             model_path: Optional[str] = None,
-            models_config: Optional[Union[List[Dict], List[ModelConfig]]] = None,
             model_config: Optional[ModelConfig] = None,
             model_name: Optional[str] = None,
             generate_config: Optional[TypeInferenceGenerateConfig] = None,
@@ -42,7 +42,6 @@ class LoadModelCompletion(LoggerMixin):
             **kwargs: Any,
     ):
         self.model_path = model_path
-        self.models_config = models_config
         self.model_config = model_config
         self.model_name = model_name
         self.generate_config = generate_config
@@ -54,21 +53,14 @@ class LoadModelCompletion(LoggerMixin):
         self.kwargs = kwargs
         self.set_model_path()
         self.load_model()
-        self.qwen_2_completion_model = qwen_2_completion_model
-        self.glm_4_completion_model = glm_4_completion_model
-        self.mini_cpm_model = mini_cpm_model
 
     def set_model_path(self):
         """"""
         if self.model_path is not None:
             pass
         else:
-            if self.model_config is None:
-                self.model_config = self.get_model_config(
-                    model_name=self.model_name, models_config=self.models_config)
             self.model_path = self.model_config.get("model_path")
             self.load_method = self.model_config.get("load_method")
-            print(self.model_config, self.model_path, self.load_method)
 
     def _get_user_content(self, messages: List[TypeMessage]) -> str:
         """"""
@@ -101,22 +93,6 @@ class LoadModelCompletion(LoggerMixin):
             self.model = model_attr
         end_time = time.time()
         self._logger(msg=f"[{__class__.__name__}] Loading Done. Use {end_time - start_time:.2f}s", color="blue")
-
-    def get_model_config(
-            self,
-            model_name: str,
-            models_config: List[Dict],
-    ) -> Dict:
-        """"""
-        for config in models_config:
-            if config["model_name"] == model_name:
-                return config
-        raise ValueError(f"Model {model_name} not found.")
-
-    def text_encode(self, text: List[str]) -> List[List[float]]:
-        """"""
-        vectors = self.model.encode(text, normalize_embeddings=True).to_list()
-        return vectors
 
     def parse_tools_call(self, content: str, usage: CompletionUsage) -> ChatCompletion:
         """"""
@@ -167,27 +143,19 @@ class LoadModelCompletion(LoggerMixin):
     def completion(self, messages: List[TypeMessage]) -> ChatCompletion:
         """"""
         self._start_logger(messages=messages)
-        if self.model_name in self.qwen_2_completion_model:
-            content, usage = completion_qwen_2(
-                model=self.model, tokenizer=self.tokenizer, messages=messages,
-                generate_config=self.generate_config,
-            )
-        elif self.model_name in self.glm_4_completion_model:
-            content, usage = completion_glm_4(
-                model=self.model, tokenizer=self.tokenizer, messages=messages,
-                generate_config=self.generate_config, validate=True,
-                tools=self.tools_config.tools, tool_choice=self.tools_config.tool_choice)
-        elif self.model_name in self.mini_cpm_model:
-            content, usage = completion_mini_cpm(
-                model=self.model, tokenizer=self.tokenizer, messages=messages,
-            )
-        else:
+        completion_function = completion_mapping.get(self.model_name)
+        self._logger(msg=f"[{__class__.__name__}] Completion Function: {completion_function}", color="green")
+        if completion_function is None:
             content = f"Not find completion method: {self.model_name}"
             usage = None
-
+        else:
+            content, usage = completion_function(
+                model=self.model, tokenizer=self.tokenizer, messages=messages,
+                generate_config=self.generate_config, validate=True,
+                tools=self.tools_config.tools, tool_choice=self.tools_config.tool_choice
+            )
         self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")
         self._logger(msg=f"[{__class__.__name__}] Completion content: {content}", color="green")
-
         chat_completion = self.parse_tools_call(content=content, usage=usage)
         return chat_completion
 
@@ -196,27 +164,21 @@ class LoadModelCompletion(LoggerMixin):
         self._start_logger(messages=messages)
         _id = generate_id(prefix="chunk-chat", k=16)
         try:
-            if self.model_name in self.qwen_2_completion_model:
-                streamer = stream_completion_qwen_2(
-                    model=self.model, tokenizer=self.tokenizer,
-                    messages=messages, generate_config=self.generate_config,
-                )
-            elif self.model_name in self.glm_4_completion_model:
+            completion_function = stream_completion_mapping.get(self.model_name)
+            self._logger(msg=f"[{__class__.__name__}] Completion Function: {completion_function}", color="green")
+
+            if completion_function is None:
+                streamer = None
+                content = f"Not find stream completion method: {self.model_name}"
+                chunk = stream_message_chunk(content=content, finish_reason="stop", model=self.model_name, _id=_id)
+                yield chunk
+            else:
                 streamer = stream_completion_glm_4(
                     model=self.model, tokenizer=self.tokenizer,
                     messages=messages, generate_config=self.generate_config,
                     validate=True, tools=self.tools_config.tools,
                     tool_choice=self.tools_config.tool_choice,
                 )
-            elif self.model_name in self.mini_cpm_model:
-                streamer = stream_completion_mini_cpm(
-                    model=self.model, tokenizer=self.tokenizer, messages=messages,
-                )
-            else:
-                streamer = None
-                content = f"Not find stream completion method: {self.model_name}"
-                chunk = stream_message_chunk(content=content, finish_reason="stop", model=self.model_name, _id=_id)
-                yield chunk
 
             if streamer is not None:
                 answer = ""
