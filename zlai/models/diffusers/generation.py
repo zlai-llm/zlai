@@ -24,7 +24,6 @@ class LoadModelDiffusers(LoggerMixin):
     def __init__(
             self,
             model_path: Optional[str] = None,
-            models_config: Optional[List[Dict]] = None,
             model_config: Optional[ModelConfig] = None,
             model_name: Optional[str] = None,
             generate_config: Optional[ImageGenerateConfig] = None,
@@ -35,7 +34,6 @@ class LoadModelDiffusers(LoggerMixin):
             **kwargs: Any,
     ):
         self.model_path = model_path
-        self.models_config = models_config
         self.model_config = model_config
         self.model_name = model_name
         self.generate_config = generate_config
@@ -52,8 +50,6 @@ class LoadModelDiffusers(LoggerMixin):
         if self.model_path is not None:
             pass
         else:
-            if self.model_config is not None:
-                self.model_config = self.get_model_config(model_name=self.model_name, models_config=self.models_config)
             self.model_path = self.model_config.get("model_path")
             self.load_method = self.model_config.get("load_method")
 
