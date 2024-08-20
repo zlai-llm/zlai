@@ -1,6 +1,8 @@
 from .mini_cpm import *
 from .glm4 import *
 from .qwen2 import *
+from .codegeex import *
+from .deepseek import *
 
 
 load_method_mapping = {
