@@ -46,7 +46,7 @@ def images_generations(
 
         try:
             model_diffusers = LoadModelDiffusers(
-                models_config=models_config, model_name=request.model,
+                model_config=model_config, model_name=request.model,
                 generate_config=generate_config, logger=logger)
         except Exception as e:
             raise HTTPException(status_code=400, detail=f"Load Model Error: {e}")
@@ -96,7 +96,7 @@ async def images_edits(
 
         try:
             model_diffusers = LoadModelDiffusers(
-                models_config=models_config, model_name=request.model,
+                model_config=model_config, model_name=request.model,
                 generate_config=generate_config, logger=logger)
         except Exception as e:
             raise HTTPException(status_code=400, detail=f"Load Model Error: {e}\n\n{traceback.format_exc()}")
