@@ -3,7 +3,7 @@ from fastapi import HTTPException
 from starlette.responses import StreamingResponse
 from zlai.models.types.completion import *
 from zlai.utils.config import pkg_config
-from zlai.models.utils import load_model_config, validate_model_path
+from zlai.models.utils import load_model_config
 from zlai.models.completion import *
 from zlai.models.types.models_config import *
 from zlai.models import app, logger
@@ -36,16 +36,15 @@ async def chat_completions(request: ChatCompletionRequest):
             raise HTTPException(status_code=400, detail="Invalid request, model not exists.")
         else:
             logger.info(f"[ChatCompletion] Model config: {model_config}")
-            model_config = validate_model_path(user_config=model_config, base_config=base_config)
-            model_config = ModelConfig.model_validate(model_config)
+            base_config.update_kwargs(model_path=model_config.get("model_path"))
 
         tools_config = ToolsConfig.model_validate(request.model_dump())
-        generate_config = model_config.generate_method.model_validate(request.model_dump())
+        generate_config = base_config.generate_method.model_validate(request.model_dump())
         logger.info(f"[ChatCompletion] Generate kwargs: {generate_config.gen_kwargs()}")
 
         try:
             model_completion = LoadModelCompletion(
-                models_config=models_config, model_name=request.model,
+                model_config=base_config, model_name=request.model,
                 generate_config=generate_config, tools_config=tools_config,
                 logger=logger)
         except Exception as e:

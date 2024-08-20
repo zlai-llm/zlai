@@ -51,6 +51,8 @@ class LoadModelCompletion(LoggerMixin):
         self.load_method = load_method
         self.args = args
         self.kwargs = kwargs
+        self._logger(msg=f"[{__class__.__name__}] Model Name: {model_name}", color="blue")
+        self._logger(msg=f"[{__class__.__name__}] Model Config: {model_config}", color="blue")
         self.set_model_path()
         self.load_model()
 
@@ -82,11 +84,7 @@ class LoadModelCompletion(LoggerMixin):
         """"""
         self._logger(msg=f"[{__class__.__name__}] Loading model...", color="blue")
         start_time = time.time()
-        if isinstance(self.load_method, str):
-            model_attr = load_method_mapping.get(self.load_method)(self.model_path)
-        else:
-            model_attr = self.load_method(self.model_path)
-
+        model_attr = self.load_method(self.model_path)
         if isinstance(model_attr, tuple):
             self.model, self.tokenizer = model_attr
         else:

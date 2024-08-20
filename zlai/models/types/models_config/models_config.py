@@ -59,3 +59,7 @@ class ModelConfig(BaseModel):
 
     def get(self, key: Any):
         return self.model_dump().get(key)
+
+    def update_kwargs(self, **kwargs):
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+        self.model_copy(update=kwargs)

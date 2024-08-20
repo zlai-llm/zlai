@@ -1,5 +1,5 @@
 import torch
-from typing import List, Dict, Union, Tuple, Iterable, Optional
+from typing import Any, List, Dict, Union, Tuple, Iterable, Optional
 from threading import Thread
 from transformers import TextIteratorStreamer
 from zlai.types.messages import TypeMessage, ImageMessage
