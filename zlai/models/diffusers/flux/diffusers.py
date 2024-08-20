@@ -13,6 +13,7 @@ __all__ = [
 def flux_generation(
         pipe: Any,
         generate_config: Union[ImageGenerateConfig, KolorsImageGenerateConfig],
+        **kwargs: Any,
 ) -> str:
     """Generate image using FLUX Diffusers model."""
     image = pipe(

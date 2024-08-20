@@ -1,13 +1,11 @@
 import time
 from logging import Logger
-from typing import Any, List, Dict, Optional, Callable
+from typing import Any, Dict, Optional, Callable
 
 from zlai.utils.mixin import LoggerMixin
 from zlai.models.types.images_generations import *
 from zlai.models.types.models_config.models_config import ModelConfig
-from zlai.models.load.diffusers import *
-from .kolors import *
-from .flux import *
+from .generate_mapping import diffusers_mapping
 
 
 __all__ = [
@@ -57,20 +55,9 @@ class LoadModelDiffusers(LoggerMixin):
         """"""
         self._logger(msg=f"[{__class__.__name__}] Loading model...", color="blue")
         start_time = time.time()
-        self.pipe = load_method_mapping.get(self.load_method)(self.model_path)
+        self.pipe = self.load_method(self.model_path)
         end_time = time.time()
         self._logger(msg=f"[{__class__.__name__}] Loading Done. Use {end_time - start_time:.2f}s", color="blue")
-
-    def get_model_config(
-            self,
-            model_name: str,
-            models_config: List[Dict],
-    ) -> Dict:
-        """"""
-        for config in models_config:
-            if config["model_name"] == model_name:
-                return config
-        raise ValueError(f"Model {model_name} not found.")
 
     def _start_logger(self, prompt: str) -> None:
         """"""
@@ -80,13 +67,13 @@ class LoadModelDiffusers(LoggerMixin):
     def diffusers(self) -> str:
         """"""
         self._start_logger(prompt=self.generate_config.prompt)
-        if isinstance(self.generate_config, KolorsImageGenerateConfig):
-            b64_img = kolors_generation(self.pipe, generate_config=self.generate_config)
-        elif isinstance(self.generate_config, KolorsImage2ImageGenerateConfig):
-            b64_img = kolors_img2img_generation(self.pipe, generate_config=self.generate_config)
-        elif isinstance(self.generate_config, FLUXImageGenerateConfig):
-            b64_img = flux_generation(self.pipe, generate_config=self.generate_config)
-        else:
+        generate_function = diffusers_mapping.get(self.model_name)
+        self._logger(msg=f"[{__class__.__name__}] Generate Function: {generate_function}", color="green")
+
+        if generate_function is None:
             b64_img = f"Not find completion method: {self.model_name}"
+        else:
+            b64_img = generate_function(self.pipe, generate_config=self.generate_config)
+
         self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")
         return b64_img

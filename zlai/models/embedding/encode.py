@@ -1,9 +1,9 @@
 import time
 from logging import Logger
 from typing import Any, List, Dict, Union, Callable, Optional
+from sentence_transformers import SentenceTransformer
 from zlai.utils.mixin import LoggerMixin
 from zlai.models.types.embedding import *
-from zlai.models.load.embedding import *
 from .bge import *
 
 
@@ -16,21 +16,21 @@ class LoadModelEmbedding(LoggerMixin):
     """"""
     model: Any
     model_config: Dict
-    load_method: str
+    load_method: Union[SentenceTransformer, Callable]
 
     def __init__(
             self,
             model_path: Optional[str] = None,
-            models_config: Optional[List[Dict]] = None,
+            model_config: Optional[Dict] = None,
             model_name: Optional[str] = None,
-            load_method: Optional[str] = "auto",
+            load_method: Optional[Callable] = SentenceTransformer,
             logger: Optional[Union[Logger, Callable]] = None,
             verbose: Optional[bool] = False,
             *args: Any,
             **kwargs: Any,
     ):
         self.model_path = model_path
-        self.models_config = models_config
+        self.model_config = model_config
         self.model_name = model_name
         self.logger = logger
         self.verbose = verbose
@@ -46,7 +46,6 @@ class LoadModelEmbedding(LoggerMixin):
         if self.model_path is not None:
             pass
         else:
-            self.model_config = self.get_model_config(model_name=self.model_name, models_config=self.models_config)
             self.model_path = self.model_config.get("model_path")
             self.load_method = self.model_config.get("load_method")
 
@@ -54,21 +53,9 @@ class LoadModelEmbedding(LoggerMixin):
         """"""
         self._logger(msg=f"[{__class__.__name__}] Loading model...", color="blue")
         start_time = time.time()
-        model_attr = load_method_mapping.get(self.load_method)(self.model_path)
-        self.model = model_attr
+        self.model = self.load_method(self.model_path)
         end_time = time.time()
         self._logger(msg=f"[{__class__.__name__}] Loading Done. Use {end_time - start_time:.2f}s", color="blue")
-
-    def get_model_config(
-            self,
-            model_name: str,
-            models_config: List[Dict],
-    ) -> Dict:
-        """"""
-        for config in models_config:
-            if config["model_name"] == model_name:
-                return config
-        raise ValueError(f"Model {model_name} not found.")
 
     def _trans_vectors_to_embedding(self, vectors: List[List[float]]) -> List[Embedding]:
         """"""

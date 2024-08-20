@@ -14,6 +14,7 @@ __all__ = [
 def kolors_generation(
         pipe: Any,
         generate_config: Union[ImageGenerateConfig, KolorsImageGenerateConfig],
+        **kwargs: Any,
 ) -> str:
     image = pipe(
         **generate_config.gen_kwargs(),
@@ -32,6 +33,7 @@ def kolors_generation(
 def kolors_img2img_generation(
         pipe: Any,
         generate_config: Union[ImageGenerateConfig, KolorsImage2ImageGenerateConfig],
+        **kwargs: Any,
 ):
     image = pipe(**generate_config.gen_kwargs(),).images[0]
     buffered = BytesIO()
