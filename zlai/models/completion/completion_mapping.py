@@ -31,7 +31,7 @@ glm_4_stream_completion_mapping = dict.fromkeys(glm_4_models, stream_completion_
 
 
 mini_cpm_models = [
-    "mini_cpm-v2_6",
+    "MiniCPM-V-2_6",
 ]
 mini_cpm_completion_mapping = dict.fromkeys(mini_cpm_models, completion_mini_cpm)
 mini_cpm_stream_completion_mapping = dict.fromkeys(mini_cpm_models, stream_completion_mini_cpm)
