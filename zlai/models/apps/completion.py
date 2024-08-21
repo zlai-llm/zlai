@@ -5,8 +5,7 @@ import uvicorn
 from typing import Union, Optional
 from zlai.models import app
 from zlai.utils.config import pkg_config
-from zlai.models.types.models_config import chat_completion_models
-from zlai.models.route.chat_completion import *
+from zlai.models.config.models import chat_completion_models
 
 
 __all__ = [
