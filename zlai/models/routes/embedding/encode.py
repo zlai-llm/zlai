@@ -3,7 +3,8 @@ from fastapi import HTTPException
 from zlai.utils import pkg_config
 from zlai.models.utils import load_model_config
 from zlai.models.embedding import LoadModelEmbedding
-from zlai.models.types.embedding import *
+from zlai.types.request.embedding import *
+from zlai.types.response.embedding import *
 from zlai.models import app, logger
 from zlai.models.config.models import embedding_models
 

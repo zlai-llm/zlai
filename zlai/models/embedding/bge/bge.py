@@ -1,8 +1,7 @@
 import torch
-from cachetools import cached, TTLCache
 from typing import Optional, List, Tuple
 from sentence_transformers import SentenceTransformer
-from zlai.models.types.embedding import *
+from zlai.types.response.embedding import *
 
 
 __all__ = [

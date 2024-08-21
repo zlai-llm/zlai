@@ -3,7 +3,7 @@ from logging import Logger
 from typing import Any, List, Dict, Union, Callable, Optional
 from sentence_transformers import SentenceTransformer
 from zlai.utils.mixin import LoggerMixin
-from zlai.models.types.embedding import *
+from zlai.types.response.embedding import *
 from .bge import *
 
 
