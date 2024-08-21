@@ -94,10 +94,42 @@ def completion_qwen_2_audio(
 ):
     """"""
     text, audios = trans_audio_messages(messages, processor)
-    inputs = processor(text=text, audios=audios, return_tensors="pt", padding=True)
-    inputs.input_ids = inputs.input_ids.to("cuda")
+    inputs = processor(
+        text=text, audios=audios, return_tensors="pt", padding=True,
+        sampling_rate=processor.feature_extracor.sampling_rate,
+    ).to(model.device)
     generate_ids = model.generate(**inputs, **generate_config.model_dump())
     generate_ids = generate_ids[:, inputs.input_ids.size(1):]
     response = processor.batch_decode(
         generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
     return response
+
+
+def stream_completion_qwen_2_audio(
+        model,
+        processor,
+        messages: List[TypeMessage],
+        generate_config: Optional[Qwen2GenerateConfig],
+        **kwargs: Any,
+):
+    """"""
+    text, audios = trans_audio_messages(messages, processor)
+    usage = CompletionUsage(completion_tokens=0, prompt_tokens=0, total_tokens=0)
+
+    streamer = TextIteratorStreamer(processor, skip_prompt=True, skip_special_tokens=True)
+    inputs = processor(
+        text=text, audios=audios, return_tensors="pt", padding=True,
+        sampling_rate=processor.feature_extracor.sampling_rate,
+    ).to(model.device)
+    usage.prompt_tokens = inputs.shape[1]
+
+    gen_config = {
+        "inputs": inputs, "streamer": streamer,
+        **generate_config.gen_kwargs(),
+    }
+    thread = Thread(target=model.generate, kwargs=gen_config)
+    thread.start()
+    for i, content in enumerate(streamer):
+        usage.completion_tokens += 1
+        usage.total_tokens = usage.prompt_tokens + usage.completion_tokens
+        yield content, usage
