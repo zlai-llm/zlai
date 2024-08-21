@@ -22,7 +22,7 @@ __all__ = [
 
 class TextContent(BaseModel):
     """"""
-    type: str = "text"
+    type: Literal["text"] = "text"
     text: Optional[str] = None
 
 
@@ -34,7 +34,7 @@ class ImageUrl(BaseModel):
 
 class ImageContent(BaseModel):
     """"""
-    type: str = "image_url"
+    type: Literal["image_url"] = "image_url"
     image_url: Optional[ImageUrl] = None
 
 

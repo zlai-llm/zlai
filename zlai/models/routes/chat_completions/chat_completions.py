@@ -18,6 +18,7 @@ __all__ = [
 @app.post("/chat/completions")
 async def chat_completions(request: ChatCompletionRequest):
     """"""
+    print(request.messages)
     if len(request.messages) < 1 or request.messages[-1].role == "assistant":
         raise HTTPException(status_code=400, detail="Invalid request, last message role must be user.")
 

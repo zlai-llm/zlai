@@ -1,3 +1,4 @@
+import base64
 import librosa
 from io import BytesIO
 from urllib.request import urlopen
@@ -13,29 +14,11 @@ __all__ = [
 ]
 
 
-conversation = [
-    {'role': 'system', 'content': 'You are a helpful assistant.'},
-    {"role": "user", "content": [
-        {"type": "audio", "audio_url": "https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen2-Audio/audio/glass-breaking-151256.mp3"},
-        {"type": "text", "text": "What's that sound?"},
-    ]},
-    {"role": "assistant", "content": "It is the sound of glass shattering."},
-    {"role": "user", "content": [
-        {"type": "text", "text": "What can you do when you hear that?"},
-    ]},
-    {"role": "assistant", "content": "Stay alert and cautious, and check if anyone is hurt or if there is any damage to property."},
-    {"role": "user", "content": [
-        {"type": "audio", "audio_url": "https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen2-Audio/audio/1272-128104-0000.flac"},
-        {"type": "text", "text": "What does the person say?"},
-    ]},
-]
-
-
 class AudioContent(BaseModel):
     """"""
     model_config = ConfigDict(arbitrary_types_allowed=True)
     type: Literal["audio"] = "audio"
-    audio_url: Optional[Union[BytesIO, str]] = None
+    audio_url: Optional[Union[BytesIO, bytes, str]] = None
 
 
 class AudioMessage(Message):
@@ -96,7 +79,29 @@ class AudioMessage(Message):
 
     def to_message(self, _type: Literal["qwen2-audio"] = "qwen2-audio") -> Dict:
         """"""
-        pass
+        content = ""
+        if isinstance(self.content, str):
+            content = self.content
+        elif isinstance(self.content, list):
+            content = []
+            for item in self.content:
+                if isinstance(item, TextContent):
+                    content.append(item.model_dump())
+                elif isinstance(item, AudioContent):
+                    _item = item.model_dump()
+                    _item["audio_url"] = base64.b64encode(item.audio_url.getvalue()).decode('utf-8')
+                    content.append(_item)
+        return {
+            "role": self.role, "content": content
+        }
+
+    def to_instance(self):
+        """"""
+        if isinstance(self.content, list):
+            for i, item in enumerate(self.content):
+                if isinstance(item, AudioContent) and isinstance(item.audio_url, (bytes, str)):
+                    self.content[i].audio_url = BytesIO(base64.b64decode(item.audio_url.encode("utf-8")))
+        return self
 
     def get_audios(self, sr) -> Union[None, List]:
         """"""
