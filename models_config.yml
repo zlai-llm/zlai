@@ -15,8 +15,14 @@ models_config:
       model_path: /home/models/THUDM/glm-4-9b-chat-1m
   glm-4v-9b:
       model_path: /home/models/THUDM/glm-4v-9b
+  codegeex4-all-9b:
+      model_path: /home/models/THUDM/codegeex4-all-9b
   MiniCPM-V-2_6:
       model_path: /home/models/openbmb/MiniCPM-V-2_6
+  DeepSeek-V2-Lite-Chat:
+      model_path: /home/models/deepseek-ai/DeepSeek-V2-Lite-Chat
+  DeepSeek-Coder-V2-Lite-Instruct:
+      model_path: /home/models/deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct
   Kolors-diffusers:
       model_path: /home/models/Kwai-Kolors/Kolors-diffusers
   Kolors-image2image:
