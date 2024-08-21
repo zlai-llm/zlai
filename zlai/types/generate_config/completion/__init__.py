@@ -8,6 +8,7 @@ from typing import Union
 
 
 TypeGenerateConfig = Union[
+    GenerateConfig,
     TypeCodeGeexGenerate,
     TypeDeepSeekGenerate,
     TypeGLM4Generate,

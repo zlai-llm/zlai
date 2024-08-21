@@ -5,6 +5,7 @@ from typing import Union
 
 
 TypeImageGenerateConfig = Union[
+    ImageGenerateConfig,
     TypeKolorsGenerate,
     TypeFLUXGenerate,
 ]
