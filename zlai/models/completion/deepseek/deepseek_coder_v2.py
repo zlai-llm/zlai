@@ -34,7 +34,7 @@ def completion_deepseek_coder_v2(
     generated_ids = outputs[0][input_tensor.shape[1]:]
     content = tokenizer.decode(generated_ids, skip_special_tokens=True)
 
-    completion_tokens = len(generated_ids[0])
+    completion_tokens = len(generated_ids)
     prompt_tokens = input_tensor.shape[1]
     total_tokens = completion_tokens + prompt_tokens
     usage = CompletionUsage(completion_tokens=completion_tokens, prompt_tokens=prompt_tokens, total_tokens=total_tokens)

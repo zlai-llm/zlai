@@ -22,7 +22,7 @@ def load_deepseek_coder_v2(
     model = AutoModelForCausalLM.from_pretrained(
         model_path, trust_remote_code=True, device_map="sequential",
         torch_dtype=torch.bfloat16, max_memory=max_memory,
-        attn_implementation="eager")
+        attn_implementation="eager").cuda()
     model.generation_config = GenerationConfig.from_pretrained(model_path)
     model.generation_config.pad_token_id = model.generation_config.eos_token_id
     return model, tokenizer
