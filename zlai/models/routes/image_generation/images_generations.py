@@ -7,11 +7,12 @@ from PIL.Image import open
 from fastapi import HTTPException, File, Form, UploadFile
 
 from zlai.utils.config import pkg_config
-from zlai.models.types.images_generations import *
 from zlai.models.diffusers import LoadModelDiffusers
 from zlai.models.utils import load_model_config
 from zlai.models import app, logger
 from zlai.models.config.models import diffusers_models
+from zlai.types.request.image import *
+from zlai.types.response.image import *
 
 
 __all__ = [
