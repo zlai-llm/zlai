@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from starlette.responses import StreamingResponse
-from zlai.models.types.models_config import *
-from zlai.models.types.completion import *
+from zlai.types.models_config import *
+from zlai.types.request.completion import ChatCompletionRequest
 from ..utils import *
 from ...completion import *
 from ....models import app, logger
