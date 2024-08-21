@@ -1,5 +1,5 @@
 from typing import Union, Optional
-from zlai.types.generate_config.base import GenerateConfig
+from zlai.types.generate_config.completion.base import GenerateConfig
 
 
 __all__ = [

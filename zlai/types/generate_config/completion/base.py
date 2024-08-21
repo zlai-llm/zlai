@@ -9,6 +9,9 @@ __all__ = [
 
 class GenerateConfig(BaseModel):
     """"""
+    max_length: Optional[int] = Field(default=None)
+    max_new_tokens: Optional[int] = Field(default=None)
+    top_k: Optional[int] = Field(default=None)
     do_sample: Optional[bool] = Field(
         default=None, description="do_sample 为 true 时启用采样策略，do_sample 为 false 时采样策略 temperature、top_p 将不生效")
     temperature: Optional[float] = Field(
