@@ -4,7 +4,7 @@ from threading import Thread
 from transformers import TextIteratorStreamer
 from zlai.types.messages import TypeMessage
 from zlai.types.completion_usage import CompletionUsage
-from zlai.models.types.generate_config import TypeInferenceGenerateConfig
+from zlai.types.generate_config.completion.codegeex import CodeGeexGenerateConfig
 
 
 __all__ = [
@@ -23,7 +23,7 @@ def completion_codegeex_4(
         model,
         tokenizer,
         messages: List[TypeMessage],
-        generate_config: Optional[TypeInferenceGenerateConfig],
+        generate_config: Optional[CodeGeexGenerateConfig],
         **kwargs,
 ) -> Tuple[str, CompletionUsage]:
     """"""
@@ -48,7 +48,7 @@ def stream_completion_codegeex_4(
         model,
         tokenizer,
         messages: List[TypeMessage],
-        generate_config: Optional[TypeInferenceGenerateConfig],
+        generate_config: Optional[CodeGeexGenerateConfig],
         **kwargs: Any,
 ) -> Iterable[Tuple[str, CompletionUsage]]:
     messages = trans_messages(messages=messages)

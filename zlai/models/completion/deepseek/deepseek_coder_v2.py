@@ -1,9 +1,9 @@
 from typing import Any, Dict, List, Tuple, Iterable, Optional
 from threading import Thread
 from transformers import TextIteratorStreamer
-from zlai.types.messages import TypeMessage, AudioMessage
+from zlai.types.messages import TypeMessage
 from zlai.types.completion_usage import CompletionUsage
-from zlai.models.types.generate_config import TypeInferenceGenerateConfig
+from zlai.types.generate_config.completion.deepseek import DeepSeekGenerateConfig
 
 
 __all__ = [
@@ -22,7 +22,7 @@ def completion_deepseek_coder_v2(
         model,
         tokenizer,
         messages: List[TypeMessage],
-        generate_config: Optional[TypeInferenceGenerateConfig],
+        generate_config: Optional[DeepSeekGenerateConfig],
         **kwargs: Any,
 ) -> Tuple[str, CompletionUsage]:
     """"""
@@ -45,7 +45,7 @@ def stream_completion_deepseek_coder_v2(
         model,
         tokenizer,
         messages: List[TypeMessage],
-        generate_config: Optional[TypeInferenceGenerateConfig],
+        generate_config: Optional[DeepSeekGenerateConfig],
         **kwargs: Any,
 ) -> Iterable[Tuple[str, CompletionUsage]]:
     messages = trans_messages(messages=messages)

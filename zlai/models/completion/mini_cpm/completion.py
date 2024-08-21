@@ -1,6 +1,7 @@
-from typing import List, Dict, Tuple, Iterable
+from typing import List, Dict, Tuple, Optional, Iterable
 from zlai.types.messages import *
 from zlai.types.completion_usage import CompletionUsage
+from zlai.types.generate_config.completion.mini_cpm import MiniCPMV26GenerateConfig
 
 
 __all__ = [
@@ -28,6 +29,7 @@ def completion_mini_cpm(
         model,
         tokenizer,
         messages: List[TypeMessage],
+        generate_config: Optional[MiniCPMV26GenerateConfig],
         **kwargs,
 ) -> Tuple[str, CompletionUsage]:
     """"""
@@ -40,8 +42,9 @@ def completion_mini_cpm(
                 if isinstance(content, str):
                     usage.prompt_tokens += len(content)
 
+    kwargs = {**generate_config.model_dump()}
     messages = mini_cpm_messages_process(messages)
-    content = model.chat(image=None, msgs=messages, tokenizer=tokenizer)
+    content = model.chat(image=None, msgs=messages, tokenizer=tokenizer, **kwargs)
 
     usage.completion_tokens = len(content)
     usage.total_tokens = usage.prompt_tokens + usage.completion_tokens
@@ -52,12 +55,14 @@ def stream_completion_mini_cpm(
         model,
         tokenizer,
         messages: List[TypeMessage],
+        generate_config: Optional[MiniCPMV26GenerateConfig],
         **kwargs,
 ) -> Iterable[Tuple[str, CompletionUsage]]:
     """"""
     usage = CompletionUsage(completion_tokens=0, prompt_tokens=0, total_tokens=0)
     messages = mini_cpm_messages_process(messages)
-    completion = model.chat(image=None, msgs=messages, tokenizer=tokenizer, sampling=True, stream=True)
+    kwargs = {**generate_config.model_dump()}
+    completion = model.chat(image=None, msgs=messages, tokenizer=tokenizer, sampling=True, stream=True, **kwargs)
     for chunk_content in completion:
         usage.completion_tokens += 1
         usage.total_tokens = usage.prompt_tokens + usage.completion_tokens

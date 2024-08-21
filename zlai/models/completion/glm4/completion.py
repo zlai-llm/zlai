@@ -4,7 +4,7 @@ from threading import Thread
 from transformers import TextIteratorStreamer
 from zlai.types.messages import TypeMessage, ImageMessage
 from zlai.types.completion_usage import CompletionUsage
-from zlai.models.types.generate_config import TypeInferenceGenerateConfig
+from zlai.types.generate_config.completion.glm4 import GLM4GenerateConfig
 from .utils import ProcessMessages
 
 
@@ -52,7 +52,7 @@ def completion_glm_4(
         validate: bool = False,
         tools: Optional[List[Dict]] = None,
         tool_choice: Optional[Union[dict, str]] = "none",
-        generate_config: Optional[TypeInferenceGenerateConfig] = None,
+        generate_config: Optional[GLM4GenerateConfig] = None,
         **kwargs: Any,
 ) -> Tuple[str, CompletionUsage]:
     """"""
@@ -78,7 +78,7 @@ def stream_completion_glm_4(
         validate: bool = False,
         tools: Optional[List[Dict]] = None,
         tool_choice: Optional[Union[dict, str]] = "none",
-        generate_config: Optional[TypeInferenceGenerateConfig] = None,
+        generate_config: Optional[GLM4GenerateConfig] = None,
 ) -> Iterable[Tuple[str, CompletionUsage]]:
     """"""
     messages = glm_4_messages_process(messages, validate, tools, tool_choice)

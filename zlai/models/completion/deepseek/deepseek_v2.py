@@ -1,9 +1,9 @@
 from typing import Any, Dict, List, Tuple, Iterable, Optional
 from threading import Thread
 from transformers import TextIteratorStreamer
-from zlai.types.messages import TypeMessage, AudioMessage
+from zlai.types.messages import TypeMessage
 from zlai.types.completion_usage import CompletionUsage
-from zlai.types.generate_config.deepseek import DeepSeekGenerateConfig
+from zlai.types.generate_config.completion.deepseek import DeepSeekGenerateConfig
 
 
 __all__ = [

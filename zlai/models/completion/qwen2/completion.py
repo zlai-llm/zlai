@@ -3,7 +3,7 @@ from threading import Thread
 from transformers import TextIteratorStreamer
 from zlai.types.messages import TypeMessage, AudioMessage
 from zlai.types.completion_usage import CompletionUsage
-from zlai.models.types.generate_config import TypeInferenceGenerateConfig
+from zlai.types.generate_config.completion.qwen2 import Qwen2GenerateConfig
 
 
 __all__ = [
@@ -22,7 +22,7 @@ def completion_qwen_2(
         model,
         tokenizer,
         messages: List[TypeMessage],
-        generate_config: Optional[TypeInferenceGenerateConfig],
+        generate_config: Optional[Qwen2GenerateConfig],
         **kwargs: Any,
 ) -> Tuple[str, CompletionUsage]:
     """"""
@@ -50,7 +50,7 @@ def stream_completion_qwen_2(
         model,
         tokenizer,
         messages: List[TypeMessage],
-        generate_config: Optional[TypeInferenceGenerateConfig],
+        generate_config: Optional[Qwen2GenerateConfig],
         **kwargs: Any,
 ) -> Iterable[Tuple[str, CompletionUsage]]:
     messages = trans_messages(messages=messages)
@@ -91,7 +91,7 @@ def completion_qwen_2_audio(
         model,
         processor,
         messages: List[TypeMessage],
-        generate_config: Optional[TypeInferenceGenerateConfig],
+        generate_config: Optional[Qwen2GenerateConfig],
         **kwargs: Any,
 ):
     """"""
