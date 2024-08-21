@@ -3,6 +3,8 @@ from zlai.models.types.models_config import ModelConfig
 from zlai.models.types.generate_config import *
 from zlai.models.types.images_generations import *
 from zlai.models.types.audio import *
+from zlai.types.generate_config.deepseek import *
+from zlai.types.generate_config.codegeex import *
 
 
 __all__ = [
@@ -91,24 +93,24 @@ chat_completion_models = {
         model_name="DeepSeek-V2-Lite-Chat",
         model_path="/home/models/deepseek-ai/DeepSeek-V2-Lite-Chat",
         model_type="completion",
-        generate_method=MiniCPMInferenceGenerateConfig,
-        load_method=load_mini_cpm,
+        generate_method=DeepSeekV2LiteChatGenerateConfig,
+        load_method=load_deepseek_v2,
         max_memory={"0": "30GB"},
     ),
     "DeepSeek-Coder-V2-Lite-Instruct": ModelConfig(
         model_name="DeepSeek-Coder-V2-Lite-Instruct",
         model_path="/home/models/deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct",
         model_type="completion",
-        generate_method=MiniCPMInferenceGenerateConfig,
-        load_method=load_mini_cpm,
+        generate_method=DeepSeekCoderV2LiteInstructChatGenerateConfig,
+        load_method=load_deepseek_coder_v2,
         max_memory={"0": "30GB"},
     ),
     "codegeex4-all-9b": ModelConfig(
         model_name="codegeex4-all-9b",
         model_path="/home/models/THUDM/codegeex4-all-9b",
         model_type="completion",
-        generate_method=MiniCPMInferenceGenerateConfig,
-        load_method=load_mini_cpm,
+        generate_method=CodeGeex4All9BGenerateConfig,
+        load_method=load_codegeex4,
         max_memory={"0": "30GB"},
     ),
 }
