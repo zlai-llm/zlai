@@ -1,10 +1,8 @@
 from zlai.models.load import *
-from zlai.models.types.models_config import ModelConfig
-from zlai.models.types.generate_config import *
-from zlai.models.types.images_generations import *
-from zlai.models.types.audio import *
-from zlai.types.generate_config.deepseek import *
-from zlai.types.generate_config.codegeex import *
+from zlai.types.models_config import ModelConfig
+from zlai.types.generate_config.image import *
+from zlai.types.generate_config.audio import *
+from zlai.types.generate_config.completion import *
 
 
 __all__ = [
@@ -21,7 +19,7 @@ chat_completion_models = {
         model_name="Qwen2-0.5B-Instruct",
         model_path="/home/models/Qwen/Qwen2-0.5B-Instruct",
         model_type="completion",
-        generate_method=Qwen205BInstructInferenceGenerateConfig,
+        generate_method=Qwen2Instruct05BGenerateConfig,
         load_method=load_qwen2,
         max_memory={"0": "2GB"},
     ),
@@ -29,7 +27,7 @@ chat_completion_models = {
         model_name="Qwen2-1.5B-Instruct",
         model_path="/home/models/Qwen/Qwen2-1.5B-Instruct",
         model_type="completion",
-        generate_method=Qwen215BInstructInferenceGenerateConfig,
+        generate_method=Qwen2Instruct15BGenerateConfig,
         load_method=load_qwen2,
         max_memory={"0": "4GB"},
     ),
@@ -37,7 +35,7 @@ chat_completion_models = {
         model_name="Qwen2-7B-Instruct",
         model_path="/home/models/Qwen/Qwen2-7B-Instruct",
         model_type="completion",
-        generate_method=Qwen2InstructInferenceGenerateConfig,
+        generate_method=Qwen2Instruct7BGenerateConfig,
         load_method=load_qwen2,
         max_memory={"0": "20GB"},
     ),
@@ -45,7 +43,7 @@ chat_completion_models = {
         model_name="Qwen2-Audio-7B-Instruct",
         model_path="/home/models/Qwen/Qwen2-Audio-7B-Instruct",
         model_type="completion",
-        generate_method=Qwen2Audio7BInstructInferenceGenerateConfig,
+        generate_method=Qwen2Audio7BInstructGenerateConfig,
         load_method=load_qwen2_audio,
         max_memory={"0": "20GB"},
     ),
@@ -53,7 +51,7 @@ chat_completion_models = {
         model_name="Qwen2-57B-A14B-Instruct-GPTQ-Int4",
         model_path="/home/models/Qwen/Qwen2-57B-A14B-Instruct-GPTQ-Int4",
         model_type="completion",
-        generate_method=Qwen2InstructInferenceGenerateConfig,
+        generate_method=Qwen2GenerateConfig,
         load_method=load_qwen2,
         max_memory={"0": "30GB"},
     ),
@@ -61,7 +59,7 @@ chat_completion_models = {
         model_name="glm-4-9b-chat",
         model_path="/home/models/THUDM/glm-4-9b-chat",
         model_type="completion",
-        generate_method=GLM49BChatInferenceGenerateConfig,
+        generate_method=GLM4Chat9BGenerateConfig,
         load_method=load_glm4,
         max_memory={"0": "30GB"},
     ),
@@ -69,7 +67,7 @@ chat_completion_models = {
         model_name="glm-4-9b-chat-1m",
         model_path="/home/models/THUDM/glm-4-9b-chat-1m",
         model_type="completion",
-        generate_method=GLM49BChat1MInferenceGenerateConfig,
+        generate_method=GLM4Chat9B1MGenerateConfig,
         load_method=load_glm4,
         max_memory={"0": "30GB"},
     ),
@@ -77,7 +75,7 @@ chat_completion_models = {
         model_name="glm-4v-9b",
         model_path="/home/models/THUDM/glm-4v-9b",
         model_type="completion",
-        generate_method=GLM4V9BInferenceGenerateConfig,
+        generate_method=GLM4V9BGenerateConfig,
         load_method=load_glm4,
         max_memory={"0": "30GB"},
     ),
@@ -85,7 +83,7 @@ chat_completion_models = {
         model_name="MiniCPM-V-2_6",
         model_path="/home/models/openbmb/MiniCPM-V-2_6",
         model_type="completion",
-        generate_method=MiniCPMInferenceGenerateConfig,
+        generate_method=MiniCPMV26GenerateConfig,
         load_method=load_mini_cpm,
         max_memory={"0": "30GB"},
     ),
