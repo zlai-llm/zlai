@@ -1,9 +1,10 @@
-from typing import Optional
+from typing import Optional, Union
 from pydantic import Field
 from .base import ImageGenerateConfig
 
 
 __all__ = [
+    "TypeFLUXGenerate",
     "FLUXImageGenerateConfig",
 ]
 
@@ -25,3 +26,8 @@ class FLUXImageGenerateConfig(ImageGenerateConfig):
             "height": self.height,
             "width": self.width,
         }
+
+
+TypeFLUXGenerate = Union[
+    FLUXImageGenerateConfig
+]

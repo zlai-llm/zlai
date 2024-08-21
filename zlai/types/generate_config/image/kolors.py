@@ -1,10 +1,11 @@
 from PIL.Image import Image as TypeImage
-from typing import Optional
+from typing import Optional, Union
 from pydantic import Field, ConfigDict
 from .base import ImageGenerateConfig
 
 
 __all__ = [
+    "TypeKolorsGenerate",
     "KolorsImageGenerateConfig",
     "KolorsImage2ImageGenerateConfig",
 ]
@@ -49,3 +50,9 @@ class KolorsImage2ImageGenerateConfig(ImageGenerateConfig):
             "height": self.height,
             "width": self.width,
         }
+
+
+TypeKolorsGenerate = Union[
+    KolorsImageGenerateConfig,
+    KolorsImage2ImageGenerateConfig
+]
