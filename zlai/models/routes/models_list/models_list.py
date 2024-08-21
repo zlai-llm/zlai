@@ -1,6 +1,6 @@
 from openai.pagination import SyncPage
 from zlai.models import app
-from zlai.models.types.models_list import _model_list, Model
+from zlai.types.models_list import _model_list, Model
 
 
 __all__ = [
