@@ -98,5 +98,6 @@ def completion_qwen_2_audio(
     inputs.input_ids = inputs.input_ids.to("cuda")
     generate_ids = model.generate(**inputs, **generate_config.model_dump())
     generate_ids = generate_ids[:, inputs.input_ids.size(1):]
-    response = processor.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+    response = processor.batch_decode(
+        generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
     return response

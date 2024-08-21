@@ -10,6 +10,7 @@ __all__ = [
 
 class MiniCPMV26GenerateConfig(GenerateConfig):
     """"""
+    max_new_tokens: int = 2048
 
 
 TypeMiniCPMGenerate = Union[
