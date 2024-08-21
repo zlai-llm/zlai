@@ -45,6 +45,11 @@ class ImagesGenerationsRequest(BaseModel):
     user: Optional[str] = None
     """A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse."""
 
+    def gen_kwargs(self):
+        """"""
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+        return kwargs
+
 
 class ImagesEditsRequest(BaseModel):
     """"""
@@ -79,6 +84,11 @@ class ImagesEditsRequest(BaseModel):
     user: Optional[str] = None
     """A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse."""
 
+    def gen_kwargs(self):
+        """"""
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+        return kwargs
+
 
 class ImagesVariationsRequest(BaseModel):
     """"""
@@ -102,3 +112,8 @@ class ImagesVariationsRequest(BaseModel):
 
     user: Optional[str] = None
     """A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse."""
+
+    def gen_kwargs(self):
+        """"""
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+        return kwargs

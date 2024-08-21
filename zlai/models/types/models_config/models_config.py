@@ -2,6 +2,7 @@ from typing import Any, Type, List, Dict, Union, Callable, Optional, Iterable
 from pydantic import BaseModel, Field, ConfigDict
 from openai.types.chat.chat_completion_tool_param import ChatCompletionToolParam
 from openai.types.chat.chat_completion_tool_choice_option_param import ChatCompletionToolChoiceOptionParam
+from zlai.types.generate_config.base import GenerateConfig
 from ..generate_config import TypeInferenceGenerateConfig, InferenceGenerateConfig, inference_generate_config_mapping
 from ..images_generations import TypeImageGenerateConfig, ImageGenerateConfig, images_generate_config_mapping
 from ..embedding import embedding_generate_config_mapping
@@ -28,7 +29,12 @@ class ModelConfig(BaseModel):
     model_type: Optional[str] = Field(default=None, description="")
     load_method: Optional[Union[str, Callable]] = Field(default=None, description="")
     max_memory: Optional[Dict[Union[str, int], str]] = Field(default={0: "20GB"}, description="")
-    generate_method: Optional[Union[str, Type[TypeAudioGenerateConfig], Type[TypeInferenceGenerateConfig], Type[TypeImageGenerateConfig]]] = Field(
+    generate_method: Optional[Union[
+        str, Type[TypeAudioGenerateConfig],
+        Type[TypeInferenceGenerateConfig],
+        Type[TypeImageGenerateConfig],
+        Type[GenerateConfig],
+    ]] = Field(
         default=None, description="")
 
     def __init__(self, **data):

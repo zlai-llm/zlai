@@ -25,3 +25,7 @@ class SpeechRequest(BaseModel):
     speed: Union[float] = 1.
     """The speed of the generated audio. Select a value from 0.25 to 4.0. 1.0 is the default."""
 
+    def gen_kwargs(self):
+        """"""
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+        return kwargs

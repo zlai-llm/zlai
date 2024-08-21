@@ -39,7 +39,7 @@ async def chat_completions(request: ChatCompletionRequest):
             base_config.update_kwargs(model_path=model_config.get("model_path"))
 
         tools_config = ToolsConfig.model_validate(request.model_dump())
-        generate_config = base_config.generate_method.model_validate(request.model_dump())
+        generate_config = base_config.generate_method.model_validate(request.gen_kwargs())
         logger.info(f"[ChatCompletion] Generate kwargs: {generate_config.gen_kwargs()}")
 
         try:

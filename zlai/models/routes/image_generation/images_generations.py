@@ -40,7 +40,7 @@ def images_generations(
             logger.info(f"[ImagesGenerations] Model config: {model_config}")
             base_config.update_kwargs(model_path=model_config.get("model_path"))
 
-        generate_config = base_config.generate_method.model_validate(request.model_dump())
+        generate_config = base_config.generate_method.model_validate(request.gen_kwargs())
         logger.info(f"[ImagesGenerations] Generate kwargs: {generate_config.gen_kwargs()}")
 
         try:
@@ -92,7 +92,7 @@ async def images_edits(
             logger.info(f"[ImagesGenerations] Model config: {model_config}")
             base_config.update_kwargs(model_path=model_config.get("model_path"))
 
-        generate_config = base_config.generate_method.model_validate(request.model_dump())
+        generate_config = base_config.generate_method.model_validate(request.gen_kwargs())
         logger.info(f"[ImagesGenerations] Generate kwargs: {generate_config.gen_kwargs()}")
 
         try:

@@ -35,3 +35,8 @@ class ChatCompletionRequest(BaseModel):
     tools: Optional[Union[Iterable[ChatCompletionToolParam], List[Dict]]] = Field(default=None, description="")
     top_logprobs: Optional[int] = Field(default=None, description="")
     top_p: Optional[float] = Field(default=None, description="")
+
+    def gen_kwargs(self):
+        """"""
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+        return kwargs
