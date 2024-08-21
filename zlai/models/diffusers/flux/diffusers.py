@@ -2,7 +2,7 @@ import torch
 import base64
 from io import BytesIO
 from typing import Any
-from zlai.models.types.images_generations import *
+from zlai.types.generate_config.image import *
 
 
 __all__ = [
