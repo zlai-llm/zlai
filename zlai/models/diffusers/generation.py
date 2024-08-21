@@ -3,8 +3,8 @@ from logging import Logger
 from typing import Any, Dict, Optional, Callable
 
 from zlai.utils.mixin import LoggerMixin
-from zlai.models.types.images_generations import *
-from zlai.models.types.models_config.models_config import ModelConfig
+from zlai.types.generate_config.image import *
+from zlai.types.models_config import ModelConfig
 from .generate_mapping import diffusers_mapping
 
 
