@@ -4,7 +4,7 @@ from zlai.models.load.chat_completion import load_method_mapping as load_complet
 from zlai.models.load.diffusers import load_method_mapping as load_diffusers
 from zlai.models.load.audio import load_method_mapping as load_tts
 from zlai.models.load.embedding import load_method_mapping as load_embedding
-from zlai.models.types.cache import DropModelRequest
+from zlai.types.cache import DropModelRequest
 
 
 __all__ = [
