@@ -23,7 +23,7 @@ def load_qwen2(
         torch_dtype="auto",
         device_map="auto",
         max_memory=max_memory,
-    )
+    ).cuda()
     tokenizer = AutoTokenizer.from_pretrained(model_path)
     return model, tokenizer
 
@@ -35,8 +35,9 @@ def load_qwen2_audio(
 ) -> Tuple[Any, Any]:
     """"""
     from transformers import Qwen2AudioForConditionalGeneration, AutoProcessor
-    max_memory = get_device_max_memory(max_memory)
+    # max_memory = get_device_max_memory(max_memory)
     processor = AutoProcessor.from_pretrained(model_path)
     model = Qwen2AudioForConditionalGeneration.from_pretrained(
-        model_path, device_map="auto", max_memory=max_memory)
+        model_path, device_map="auto",
+    ).cuda()
     return model, processor

@@ -9,6 +9,7 @@ from zlai.types.generate_config.completion.qwen2 import Qwen2GenerateConfig
 __all__ = [
     "completion_qwen_2",
     "stream_completion_qwen_2",
+    "completion_qwen_2_audio",
 ]
 
 
@@ -79,6 +80,7 @@ def trans_audio_messages(messages: List[TypeMessage], processor: Any) -> Tuple[s
     _messages = []
     for message in messages:
         if isinstance(message, AudioMessage):
+            message = message.to_instance()
             audios.extend(message.get_audios(sr=processor.feature_extractor.sampling_rate))
         _messages.append(message.model_dump())
     text = processor.apply_chat_template(_messages, add_generation_prompt=True, tokenize=False)
@@ -87,22 +89,27 @@ def trans_audio_messages(messages: List[TypeMessage], processor: Any) -> Tuple[s
 
 def completion_qwen_2_audio(
         model,
-        processor,
+        tokenizer,
         messages: List[TypeMessage],
         generate_config: Optional[Qwen2GenerateConfig],
         **kwargs: Any,
 ):
     """"""
-    text, audios = trans_audio_messages(messages, processor)
-    inputs = processor(
+    text, audios = trans_audio_messages(messages, tokenizer)
+    inputs = tokenizer(
         text=text, audios=audios, return_tensors="pt", padding=True,
-        sampling_rate=processor.feature_extracor.sampling_rate,
+        sampling_rate=tokenizer.feature_extractor.sampling_rate,
     ).to(model.device)
-    generate_ids = model.generate(**inputs, **generate_config.model_dump())
-    generate_ids = generate_ids[:, inputs.input_ids.size(1):]
-    response = processor.batch_decode(
-        generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
-    return response
+    generated_ids = model.generate(**inputs, **generate_config.model_dump())
+    generated_ids = generated_ids[:, inputs.input_ids.size(1):]
+    response = tokenizer.batch_decode(
+        generated_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+
+    completion_tokens = generated_ids.shape[1]
+    prompt_tokens = inputs.get("input_ids").shape[1]
+    total_tokens = completion_tokens + prompt_tokens
+    usage = CompletionUsage(completion_tokens=completion_tokens, prompt_tokens=prompt_tokens, total_tokens=total_tokens)
+    return response, usage
 
 
 def stream_completion_qwen_2_audio(

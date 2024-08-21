@@ -33,13 +33,13 @@ class Qwen2Instruct7BGenerateConfig(Qwen2GenerateConfig):
     repetition_penalty: Optional[float] = 1.1
 
 
-class Qwen2Audio7BInstructGenerateConfig(Qwen2GenerateConfig):
+class Qwen2Audio7BInstructGenerateConfig(GenerateConfig):
     """"""
     repetition_penalty: Optional[float] = 1.1
     do_sample: Optional[bool] = True
     max_length: int = 256
-    top_k: Optional[int] = 20,
-    top_p: Optional[float] = 0.5,
+    top_k: Optional[int] = 20
+    top_p: Optional[float] = 0.5
     temperature: Optional[float] = 0.7
 
 

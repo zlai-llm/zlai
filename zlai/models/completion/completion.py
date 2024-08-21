@@ -65,7 +65,7 @@ class LoadModelCompletion(LoggerMixin):
         """"""
         question = ""
         user_message = messages[-1]
-        if isinstance(user_message, ImageMessage):
+        if isinstance(user_message, (AudioMessage, ImageMessage)):
             if isinstance(user_message.content, str):
                 question = user_message.content
             else:
@@ -136,6 +136,7 @@ class LoadModelCompletion(LoggerMixin):
         self._start_logger(messages=messages)
         completion_function = completion_mapping.get(self.model_name)
         self._logger(msg=f"[{__class__.__name__}] Completion Function: {completion_function}", color="green")
+        start = time.time()
         if completion_function is None:
             content = f"Not find completion method: {self.model_name}"
             usage = None
@@ -145,7 +146,8 @@ class LoadModelCompletion(LoggerMixin):
                 generate_config=self.generate_config, validate=True,
                 tools=self.tools_config.tools, tool_choice=self.tools_config.tool_choice
             )
-        self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")
+        end = time.time()
+        self._logger(msg=f"[{__class__.__name__}] Generating Done. Use {end - start:.2f}s", color="green")
         self._logger(msg=f"[{__class__.__name__}] Completion content: {content}", color="green")
         chat_completion = self.parse_tools_call(content=content, usage=usage)
         return chat_completion
@@ -157,7 +159,7 @@ class LoadModelCompletion(LoggerMixin):
         try:
             completion_function = stream_completion_mapping.get(self.model_name)
             self._logger(msg=f"[{__class__.__name__}] Completion Function: {completion_function}", color="green")
-
+            start = time.time()
             if completion_function is None:
                 streamer = None
                 content = f"Not find stream completion method: {self.model_name}"
@@ -188,8 +190,8 @@ class LoadModelCompletion(LoggerMixin):
                 chunk = self.parse_stream_tools_call(content=answer, _id=_id, usage=usage)
                 yield f"data: {chunk.model_dump_json()}\n\n"
                 self._logger(msg=f"[{__class__.__name__}] Completion content: {answer}", color="green")
-
-            self._logger(msg=f"[{__class__.__name__}] Generating Done.", color="green")
+            end = time.time()
+            self._logger(msg=f"[{__class__.__name__}] Generating Done. Use {end - start:.2f}s", color="green")
 
         except Exception as error:
             chunk = stream_message_chunk(
