@@ -1,12 +1,11 @@
 import os
 from fastapi import HTTPException, Response
 from zlai.utils import pkg_config
-from zlai.models.utils import load_model_config, get_model_config
-from zlai.models.types.models_config import ModelConfig
+from zlai.models.utils import load_model_config
 from zlai.models.tts.generation import LoadModelAudio
-from zlai.models.types.audio import *
 from zlai.models import app, logger
 from zlai.models.config.models import audio_models
+from zlai.types.request.audio import SpeechRequest
 
 
 __all__ = [
