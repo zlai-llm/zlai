@@ -63,6 +63,8 @@ completion_mapping = {
     **glm_4_completion_mapping,
     **mini_cpm_completion_mapping,
     **codegeex_4_completion_mapping,
+    **deepseek_completion_mapping,
+    **deepseek_coder_v2_completion_mapping,
 }
 
 stream_completion_mapping = {
@@ -70,4 +72,6 @@ stream_completion_mapping = {
     **glm_4_stream_completion_mapping,
     **mini_cpm_stream_completion_mapping,
     **codegeex_4_stream_completion_mapping,
+    **deepseek_stream_completion_mapping,
+    **deepseek_coder_v2_stream_completion_mapping,
 }

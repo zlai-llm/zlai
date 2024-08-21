@@ -84,7 +84,7 @@ def stream_completion_glm_4(
     messages = glm_4_messages_process(messages, validate, tools, tool_choice)
     usage = CompletionUsage(completion_tokens=0, prompt_tokens=0, total_tokens=0)
 
-    streamer = TextIteratorStreamer(tokenizer)
+    streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
     inputs = tokenizer.apply_chat_template(
         messages, add_generation_prompt=True, tokenize=True, return_tensors="pt", return_dict=True
     ).to(model.device)
@@ -98,9 +98,10 @@ def stream_completion_glm_4(
         usage.completion_tokens += 1
         usage.total_tokens = usage.prompt_tokens + usage.completion_tokens
         content = str(response)
-        if "[gMASK]" in content and i == 0:
-            drop_tokens.insert(0, content)
-        for t in drop_tokens:
-            content = content.replace(t, "")
-        if content:
-            yield content, usage
+        yield content, usage
+        # if "[gMASK]" in content and i == 0:
+        #     drop_tokens.insert(0, content)
+        # for t in drop_tokens:
+        #     content = content.replace(t, "")
+        # if content:
+        #     yield content, usage

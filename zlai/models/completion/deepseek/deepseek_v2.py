@@ -51,7 +51,7 @@ def stream_completion_deepseek_2(
     messages = trans_messages(messages=messages)
     usage = CompletionUsage(completion_tokens=0, prompt_tokens=0, total_tokens=0)
 
-    streamer = TextIteratorStreamer(tokenizer)
+    streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
     inputs = tokenizer.apply_chat_template(
         messages, add_generation_prompt=True, return_tensors="pt").to(model.device)
     usage.prompt_tokens = inputs.shape[1]
@@ -62,9 +62,7 @@ def stream_completion_deepseek_2(
     }
     thread = Thread(target=model.generate, kwargs=gen_config)
     thread.start()
-    for i, response in enumerate(streamer):
+    for i, content in enumerate(streamer):
         usage.completion_tokens += 1
         usage.total_tokens = usage.prompt_tokens + usage.completion_tokens
-        if i > 0:
-            content = response.replace(tokenizer.eos_token, '')
-            yield content, usage
+        yield content, usage
