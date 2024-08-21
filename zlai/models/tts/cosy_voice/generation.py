@@ -1,7 +1,6 @@
 import io
 import torchaudio
-from typing import Union
-from zlai.models.types.audio import *
+from zlai.types.generate_config.audio import *
 from zlai.models.tts.cosy_voice.cosyvoice.cli.cosyvoice import CosyVoice
 
 
