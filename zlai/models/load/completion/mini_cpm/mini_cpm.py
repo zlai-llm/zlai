@@ -3,7 +3,7 @@ from cachetools import cached, TTLCache
 from typing import Any, Dict, Tuple, Optional
 from transformers import AutoModel, AutoTokenizer
 from zlai.models.utils import get_device_max_memory
-from ..cache import *
+from zlai.models.load.cache import *
 
 
 __all__ = [

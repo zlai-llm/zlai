@@ -1,6 +1,6 @@
 import torch
 from zlai.models import app, logger
-from zlai.models.load.chat_completion import load_method_mapping as load_completion
+from zlai.models.load.completion import load_method_mapping as load_completion
 from zlai.models.load.diffusers import load_method_mapping as load_diffusers
 from zlai.models.load.audio import load_method_mapping as load_tts
 from zlai.models.load.embedding import load_method_mapping as load_embedding

@@ -1,6 +1,6 @@
 from .mini_cpm import *
-from .glm4 import *
-from .qwen2 import *
+from .glm import *
+from .qwen import *
 from .codegeex import *
 from .deepseek import *
 
