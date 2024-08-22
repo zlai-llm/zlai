@@ -89,7 +89,6 @@ def stream_completion_glm_4(
         messages, add_generation_prompt=True, tokenize=True, return_tensors="pt", return_dict=True
     ).to(model.device)
     usage.prompt_tokens = inputs.get("input_ids").shape[1]
-    drop_tokens = tokenizer.special_tokens_map.get("additional_special_tokens")
     gen_config = {**inputs, "streamer": streamer, **generate_config.gen_kwargs()}
     thread = Thread(target=model.generate, kwargs=gen_config)
     thread.start()
@@ -99,9 +98,3 @@ def stream_completion_glm_4(
         usage.total_tokens = usage.prompt_tokens + usage.completion_tokens
         content = str(response)
         yield content, usage
-        # if "[gMASK]" in content and i == 0:
-        #     drop_tokens.insert(0, content)
-        # for t in drop_tokens:
-        #     content = content.replace(t, "")
-        # if content:
-        #     yield content, usage

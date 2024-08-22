@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from pydantic import BaseModel
 
 
@@ -9,5 +9,4 @@ __all__ = [
 
 class DropModelRequest(BaseModel):
     """"""
-    method: List[str] = []
-    path: List[str] = []
+    model_name: Union[str, List[str]]

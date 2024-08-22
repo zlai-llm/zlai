@@ -79,6 +79,22 @@ chat_completion_models = {
         load_method=load_glm4,
         max_memory={"0": "30GB"},
     ),
+    "LongWriter-glm4-9b": ModelConfig(
+        model_name="LongWriter-glm4-9b",
+        model_path="/home/models/THUDM/LongWriter-glm4-9b",
+        model_type="completion",
+        generate_method=GLM4LongWriter9B,
+        load_method=load_glm4_long_writer_glm4,
+        max_memory={"0": "30GB"},
+    ),
+    "LongWriter-llama3.1-8b": ModelConfig(
+        model_name="LongWriter-llama3.1-8b",
+        model_path="/home/models/THUDM/LongWriter-llama3.1-8b",
+        model_type="completion",
+        generate_method=Llama3LongWriter8B,
+        load_method=load_glm4_long_writer_llama3,
+        max_memory={"0": "30GB"},
+    ),
     "MiniCPM-V-2_6": ModelConfig(
         model_name="MiniCPM-V-2_6",
         model_path="/home/models/openbmb/MiniCPM-V-2_6",

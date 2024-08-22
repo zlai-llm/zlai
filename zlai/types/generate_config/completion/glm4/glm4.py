@@ -8,6 +8,8 @@ __all__ = [
     "GLM4Chat9BGenerateConfig",
     "GLM4Chat9B1MGenerateConfig",
     "GLM4V9BGenerateConfig",
+    "GLM4LongWriter9B",
+    "Llama3LongWriter8B",
 ]
 
 
@@ -43,9 +45,30 @@ class GLM4V9BGenerateConfig(GLM4GenerateConfig):
     temperature: Optional[float] = 0.8
 
 
+class GLM4LongWriter9B(GenerateConfig):
+    """"""
+    max_length: int = 32768
+    num_beams = 1
+    do_sample = True
+    top_p = 0.8
+    temperature = 0.8
+
+
+class Llama3LongWriter8B(GenerateConfig):
+    """"""
+    max_new_tokens = 32768
+    num_beams = 1
+    do_sample = True
+    top_p = 0.8
+    temperature = 0.5
+    repetition_penalty = 1
+
+
 TypeGLM4Generate = Union[
     GLM4GenerateConfig,
     GLM4Chat9BGenerateConfig,
     GLM4Chat9B1MGenerateConfig,
     GLM4V9BGenerateConfig,
+    GLM4LongWriter9B,
+    Llama3LongWriter8B,
 ]
