@@ -1,3 +1,4 @@
+from urllib.request import urlopen
 from io import BytesIO
 import base64
 import unittest
@@ -7,6 +8,14 @@ from zlai.types.messages.audio import AudioMessage
 
 class TestMessage(unittest.TestCase):
     """"""
+
+    def test_bytes(self):
+        """"""
+        url = "https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen2-Audio/audio/guess_age_gender.wav"
+        data = urlopen(url).read()
+        message = AudioMessage(content="", audios=[data])
+        print(message)
+        print(message.to_message())
 
     def test_message(self):
         """"""
