@@ -25,7 +25,7 @@ class AudioMessage(Message):
     """"""
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
-    role: Literal["user"] = Field(default="user", description="""The role of the author of this message.""")
+    role: Literal["user", "assistant"] = Field(default="user", description="""The role of the author of this message.""")
     content: Optional[Union[str, List[Union[TextContent, AudioContent]]]] = Field(
         default=None, description="""The content of the message.""")
 
@@ -38,7 +38,7 @@ class AudioMessage(Message):
     ):
         super().__init__(**kwargs)
         _content = None
-        if isinstance(self.content, str):
+        if isinstance(self.content, str) or self.content is None:
             _content = [self._add_content(self.content)]
 
             if audios:
@@ -67,7 +67,7 @@ class AudioMessage(Message):
         data = BytesIO(urlopen(audio_url).read())
         return data
 
-    def _add_content(self, content: str) -> TextContent:
+    def _add_content(self, content: Optional[str]) -> TextContent:
         """"""
         return TextContent(text=content)
 

@@ -81,7 +81,7 @@ class ImageMixin(Message):
 class ImageMessage(ImageMixin):
     """"""
     model_config = ConfigDict(arbitrary_types_allowed=True)
-    role: Literal["user"] = Field(default="user", description="""The role of the author of this message.""")
+    role: Literal["user", "assistant"] = Field(default="user", description="""The role of the author of this message.""")
     content: Optional[Union[str, List[Union[TextContent, ImageContent]]]] = Field(
         default=None, description="""The content of the message.""")
 

@@ -15,7 +15,7 @@ class TestMessage(unittest.TestCase):
         data = urlopen(url).read()
         message = AudioMessage(content="", audios=[data])
         print(message)
-        print(message.to_message())
+        # print(message.to_message())
 
     def test_message(self):
         """"""
