@@ -1,11 +1,9 @@
 import time
 from logging import Logger
 from typing import Any, Dict, Optional, Callable
-
 from zlai.utils.mixin import LoggerMixin
 from zlai.types.generate_config.image import *
 from zlai.types.models_config import ModelConfig
-from .generate_mapping import diffusers_mapping
 
 
 __all__ = [
@@ -67,7 +65,7 @@ class LoadModelDiffusers(LoggerMixin):
     def diffusers(self) -> str:
         """"""
         self._start_logger(prompt=self.generate_config.prompt)
-        generate_function = diffusers_mapping.get(self.model_name)
+        generate_function = self.model_config.inference_method.base
         self._logger(msg=f"[{__class__.__name__}] Generate Function: {generate_function}", color="green")
 
         if generate_function is None:

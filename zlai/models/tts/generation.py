@@ -1,10 +1,10 @@
 import time
 from logging import Logger
-from typing import Any, List, Dict, Optional, Callable
+from typing import Any, List, Optional, Callable
 from zlai.utils.mixin import LoggerMixin
 from zlai.types.generate_config.audio import *
+from zlai.types.models_config import ModelConfig
 from .cosy_voice import *
-from .generate_mapping import *
 
 
 __all__ = [
@@ -15,13 +15,13 @@ __all__ = [
 class LoadModelAudio(LoggerMixin):
     """"""
     pipe: Any
-    model_config: Dict
+    model_config: ModelConfig
     load_method: Callable
 
     def __init__(
             self,
             model_path: Optional[str] = None,
-            model_config: Optional[Dict] = None,
+            model_config: Optional[ModelConfig] = None,
             model_name: Optional[str] = None,
             generate_config: Optional[VoiceGenerateConfig] = None,
             load_method: Optional[Callable] = None,
@@ -67,7 +67,7 @@ class LoadModelAudio(LoggerMixin):
     def generate(self) -> str:
         """"""
         self._start_logger(prompt=self.generate_config.input)
-        generate_function = tts_mapping.get(self.model_name)
+        generate_function = self.model_config.inference_method.base
         self._logger(msg=f"[{__class__.__name__}] Generate Function: {generate_function}", color="green")
 
         if generate_function is None:

@@ -48,20 +48,20 @@ class GLM4V9BGenerateConfig(GLM4GenerateConfig):
 class GLM4LongWriter9B(GenerateConfig):
     """"""
     max_length: int = 32768
-    num_beams = 1
-    do_sample = True
-    top_p = 0.8
-    temperature = 0.8
+    num_beams: int = 1
+    do_sample: bool = True
+    top_p: float = 0.8
+    temperature: float = 0.8
 
 
 class Llama3LongWriter8B(GenerateConfig):
     """"""
-    max_new_tokens = 32768
-    num_beams = 1
-    do_sample = True
-    top_p = 0.8
-    temperature = 0.5
-    repetition_penalty = 1
+    max_new_tokens: int = 32768
+    num_beams: int = 1
+    do_sample: bool = True
+    top_p: float = 0.8
+    temperature: float = 0.5
+    repetition_penalty: int = 1
 
 
 TypeGLM4Generate = Union[

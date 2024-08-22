@@ -1,6 +1,7 @@
+import torch
 from typing import Any, Dict, List, Tuple, Iterable, Optional
 from threading import Thread
-from transformers import TextIteratorStreamer
+from transformers import TextIteratorStreamer, StoppingCriteria, StoppingCriteriaList
 from zlai.types.messages import TypeMessage
 from zlai.types.completion_usage import CompletionUsage
 from zlai.types.generate_config.completion.glm4 import GLM4LongWriter9B, Llama3LongWriter8B
@@ -40,7 +41,7 @@ def completion_long_writer_glm4(
     content = tokenizer.decode(outputs)
 
     completion_tokens = len(outputs)
-    prompt_tokens = inputs.shape[1]
+    prompt_tokens = inputs.input_ids.shape[1]
     total_tokens = completion_tokens + prompt_tokens
     usage = CompletionUsage(completion_tokens=completion_tokens, prompt_tokens=prompt_tokens, total_tokens=total_tokens)
     return content, usage
@@ -54,6 +55,17 @@ def stream_completion_long_writer_glm4(
         **kwargs: Any,
 ) -> Iterable[Tuple[str, CompletionUsage]]:
     """"""
+    class StopOnTokens(StoppingCriteria):
+        def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs) -> bool:
+            # stop_ids = model.config.eos_token_id
+            stop_ids = [tokenizer.eos_token_id, tokenizer.get_command("<|user|>"),
+                        tokenizer.get_command("<|observation|>")]
+            for stop_id in stop_ids:
+                if input_ids[0][-1] == stop_id:
+                    return True
+            return False
+
+    stop = StopOnTokens()
     query, history = trans_messages(messages=messages)
     gen_kwargs = {**generate_config.gen_kwargs()}
     usage = CompletionUsage(completion_tokens=0, prompt_tokens=0, total_tokens=0)
@@ -63,14 +75,19 @@ def stream_completion_long_writer_glm4(
     eos_token_id = [tokenizer.eos_token_id, tokenizer.get_command("<|user|>"),
                     tokenizer.get_command("<|observation|>")]
 
-    usage.prompt_tokens = inputs.shape[1]
-    gen_config = {"inputs": inputs, "streamer": streamer, "eos_token_id": eos_token_id, **gen_kwargs,}
+    usage.prompt_tokens = inputs.input_ids.shape[1]
+    gen_config = {
+        **inputs, "streamer": streamer, "eos_token_id": eos_token_id,
+        "stopping_criteria": StoppingCriteriaList([stop]), **gen_kwargs,}
     thread = Thread(target=model.generate, kwargs=gen_config)
     thread.start()
     for i, content in enumerate(streamer):
         usage.completion_tokens += 1
         usage.total_tokens = usage.prompt_tokens + usage.completion_tokens
+        if "<|user|>" in content:
+            content = content.replace("<|user|>", "")
         yield content, usage
+
 
 def completion_long_writer_llama3(
         model,
@@ -84,9 +101,9 @@ def completion_long_writer_llama3(
     gen_kwargs = {**generate_config.gen_kwargs()}
     prompt = f"[INST]{query}[/INST]"
 
-    input = tokenizer(prompt, truncation=False, return_tensors="pt").to(model.device)
-    context_length = input.input_ids.shape[-1]
-    output = model.generate(**input, **gen_kwargs)[0]
+    inputs = tokenizer(prompt, truncation=False, return_tensors="pt").to(model.device)
+    context_length = inputs.input_ids.shape[-1]
+    output = model.generate(**inputs, **gen_kwargs)[0]
     content = tokenizer.decode(output[context_length:], skip_special_tokens=True)
 
     completion_tokens = len(output[context_length:])
@@ -110,11 +127,11 @@ def stream_completion_long_writer_llama3(
 
     usage = CompletionUsage(completion_tokens=0, prompt_tokens=0, total_tokens=0)
 
-    streamer = TextIteratorStreamer(tokenizer, skip_special_tokens=True)
+    streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
     inputs = tokenizer(prompt, truncation=False, return_tensors="pt").to(model.device)
 
-    usage.prompt_tokens = inputs.shape[1]
-    gen_config = {"inputs": inputs, "streamer": streamer, **gen_kwargs, }
+    usage.prompt_tokens = inputs.input_ids.shape[1]
+    gen_config = {**inputs, "streamer": streamer, **gen_kwargs, }
     thread = Thread(target=model.generate, kwargs=gen_config)
     thread.start()
     for i, content in enumerate(streamer):

@@ -10,6 +10,7 @@ from zlai.types.generate_config.audio import TypeAudioGenerateConfig
 __all__ = [
     "ModelConfig",
     "ToolsConfig",
+    "InferenceMethod",
 ]
 
 
@@ -17,6 +18,12 @@ class ToolsConfig(BaseModel):
     """"""
     tool_choice: Optional[ChatCompletionToolChoiceOptionParam] = Field(default='none', description="")
     tools: Optional[Union[Iterable[ChatCompletionToolParam], List[Dict]]] = Field(default=None, description="")
+
+
+class InferenceMethod(BaseModel):
+    """"""
+    base: Optional[Callable] = None
+    stream: Optional[Callable] = None
 
 
 class ModelConfig(BaseModel):
@@ -30,6 +37,7 @@ class ModelConfig(BaseModel):
     generate_method: Optional[Union[
         Type[TypeGenerateConfig], Type[TypeAudioGenerateConfig], Type[TypeImageGenerateConfig]]] = Field(
         default=None, description="")
+    inference_method: Optional[InferenceMethod] = Field(default=None, description="")
 
     def __init__(self, **data):
         super().__init__(**data)

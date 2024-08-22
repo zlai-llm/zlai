@@ -9,7 +9,6 @@ from zlai.utils.mixin import LoggerMixin
 from zlai.types.models_config import ModelConfig, ToolsConfig
 from zlai.types.generate_config.completion import GenerateConfig
 from zlai.models.utils import generate_id, stream_message_chunk
-from zlai.models.completion.completion_mapping import *
 from .glm4 import *
 
 
@@ -134,7 +133,7 @@ class LoadModelCompletion(LoggerMixin):
     def completion(self, messages: List[TypeMessage]) -> ChatCompletion:
         """"""
         self._start_logger(messages=messages)
-        completion_function = completion_mapping.get(self.model_name)
+        completion_function = self.model_config.inference_method.base
         self._logger(msg=f"[{__class__.__name__}] Completion Function: {completion_function}", color="green")
         start = time.time()
         if completion_function is None:
@@ -157,7 +156,7 @@ class LoadModelCompletion(LoggerMixin):
         self._start_logger(messages=messages)
         _id = generate_id(prefix="chunk-chat", k=16)
         try:
-            completion_function = stream_completion_mapping.get(self.model_name)
+            completion_function = self.model_config.inference_method.stream
             self._logger(msg=f"[{__class__.__name__}] Completion Function: {completion_function}", color="green")
             start = time.time()
             if completion_function is None:
