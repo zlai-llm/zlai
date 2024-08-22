@@ -16,7 +16,7 @@ __all__ = [
 def get_gpu_memory_data(device: int) -> Tuple[float, float]:
     """"""
     data = torch.cuda.mem_get_info(device=device)
-    free, total = [round(d/1024**3) for d in data]
+    free, total = [round(d/1024**3, 2) for d in data]
     return free, total
 
 
@@ -74,7 +74,7 @@ def clear_gpu_memory():
     return {"message": "GPU memory cache cleared.", "cleared_models": cleared_models}
 
 
-@app.get("/cache/gpu_memory")
+@app.post("/cache/gpu_memory")
 def gpu_memory(request: GPUMemoryRequest):
     """"""
     if isinstance(request.device, int):
