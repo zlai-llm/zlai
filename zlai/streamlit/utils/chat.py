@@ -19,7 +19,7 @@ avatar_mapping = {
 
 def init_chat_history(
         init_message: Optional[str] = None
-) -> Tuple[List[TypeMessage], List[TypeMessage]]:
+):
     """"""
     if init_message:
         with st.chat_message("assistant", avatar='🤖'):
@@ -35,4 +35,3 @@ def init_chat_history(
     else:
         st.session_state.messages = []
         st.session_state.display_messages = []
-    return st.session_state.messages, st.session_state.display_messages

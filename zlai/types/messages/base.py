@@ -23,6 +23,10 @@ class Message(BaseModel):
         """"""
         return self.model_dump()
 
+    def to_dict(self):
+        """"""
+        return self.model_dump()
+
     def show_streamlit(self):
         """"""
         st = self._validate_streamlit()

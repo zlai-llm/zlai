@@ -23,7 +23,7 @@ class AudioMessage(Message):
 
     def __init__(
             self,
-            audios: Optional[List[bytes]] = None,
+            audios: Optional[List[Union[BytesIO, bytes]]] = None,
             audios_url: Optional[List[str]] = None,
             audios_path: Optional[List[str]] = None,
             **kwargs
@@ -63,9 +63,10 @@ class AudioMessage(Message):
         """"""
         return TextContent(text=content)
 
-    def _add_audio(self, audio: bytes) -> AudioContent:
+    def _add_audio(self, audio: Union[BytesIO, bytes]) -> AudioContent:
         """"""
-        audio = BytesIO(audio)
+        if isinstance(audio, bytes):
+            audio = BytesIO(audio)
         return AudioContent(audio_url=audio)
 
     def _add_url(self, url: str) -> AudioContent:
