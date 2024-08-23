@@ -1,5 +1,5 @@
 from typing import List, Union
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 __all__ = [
@@ -10,6 +10,7 @@ __all__ = [
 
 class DropModelRequest(BaseModel):
     """"""
+    model_config = ConfigDict(protected_namespaces=())
     model_name: Union[str, List[str]]
 
 
