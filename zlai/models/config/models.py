@@ -86,7 +86,7 @@ chat_completion_models = {
         max_memory={"0": "30GB"},
         inference_method=InferenceMethod(
             base=completion_glm_4,
-            stream=stream_completion_qwen_2,
+            stream=stream_completion_glm_4,
         ),
     ),
     "glm-4-9b-chat-1m": ModelConfig(
@@ -98,7 +98,7 @@ chat_completion_models = {
         max_memory={"0": "30GB"},
         inference_method=InferenceMethod(
             base=completion_glm_4,
-            stream=stream_completion_qwen_2,
+            stream=stream_completion_glm_4,
         ),
     ),
     "glm-4v-9b": ModelConfig(
@@ -110,7 +110,7 @@ chat_completion_models = {
         max_memory={"0": "30GB"},
         inference_method=InferenceMethod(
             base=completion_glm_4,
-            stream=stream_completion_qwen_2,
+            stream=stream_completion_glm_4,
         ),
     ),
     "LongWriter-glm4-9b": ModelConfig(
