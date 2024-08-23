@@ -1,5 +1,5 @@
 import torch
-from cachetools import cached, TTLCache
+from cachetools import cached, LRUCache
 from typing import Any, Dict, Tuple, Optional
 from transformers import AutoModel, AutoTokenizer
 from zlai.models.utils import get_device_max_memory
@@ -11,7 +11,7 @@ __all__ = [
 ]
 
 
-@cached(cache=TTLCache(**cache_config.model_dump()))
+@cached(cache=LRUCache(**cache_config.model_dump()))
 def load_mini_cpm(
         model_path: str,
         max_memory: Optional[Dict] = None

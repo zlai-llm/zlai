@@ -1,5 +1,5 @@
 import torch
-from cachetools import cached, TTLCache
+from cachetools import cached, LRUCache
 from diffusers import FluxPipeline
 from typing import Optional, Dict
 from ..cache import *
@@ -10,7 +10,7 @@ __all__ = [
 ]
 
 
-@cached(cache=TTLCache(**cache_config.model_dump()))
+@cached(cache=LRUCache(**cache_config.model_dump()))
 def load_flux_diffusers(
     model_path: str,
     max_memory: Optional[Dict] = None,

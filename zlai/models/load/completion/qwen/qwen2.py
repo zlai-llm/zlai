@@ -1,5 +1,5 @@
 from typing import Any, Dict, Tuple, Optional
-from cachetools import cached, TTLCache
+from cachetools import cached, LRUCache
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from zlai.models.utils import get_device_max_memory
 from zlai.models.load.cache import *
@@ -11,7 +11,7 @@ __all__ = [
 ]
 
 
-@cached(cache=TTLCache(**cache_config.model_dump()))
+@cached(cache=LRUCache(**cache_config.model_dump()))
 def load_qwen2(
         model_path: str,
         max_memory: Optional[Dict] = None
@@ -28,7 +28,7 @@ def load_qwen2(
     return model, tokenizer
 
 
-@cached(cache=TTLCache(**cache_config.model_dump()))
+@cached(cache=LRUCache(**cache_config.model_dump()))
 def load_qwen2_audio(
         model_path: str,
         max_memory: Optional[Dict] = None

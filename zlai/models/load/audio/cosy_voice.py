@@ -1,4 +1,4 @@
-from cachetools import cached, TTLCache
+from cachetools import cached, LRUCache
 from typing import Any
 from zlai.models.tts.cosy_voice.cosyvoice.cli.cosyvoice import CosyVoice
 from ..cache import *
@@ -9,7 +9,7 @@ __all__ = [
 ]
 
 
-@cached(cache=TTLCache(**cache_config.model_dump()))
+@cached(cache=LRUCache(**cache_config.model_dump()))
 def load_cosy_voice(
     model_path: str,
     **kwargs: Any,
