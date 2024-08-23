@@ -5,7 +5,7 @@ import streamlit as st
 from zlai.llms import *
 from zlai.agent import *
 from zlai.streamlit import *
-from zlai.streamlit.web.pages.utils.chat import *
+from zlai.streamlit.pages.pages.utils.chat import *
 
 
 class PageConfig(BaseModel):

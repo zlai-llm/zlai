@@ -19,7 +19,11 @@ def trans_bs64_to_image(bs64: str):
 def trans_image_to_bs64(image: Image.Image) -> str:
     """"""
     img_bytes = io.BytesIO()
-    image.save(img_bytes, format='JPEG')
+    if image.mode == "RGB":
+        image.save(img_bytes, format='JPEG')
+    elif image.mode == "RGBA":
+        image.save(img_bytes, format='PNG')
+    else:
+        raise ValueError("Unsupported image mode: {}".format(image.mode))
     img_bs64 = base64.b64encode(img_bytes.getvalue()).decode('utf-8')
     return img_bs64
-

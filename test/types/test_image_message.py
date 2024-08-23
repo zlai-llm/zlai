@@ -1,4 +1,6 @@
 import unittest
+import io, base64
+from PIL import Image
 from typing import List, Dict
 from zlai.types.messages import *
 
@@ -9,6 +11,14 @@ class TestImageMessage(unittest.TestCase):
     def setUp(self):
         self.path = "/Users/chensy/Pictures/TGWX8088-opq570071353.jpg"
         self.url = "https://picx.zhimg.com/80/v2-0aea2c883dc1c8b8ca566eb8a8b38c70_720w.png"
+
+    def test_image_format(self):
+        """"""
+        path = "/Users/chensy/Downloads/智能机器人.png"
+        image = Image.open(path)
+        image_message = ImageMessage(content="介绍这个图片", images=[image])
+        print(image_message)
+        print(image_message)
 
     def test_image_message_path(self):
         """"""
