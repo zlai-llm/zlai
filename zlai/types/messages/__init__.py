@@ -26,3 +26,5 @@ TypeMessage = Union[
     ChartMessage,
     TableMessage,
 ]
+
+# todo: 要增加不同的message类型组别，区分request类型与展示类型

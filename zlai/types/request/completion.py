@@ -36,6 +36,9 @@ TypeRequestMessage = Union[
 
 
 class ChatCompletionRequest(BaseRequest):
+    """
+    todo: 这里也许需要检查TypeRequestMessage的合法性，在server中不一定会检验到正确的message类型
+    """
     messages: List[TypeRequestMessage]
     model: Union[str, ChatModel]
     frequency_penalty: Optional[float] = Field(default=None, description="")
