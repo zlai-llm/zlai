@@ -3,7 +3,7 @@ from pydantic import Field
 from openai.types.chat.completion_create_params import Function, FunctionCall
 from openai.types.chat.chat_completion_tool_param import ChatCompletionToolParam
 from openai.types.chat.chat_completion_tool_choice_option_param import ChatCompletionToolChoiceOptionParam
-from zlai.types.messages import TypeMessage
+from zlai.types.messages import *
 from .base import BaseRequest
 
 
@@ -17,8 +17,26 @@ ChatModel = Literal[
 ]
 
 
+TypeRequestMessage = Union[
+    ChatCompletionMessage,
+    # Message,
+    # ChatMessage,
+    SystemMessage,
+    # SystemToolsMessage,
+    UserMessage,
+    AssistantMessage,
+    # AssistantWithMetadataMessage,
+    ObservationMessage,
+    # FunctionMessage,
+    # ToolMessage,
+    # ToolsMessage,
+    ImageMessage,
+    AudioMessage,
+]
+
+
 class ChatCompletionRequest(BaseRequest):
-    messages: List[TypeMessage]
+    messages: List[TypeRequestMessage]
     model: Union[str, ChatModel]
     frequency_penalty: Optional[float] = Field(default=None, description="")
     function_call: FunctionCall = Field(default=None, description="")
