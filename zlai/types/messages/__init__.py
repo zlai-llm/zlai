@@ -5,6 +5,7 @@ from .chart import *
 from .function import *
 from .image import *
 from .messages import *
+from .table import *
 
 
 TypeMessage = Union[
@@ -23,4 +24,5 @@ TypeMessage = Union[
     AudioMessage,
     ChatCompletionMessage,
     ChartMessage,
+    TableMessage,
 ]

@@ -1,4 +1,5 @@
 from io import BytesIO
+from pandas import DataFrame
 from pydantic import BaseModel, ConfigDict
 from typing import Union, Literal, Optional
 from PIL.Image import Image as TypeImage
@@ -12,6 +13,7 @@ __all__ = [
     "ImageContent",
     "AudioContent",
     "ChartContent",
+    "TableContent",
 ]
 
 
@@ -49,3 +51,10 @@ class ChartContent(Content):
     """"""
     type: Literal["chart"] = "chart"
     chart: Optional[str] = None
+
+
+class TableContent(Content):
+    """"""
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    type: Literal["table"] = "table"
+    table: Optional[DataFrame] = None
