@@ -16,7 +16,12 @@ def load_qwen2(
         model_path: str,
         max_memory: Optional[Dict] = None
 ) -> Tuple[Any, Any]:
-    """"""
+    """
+    todo: 增加一个GPU启动，用于测试模型
+    :param model_path:
+    :param max_memory:
+    :return:
+    """
     max_memory = get_device_max_memory(max_memory)
     model = AutoModelForCausalLM.from_pretrained(
         pretrained_model_name_or_path=model_path,
