@@ -3,39 +3,19 @@ import base64
 import requests
 from PIL import Image
 from io import BytesIO
-from PIL.Image import Image as TypeImage
-from pydantic import BaseModel, ConfigDict, Field
+from urllib.parse import urlparse
+from pydantic import ConfigDict, Field
 from typing import Optional, Literal, Union, List, Dict
 from zlai.utils.image import *
 from zlai.utils import pkg_config
 from .base import Message
+from .content import TypeImage, ImageUrl, TextContent, ImageContent
 
 
 __all__ = [
-    "ImageUrl",
-    "TextContent",
-    "ImageContent",
     "ImageMixin",
     "ImageMessage",
 ]
-
-
-class TextContent(BaseModel):
-    """"""
-    type: Literal["text"] = "text"
-    text: Optional[str] = None
-
-
-class ImageUrl(BaseModel):
-    """"""
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-    url: Optional[Union[str, TypeImage]] = None
-
-
-class ImageContent(BaseModel):
-    """"""
-    type: Literal["image_url"] = "image_url"
-    image_url: Optional[ImageUrl] = None
 
 
 class ImageMixin(Message):
@@ -178,3 +158,34 @@ class ImageMessage(ImageMixin):
 
         else:
             raise ValueError(f"Unknown message type {_type}")
+
+    def is_path(self, path: str) -> bool:
+        """"""
+        return os.path.exists(path)
+
+    def is_url(self, url: str) -> bool:
+        """"""
+        try:
+            result = urlparse(url)
+            mark = all([result.scheme, result.netloc])
+        except Exception as e:
+            mark = False
+        return mark
+
+    def show_streamlit(self):
+        """"""
+        st = self._validate_streamlit()
+        if isinstance(self.content, str):
+            st.markdown(self.content)
+        if isinstance(self.content, list):
+            for _content in self.content:
+                if isinstance(_content, TextContent):
+                    st.markdown(_content.text)
+                elif isinstance(_content, ImageContent):
+                    image = _content.image_url.url
+                    if isinstance(image, str):
+                        image = trans_bs64_to_image(image)
+                    if isinstance(image, TypeImage):
+                        st.image(image=image)
+                    else:
+                        st.write("Image can't be displayed.")

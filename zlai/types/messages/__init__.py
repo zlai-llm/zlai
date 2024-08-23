@@ -1,6 +1,7 @@
 from typing import Union
 from .audio import *
 from .base import *
+from .chart import *
 from .function import *
 from .image import *
 from .messages import *
@@ -21,4 +22,5 @@ TypeMessage = Union[
     ImageMessage,
     AudioMessage,
     ChatCompletionMessage,
+    ChartMessage,
 ]

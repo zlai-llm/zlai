@@ -2,23 +2,15 @@ import base64
 import librosa
 from io import BytesIO
 from urllib.request import urlopen
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import ConfigDict, Field
 from typing import Optional, Literal, Union, List, Dict
-from .image import TextContent
+from .content import TextContent, AudioContent
 from .base import Message
 
 
 __all__ = [
-    "AudioContent",
     "AudioMessage",
 ]
-
-
-class AudioContent(BaseModel):
-    """"""
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-    type: Literal["audio"] = "audio"
-    audio_url: Optional[Union[BytesIO, bytes, str]] = None
 
 
 class AudioMessage(Message):
@@ -121,3 +113,20 @@ class AudioMessage(Message):
                     audio = librosa.load(item.audio_url, sr=sr)[0]
                     audios.append(audio)
         return audios
+
+    def show_streamlit(self):
+        st = self._validate_streamlit()
+        if isinstance(self.content, str):
+            st.markdown(self.content)
+        elif isinstance(self.content, list):
+            for _content in self.content:
+                if isinstance(_content, TextContent):
+                    st.markdown(_content.text)
+                if isinstance(_content, AudioContent):
+                    audio = _content.audio_url
+                    if isinstance(audio, str):
+                        audio = BytesIO(base64.b64decode(audio.encode("utf-8")))
+                    if isinstance(audio, BytesIO):
+                        st.audio(audio, format="audio/wav")
+                    else:
+                        st.write("Audio can't be displayed.")
