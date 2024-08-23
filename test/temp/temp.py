@@ -4,6 +4,9 @@ from typing import ClassVar, List, Optional
 from zlai.schema import *
 from zlai.prompt import *
 
+import warnings
+warnings.filterwarnings('error', category=UserWarning)
+
 
 system_message = SystemMessage(content="""你是一个地址命名实体识别机器人，你需要解析出文本中出现的省、市、区，并以Dict输出。\
 文本中没有省、市、区，则返回空Dict。""")
