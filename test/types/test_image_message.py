@@ -17,8 +17,8 @@ class TestImageMessage(unittest.TestCase):
         path = "/Users/chensy/Downloads/智能机器人.png"
         image = Image.open(path)
         image_message = ImageMessage(content="介绍这个图片", images=[image])
-        print(image_message)
-        print(image_message)
+        # print(image_message)
+        print(image_message.to_message())
 
     def test_image_message_path(self):
         """"""
