@@ -21,7 +21,7 @@ class ChartMessage(Message):
     content: Optional[Union[str, List[Union[TextContent, ChartContent]]]] = Field(
         default=None, description="""The content of the message.""")
 
-    def __init__(self, charts: Optional[List[str]], **kwargs):
+    def __init__(self, charts: Optional[List[str]] = None, **kwargs):
         super().__init__(**kwargs)
         _content = None
         if isinstance(self.content, str):
@@ -29,8 +29,6 @@ class ChartMessage(Message):
             if isinstance(charts, list):
                 for chart in charts:
                     _content.append(self._add_chart(chart))
-            else:
-                raise TypeError("charts must be a list.")
         elif isinstance(self.content, list):
             _content = self.content
         self.content = _content

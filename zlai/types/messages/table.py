@@ -17,7 +17,7 @@ class TableMessage(Message):
     content: Optional[Union[str, List[Union[TextContent, TableContent]]]] = Field(
         default=None, description="""The content of the message.""")
 
-    def __init__(self, tables: Optional[List[DataFrame]], **kwargs):
+    def __init__(self, tables: Optional[List[DataFrame]] = None, **kwargs):
         super().__init__(**kwargs)
         _content = None
         if isinstance(self.content, str):
@@ -25,8 +25,6 @@ class TableMessage(Message):
             if isinstance(tables, list):
                 for table in tables:
                     _content.append(self._add_table(table))
-            else:
-                raise TypeError("tables must be a list.")
         elif isinstance(self.content, list):
             _content = self.content
         self.content = _content
