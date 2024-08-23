@@ -1,4 +1,6 @@
 import unittest
+import random
+import pandas as pd
 from zlai.types.messages import *
 from pyecharts.charts import Bar
 from pyecharts.faker import Faker
@@ -23,13 +25,24 @@ class TestStreamlitMessage(unittest.TestCase):
                 title_opts={"text": "Bar-通过 dict 进行配置", "subtext": "我也是通过 dict 进行配置的"}
             ).render_embed()
 
+        table = pd.DataFrame(
+            {
+                "name": ["Roadmap", "Extras", "Issues"],
+                "url": ["https://roadmap.streamlit.app", "https://extras.streamlit.app",
+                        "https://issues.streamlit.app"],
+                "stars": [random.randint(0, 1000) for _ in range(3)],
+                "views_history": [[random.randint(0, 5000) for _ in range(30)] for _ in range(3)],
+            }
+        )
+
         self.messages = [
             SystemMessage(content="System"),
             UserMessage(content="Hello 👋"),
             AssistantMessage(content="Hi there! How can I help you today?"),
             ImageMessage(content="介绍一下这个图片", images_url=[image_url]),
             AudioMessage(role="assistant", content="这是我唱的歌", audios_path=[audio_path]),
-            ChartMessage(content="这是我的图表", charts=[chart])
+            ChartMessage(content="这是我的图表", charts=[chart]),
+            TableMessage(content="这是表格", tables=[table]),
         ]
 
         avatar_mapping = {
