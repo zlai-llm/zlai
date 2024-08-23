@@ -9,6 +9,7 @@ from zlai.utils.mixin import LoggerMixin
 from zlai.types.models_config import ModelConfig, ToolsConfig
 from zlai.types.generate_config.completion import GenerateConfig
 from zlai.models.utils import generate_id, stream_message_chunk
+from zlai.types.messages.content import TextContent
 from .glm4 import *
 
 
