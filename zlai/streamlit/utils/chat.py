@@ -14,6 +14,7 @@ avatar_mapping = {
     "system": "🧠",
     "user": "🧑",
     "assistant": "🤖",
+    "observation": "💡",
 }
 
 

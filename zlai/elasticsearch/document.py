@@ -8,7 +8,6 @@ from pydantic import BaseModel, Field
 
 from ..embedding import Embedding
 from ..utils import LoggerMixin, batches, call_batches
-from ..schema import ESUrl
 from .elasticsearch import *
 
 

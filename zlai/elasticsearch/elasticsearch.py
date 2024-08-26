@@ -34,30 +34,35 @@ es_url = ESUrl
 
 def get_es_global_con(
         hosts: str,
+        timeout: int = 20,
+        **kwargs: Any
 ) -> None:
     """
 
+    :param timeout:
     :param hosts:
     :return:
 
-    >>> con = get_es_con(hosts=ESUrl.model)
+    Example:
+        connections.create_connection(hosts=['localhost'], http_auth=('elastic', 'your_password'))
     """
-    connections.create_connection(hosts=hosts, timeout=20)
+    connections.create_connection(hosts=hosts, timeout=timeout, **kwargs)
     print(colored(f'ES connected!', 'green', attrs=['bold']))
     return None
 
 
 def get_es_con(
         hosts: str,
+        **kwargs: Any
 ) -> Elasticsearch:
     """
 
     :param hosts:
     :return:
-
-    >>> con = get_es_con(hosts=ESUrl.model)
+    Example:
+        con = get_es_con(hosts=['http://localhost:9200'])
     """
-    return Elasticsearch(hosts=hosts)
+    return Elasticsearch(hosts=hosts, **kwargs)
 
 
 def create_index(
