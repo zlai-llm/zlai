@@ -18,7 +18,7 @@ class TestImageMessage(unittest.TestCase):
         image = Image.open(path)
         image_message = ImageMessage(content="介绍这个图片", images=[image])
         # print(image_message)
-        print(image_message.to_message())
+        print(image_message.to_dict())
 
     def test_image_message_path(self):
         """"""
@@ -39,8 +39,8 @@ class TestImageMessage(unittest.TestCase):
 
         image_message = ImageMessage(
             content="介绍这个图片", images=[image], images_url=[self.url], images_path=[self.path])
-        print(image_message.to_message(_type="mini_cpm"))
-        print(image_message.to_message(_type="glm4v"))
+        print(image_message.to_dict(_type="mini_cpm"))
+        print(image_message.to_dict(_type="glm4v"))
 
     def test_images(self):
         from PIL import Image
@@ -48,5 +48,5 @@ class TestImageMessage(unittest.TestCase):
 
         image_message = ImageMessage(
             content="介绍这个图片", images=[image])
-        print(image_message.to_message(_type="mini_cpm"))
-        print(image_message.to_message(_type="glm4v"))
+        print(image_message.to_dict(_type="mini_cpm"))
+        print(image_message.to_dict(_type="glm4v"))

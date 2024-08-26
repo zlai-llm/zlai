@@ -1,3 +1,4 @@
+from typing import Dict
 from pydantic import BaseModel, Field
 
 
@@ -19,15 +20,15 @@ class Message(BaseModel):
         except ImportError:
             raise ImportError("Please install streamlit to use this function, < pip install streamlit >")
 
+    def to_dict(self) -> Dict:
+        """"""
+        return self.model_dump()
+
     def to_message(self):
         """"""
-        return self.model_dump()
+        return self
 
-    def to_dict(self):
-        """"""
-        return self.model_dump()
-
-    def show_streamlit(self):
+    def show_streamlit(self) -> None:
         """"""
         st = self._validate_streamlit()
         if isinstance(self.content, str):

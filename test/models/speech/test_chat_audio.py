@@ -48,7 +48,7 @@ class TestMessage(unittest.TestCase):
         client = OpenAI(api_key="1234", base_url="http://127.0.0.1:8000/")
         response = client.chat.completions.create(
             model="Qwen2-0.5B-Instruct",
-            messages=[message.to_message()],
+            messages=[message.to_dict()],
             stream=False
         )
         print(response)

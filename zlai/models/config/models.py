@@ -253,3 +253,5 @@ total_models = {
     **audio_models,
     **embedding_models,
 }
+
+# todo: 测试在外部指定目录找不到模型文件的情况，并补充文档

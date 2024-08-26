@@ -21,7 +21,7 @@ def trans_messages(messages: List[TypeMessage]) -> List[Dict]:
     for i, message in enumerate(messages):
         if isinstance(message, ImageMessage):
             image_idx.append(i)
-            _messages.append(message.to_message(_type="glm4v"))
+            _messages.append(message.to_dict(_type="glm4v"))
         else:
             _messages.append(message.model_dump())
     if len(image_idx) > 1:

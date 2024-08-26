@@ -79,7 +79,7 @@ class AudioMessage(Message):
         audio = self._encode_audio_path(audio_path=path)
         return AudioContent(audio_url=audio)
 
-    def to_message(self, _type: Literal["qwen2-audio"] = "qwen2-audio") -> Dict:
+    def to_dict(self, _type: Literal["qwen2-audio"] = "qwen2-audio") -> Dict:
         """"""
         content = ""
         if isinstance(self.content, str):

@@ -120,7 +120,7 @@ class ImageMessage(ImageMixin):
                 if isinstance(content, ImageContent) and isinstance(content.image_url.url, str):
                     self.content[i].image_url.url = trans_bs64_to_image(content.image_url.url)
 
-    def to_message(self, _type: Literal["mini_cpm", "glm4v"] = "mini_cpm") -> Dict:
+    def to_dict(self, _type: Literal["mini_cpm", "glm4v"] = "mini_cpm") -> Dict:
         """"""
         if _type == "mini_cpm":
             _content = []
