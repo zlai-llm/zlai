@@ -73,23 +73,20 @@ class ImageMessage(ImageMixin):
             **kwargs
     ):
         super().__init__(**kwargs)
-        _content = None
-        if isinstance(self.content, str):
-            _content = [self._add_content(self.content)]
-
-            if images:
-                for image in images:
-                    _content.append(self._add_image(image))
-            if images_url:
-                for url in images_url:
-                    _content.append(self._add_url(url))
-            if images_path:
-                for path in images_path:
-                    _content.append(self._add_path(path))
-
-        elif isinstance(self.content, list):
+        _content = []
+        if isinstance(self.content, list):
             _content = self.content
-
+        elif isinstance(self.content, str):
+            _content.append(self._add_content(self.content))
+        if images:
+            for image in images:
+                _content.append(self._add_image(image))
+        if images_url:
+            for url in images_url:
+                _content.append(self._add_url(url))
+        if images_path:
+            for path in images_path:
+                _content.append(self._add_path(path))
         self.content = _content
 
     def _add_content(self, content: str) -> TextContent:

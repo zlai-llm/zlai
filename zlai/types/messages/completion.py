@@ -1,7 +1,7 @@
 from pydantic import Field
 from typing import Self, List, Dict, Union, Literal, Optional
 from zlai.types.function_call import *
-from zlai.streamlit.utils.display import show_tool_call
+from zlai.types.messages.display import *
 from .base import Message
 from .messages import UserMessage, AssistantMessage, SystemMessage
 from .function import ObservationMessage

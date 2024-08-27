@@ -29,23 +29,20 @@ class AudioMessage(Message):
             **kwargs
     ):
         super().__init__(**kwargs)
-        _content = None
-        if isinstance(self.content, str) or self.content is None:
-            _content = [self._add_content(self.content)]
-
-            if audios:
-                for audio in audios:
-                    _content.append(self._add_audio(audio))
-            if audios_url:
-                for url in audios_url:
-                    _content.append(self._add_url(url))
-            if audios_path:
-                for path in audios_path:
-                    _content.append(self._add_path(path))
-
-        elif isinstance(self.content, list):
+        _content = []
+        if isinstance(self.content, list):
             _content = self.content
-
+        elif isinstance(self.content, str):
+            _content.append(self._add_content(self.content))
+        if audios:
+            for audio in audios:
+                _content.append(self._add_audio(audio))
+        if audios_url:
+            for url in audios_url:
+                _content.append(self._add_url(url))
+        if audios_path:
+            for path in audios_path:
+                _content.append(self._add_path(path))
         self.content = _content
 
     def _encode_audio_path(self, audio_path: str) -> BytesIO:

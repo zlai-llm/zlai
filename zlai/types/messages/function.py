@@ -1,7 +1,7 @@
 from pandas import DataFrame
 from pydantic import Field, ConfigDict
 from typing import Literal, Optional, Union, Dict
-from zlai.streamlit.utils.display import show_observation
+from zlai.types.messages.display.display import show_observation
 from .base import Message
 
 
