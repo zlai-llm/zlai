@@ -1,3 +1,4 @@
+import os
 import unittest
 from openai import OpenAI
 from zlai.types import ImageMessage, UserMessage
@@ -84,3 +85,19 @@ class TestModels(unittest.TestCase):
         )
         print(response)
 
+
+class TestMiniCPM(unittest.TestCase):
+    """"""
+    def test_model(self):
+        """"""
+        url = "https://picx.zhimg.com/80/v2-0aea2c883dc1c8b8ca566eb8a8b38c70_720w.png"
+        messages = [
+            ImageMessage(content="介绍这个图片", images_url=[url]).to_dict(),
+        ]
+        client = OpenAI(api_key="1234", base_url=os.getenv("BASE_URL"))
+        response = client.chat.completions.create(
+            model="MiniCPM-V-2_6",
+            messages=messages,
+            stream=False
+        )
+        print(response)

@@ -112,6 +112,20 @@ class TestMokeZhipuModels(unittest.TestCase):
             answer += out.choices[0].delta.content
             print(answer)
 
+    def test_tools_stream2(self):
+        """"""
+        messages = [
+            {'role': 'assistant', 'content': None, 'function_call': None, 'tool_calls': [{'id': 'call_2024082711153920bd346496c04e45', 'function': {'arguments': '{"fund_code":"008888"}', 'name': 'search_fund'}, 'type': 'function'}]},
+            {'role': 'tool', 'content': "[{'基金代码': '008888', '基金拼音简写': 'HXGZBDTXPETFLJC', '基金名称': '华夏国证半导体芯片ETF联接C', '基金类': '指数型-股票', '基金拼音全称': 'HUAXIAGUOZHENGBANDAOTIXINPIANETFLIANJIEC'}]", 'tool_call_id': 'call_2024082711153920bd346496c04e45'}]
+
+
+        llm = Zhipu(generate_config=GLM4GenerateConfig(tools=self.tools, stream=True))
+        output = llm.generate(query="我想要联系广州发展集团股份有限公司公司的法人代表，请问他的名字是什么？")
+        answer = ''
+        for out in output:
+            print(out)
+            answer += out.choices[0].delta.content
+            print(answer)
 
 class TestZhipu(unittest.TestCase):
     """"""
