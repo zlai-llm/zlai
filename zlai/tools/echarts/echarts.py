@@ -1,12 +1,13 @@
 try:
     import pyecharts.options as opts
     from pyecharts.charts import Line, Bar, Pie, Radar, Scatter, Map
+    from pyecharts.globals import ThemeType
 except ModuleNotFoundError:
     raise ModuleNotFoundError("pip install echarts")
 
 import random
 import numpy as np
-from typing import Any, List, Dict, Tuple, Literal, Optional, Annotated
+from typing import Any, List, Dict, Literal, Optional, Annotated
 
 
 __all__ = [
@@ -36,7 +37,8 @@ def base_chart(
         data: Annotated[Dict[str, List[float]], "数据", True],
         title: Annotated[str, "标题", True],
         sub_title: Annotated[Optional[str], "副标题", True] = None,
-        save_path: Annotated[Optional[str], "保存路径", False] = None,
+        width: Annotated[Optional[int], "图表宽度 px", False] = 640,
+        height: Annotated[Optional[int], "图表高度 px", False] = 400,
 ):
     """
     绘制折线图、柱状图
@@ -45,8 +47,9 @@ def base_chart(
     :param data: 数据
     :param title: 标题
     :param sub_title: 副标题
-    :param save_path: 保存路径
-    :return: 是否成功输出图片日志
+    :param width: 图表宽度 px
+    :param height: 图表高度 px
+    :return: html chart
 
     Example:
         1. 绘制2020年1月1日至2020年1月5日每日气温折线图，气温数据为 8℃、12℃、9℃、18℃、12℃（中国气象局）。
@@ -60,31 +63,31 @@ def base_chart(
             )
             ```
     """
-    c = base_chart_mapping.get(chart_type)()
+    c = base_chart_mapping.get(chart_type)(
+        init_opts=opts.InitOpts(width=f"{width}px", height=f"{height}px", theme=ThemeType.MACARONS)
+    )
     c.add_xaxis(x_ticks)
     for key, value in data.items():
         c.add_yaxis(key, value)
     c.set_global_opts(title_opts=opts.TitleOpts(title=title, subtitle=sub_title))
-
-    if save_path is None:
-        save_path = f"./{chart_type}.html"
-    c.render(path=save_path)
-    return f"{chart_type} chart save path: {save_path}"
+    return c.render_embed()
 
 
 def pie_chart(
         data: Annotated[Dict[str, float], "数据", True],
         title: Annotated[str, "标题", True],
         sub_title: Annotated[Optional[str], "副标题", True] = None,
-        save_path: Annotated[Optional[str], "保存路径", False] = None,
+        width: Annotated[Optional[int], "图表宽度 px", False] = 640,
+        height: Annotated[Optional[int], "图表高度 px", False] = 400,
 ):
     """
     绘制饼图
     :param data: 数据
     :param title: 标题
     :param sub_title: 副标题
-    :param save_path: 保存路径
-    :return: 是否成功输出图片日志
+    :param width: 图表宽度 px
+    :param height: 图表高度 px
+    :return: html chart
 
     Example:
         1. 中国、美国、日本的GDP分别为 17万亿、19万亿、7万亿，请绘制饼图展示。
@@ -96,14 +99,11 @@ def pie_chart(
             )
             ```
     """
-    c = Pie()
+    c = Pie(init_opts=opts.InitOpts(width=f"{width}px", height=f"{height}px",))
     c.add("", [list(z) for z in data.items()])
     c.set_global_opts(title_opts=opts.TitleOpts(title=title, subtitle=sub_title))
     c.set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
-    if save_path is None:
-        save_path = f"./pie.html"
-    c.render(path=save_path)
-    return f"Pie chart save path: {save_path}"
+    return c.render_embed()
 
 
 def radar_chart(
@@ -111,7 +111,8 @@ def radar_chart(
         data: Annotated[Dict[str, float], "数据", True],
         title: Annotated[str, "标题", True],
         sub_title: Annotated[Optional[str], "副标题", True] = None,
-        save_path: Annotated[Optional[str], "保存路径", False] = None,
+        width: Annotated[Optional[int], "图表宽度 px", False] = 640,
+        height: Annotated[Optional[int], "图表高度 px", False] = 400,
 ):
     """
     绘制雷达图
@@ -119,8 +120,9 @@ def radar_chart(
     :param data: 数据
     :param title: 标题
     :param sub_title: 副标题
-    :param save_path: 保存路径
-    :return: 是否成功输出图片日志
+    :param width: 图表宽度 px
+    :param height: 图表高度 px
+    :return: html chart
 
     Example:
         1. 小明期末考试成绩为数学76分、英语88分、语文98分，小红期末考试成绩为数学96分、英语78分、语文87分请绘制雷达图展示。
@@ -136,17 +138,13 @@ def radar_chart(
     data_metrix = np.array(list(data.values()))
     schema = [opts.RadarIndicatorItem(name=label, max_=max_) for label, max_ in zip(labels, data_metrix.max(axis=0))]
 
-    c = Radar()
+    c = Radar(init_opts=opts.InitOpts(width=f"{width}px", height=f"{height}px",))
     c.add_schema(schema=schema)
     for i, (name, value) in enumerate(data.items()):
         c.add(name, [value], color=random.choice(colors))
     c.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
     c.set_global_opts(title_opts=opts.TitleOpts(title=title, subtitle=sub_title))
-
-    if save_path is None:
-        save_path = f"./radar.html"
-    c.render(path=save_path)
-    return f"Radar chart save path: {save_path}"
+    return c.render_embed()
 
 
 def scatter_chart(
@@ -154,7 +152,8 @@ def scatter_chart(
         y_data: Annotated[List[float], "y轴坐标", True],
         title: Annotated[str, "标题", True],
         sub_title: Annotated[Optional[str], "副标题", True] = None,
-        save_path: Annotated[Optional[str], "保存路径", False] = None,
+        width: Annotated[Optional[int], "图表宽度 px", False] = 640,
+        height: Annotated[Optional[int], "图表高度 px", False] = 400,
 ):
     """
     绘制散点图
@@ -162,8 +161,9 @@ def scatter_chart(
     :param y_data: y轴坐标
     :param title: 标题
     :param sub_title: 副标题
-    :param save_path: 保存路径
-    :return: 是否成功输出图片日志
+    :param width: 图表宽度 px
+    :param height: 图表高度 px
+    :return: html chart
 
     Example:
         1. 有一些列随机点，[[10, 2], [3, 2], [8, 9]] 请绘制一个散点图进行展示。
@@ -175,7 +175,7 @@ def scatter_chart(
             )
             ```
     """
-    c = Scatter()
+    c = Scatter(init_opts=opts.InitOpts(width=f"{width}px", height=f"{height}px",))
     c.add_xaxis(xaxis_data=x_data)
     c.add_yaxis(series_name="", y_axis=y_data,)
     c.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
@@ -191,11 +191,7 @@ def scatter_chart(
             splitline_opts=opts.SplitLineOpts(is_show=True),
         ),
     )
-
-    if save_path is None:
-        save_path = f"./scatter.html"
-    c.render(path=save_path)
-    return f"Scatter chart save path: {save_path}"
+    return c.render_embed()
 
 
 def map_chart(
@@ -203,7 +199,8 @@ def map_chart(
         title: Annotated[str, "标题", True],
         sub_title: Annotated[Optional[str], "副标题", True] = None,
         map_type: Annotated[Literal["china"], "地图地区", False] = "china",
-        save_path: Annotated[Optional[str], "保存路径", False] = None,
+        width: Annotated[Optional[int], "图表宽度 px", False] = 640,
+        height: Annotated[Optional[int], "图表高度 px", False] = 400,
 ):
     """
     将数据依据地区绘制在地图上
@@ -211,8 +208,9 @@ def map_chart(
     :param title: 标题
     :param sub_title: 副标题
     :param map_type: 地图地区
-    :param save_path: 保存路径
-    :return: 是否成功输出图片日志
+    :param width: 图表宽度 px
+    :param height: 图表高度 px
+    :return: html chart
 
     Example:
         1. 2024年一季度的河北省、河南省、浙江省、广东省GDP数据为1.2万亿、1.3万亿、2.5万亿、4.5万亿，绘制一个地图清晰展示该数据，
@@ -227,13 +225,10 @@ def map_chart(
     map_type = map_type.lower()
     data = [list(item.items())[0] for item in data]
     max_data = max([item[1] for item in data])
-    c = Map()
+    c = Map(init_opts=opts.InitOpts(width=f"{width}px", height=f"{height}px",))
     c.add("", data, maptype=map_type)
     c.set_global_opts(
         title_opts=opts.TitleOpts(title=title, subtitle=sub_title),
         visualmap_opts=opts.VisualMapOpts(max_=max_data, is_piecewise=True),
     )
-    if save_path is None:
-        save_path = f"./map.html"
-    c.render(path=save_path)
-    return f"Map chart save path: {save_path}"
+    return c.render_embed()
