@@ -1,6 +1,6 @@
 from pandas import DataFrame
 from pydantic import Field, ConfigDict
-from typing import Literal, Optional, Union, Dict
+from typing import Literal, Optional, Union, Dict, List
 from zlai.types.messages.display.display import show_observation
 from .base import Message
 
@@ -17,7 +17,7 @@ class ObservationMessage(Message):
     """"""
     model_config = ConfigDict(arbitrary_types_allowed=True)
     role: Literal["observation"] = Field("observation", description="角色")
-    content: Union[str, Dict, DataFrame] = Field(..., description="对话内容")
+    content: Union[str, List, Dict, DataFrame] = Field(..., description="对话内容")
 
     def show_streamlit(self) -> None:
         _ = self._validate_streamlit()

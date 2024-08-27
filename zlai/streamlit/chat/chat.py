@@ -204,7 +204,7 @@ class StreamlitChat:
             message = display_message
         elif tool_call_id and observation:
             display_message = ObservationMessage(content=observation)
-            message = ToolsMessage(content=observation, tool_call_id=tool_call_id)
+            message = ToolsMessage(content=str(observation), tool_call_id=tool_call_id)
         elif observation:
             display_message = ObservationMessage(content=observation)
             message = display_message
