@@ -1,6 +1,8 @@
-from typing import List, Dict, Literal, Optional
+from typing import List, Dict, Union, Literal, Optional
 from pydantic import Field
 from .base import Message
+from .content import TextContent
+
 
 __all__ = [
     "ChatMessage",
@@ -15,13 +17,13 @@ __all__ = [
 class ChatMessage(Message):
     """"""
     role: str = Field(..., description="角色")
-    content: str = Field(..., description="对话内容")
+    content: Optional[str] = Field(..., description="对话内容")
 
 
 class SystemMessage(Message):
     """"""
     role: Literal["system"] = Field(default="system", description="角色")
-    content: str = Field(..., description="对话内容")
+    content: Optional[str] = Field(..., description="对话内容")
 
 
 class SystemToolsMessage(SystemMessage):
@@ -32,16 +34,16 @@ class SystemToolsMessage(SystemMessage):
 class UserMessage(Message):
     """"""
     role: Literal["user"] = Field("user", description="角色")
-    content: str = Field(..., description="对话内容")
+    content: Optional[Union[str, List[TextContent]]] = Field(..., description="对话内容")
 
 
 class AssistantMessage(Message):
     """"""
     role: Literal["assistant"] = Field("assistant", description="角色")
-    content: str = Field(..., description="对话内容")
+    content: Optional[str] = Field(..., description="对话内容")
 
 
 class AssistantWithMetadataMessage(AssistantMessage):
     """for glm4 function call"""
     metadata: str = Field(default=None, description="metadata")
-    content: str = Field(default="", description="对话内容")
+    content: Optional[str] = Field(default="", description="对话内容")

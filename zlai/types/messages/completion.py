@@ -1,6 +1,7 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
 from typing import Self, List, Dict, Union, Literal, Optional
 from zlai.types.function_call import *
+from zlai.streamlit.utils.display import show_tool_call
 from .base import Message
 from .messages import UserMessage, AssistantMessage, SystemMessage
 from .function import ObservationMessage
@@ -104,21 +105,10 @@ class ChatCompletionMessage(Message):
 
     def _show_tool_message(self):
         """
-        todo: add fix
         :return:
         """
-        st = self._validate_streamlit()
-        arguments = self.tool_calls[0].function.arguments
-        try:
-            arguments = eval(arguments)
-        except:
-            pass
-
-        with st.expander(f"Tool Call: {self.tool_calls[0].function.name}"):
-            if isinstance(arguments, dict):
-                st.json(arguments)
-            else:
-                st.write(arguments)
+        _ = self._validate_streamlit()
+        show_tool_call(tool_call=self.tool_calls[0])
 
     def show_streamlit(self):
         """"""
