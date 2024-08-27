@@ -1,3 +1,4 @@
+import inspect
 from pandas import DataFrame
 from pydantic import BaseModel, Field
 from typing import Any, List, Dict, Union, Tuple, Optional, Callable
@@ -33,7 +34,12 @@ class Tools(BaseModel):
             register_tool(tool_hooks=self.tool_hooks, tool_descriptions=self.tool_descriptions)(fun)
 
     def dispatch_tool(self, *args: Any, **kwargs: Any) -> Any:
-        return dispatch_tool(*args, **kwargs, hooks=self.tool_hooks)
+        tool_name = kwargs.get("tool_name")
+        tool_params = kwargs.get("tool_params")
+        func_params = list(inspect.signature(self.tool_hooks.get(tool_name)).parameters.keys())
+        excess_params = [param for param in tool_params.keys() if param not in func_params]
+        excess_params = [tool_params.pop(param) for param in excess_params]
+        return dispatch_tool(tool_name=tool_name, tool_params=tool_params, hooks=self.tool_hooks)
 
 
 class ToolsAgent(AgentMixin):
