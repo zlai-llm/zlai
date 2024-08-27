@@ -23,14 +23,14 @@ class ChartMessage(Message):
 
     def __init__(self, charts: Optional[List[str]] = None, **kwargs):
         super().__init__(**kwargs)
-        _content = None
-        if isinstance(self.content, str):
-            _content = [self._add_content(self.content)]
-            if isinstance(charts, list):
-                for chart in charts:
-                    _content.append(self._add_chart(chart))
-        elif isinstance(self.content, list):
+        _content = []
+        if isinstance(self.content, list):
             _content = self.content
+        elif isinstance(self.content, str):
+            _content.append(self._add_content(self.content))
+        if isinstance(charts, list):
+            for chart in charts:
+                _content.append(self._add_chart(chart))
         self.content = _content
 
     def _add_content(self, content: str) -> TextContent:

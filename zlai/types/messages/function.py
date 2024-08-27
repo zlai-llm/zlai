@@ -1,6 +1,7 @@
 from pandas import DataFrame
 from pydantic import Field, ConfigDict
 from typing import Literal, Optional, Union, Dict
+from zlai.streamlit.utils.display import show_observation
 from .base import Message
 
 
@@ -19,19 +20,8 @@ class ObservationMessage(Message):
     content: Union[str, Dict, DataFrame] = Field(..., description="对话内容")
 
     def show_streamlit(self) -> None:
-        st = self._validate_streamlit()
-        try:
-            _content = eval(self.content)
-        except:
-            _content = self.content
-
-        with st.expander("Observation"):
-            if isinstance(_content, DataFrame):
-                st.table(_content)
-            elif isinstance(_content, (list, dict)):
-                st.json(_content)
-            else:
-                st.markdown(_content)
+        _ = self._validate_streamlit()
+        show_observation(self.content)
 
 
 class FunctionMessage(ObservationMessage):

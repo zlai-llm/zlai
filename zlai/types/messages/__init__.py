@@ -3,6 +3,7 @@ from .audio import *
 from .base import *
 from .chart import *
 from .completion import *
+from .content import *
 from .function import *
 from .image import *
 from .messages import *

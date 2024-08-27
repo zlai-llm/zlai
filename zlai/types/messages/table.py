@@ -19,14 +19,14 @@ class TableMessage(Message):
 
     def __init__(self, tables: Optional[List[DataFrame]] = None, **kwargs):
         super().__init__(**kwargs)
-        _content = None
-        if isinstance(self.content, str):
-            _content = [self._add_content(self.content)]
-            if isinstance(tables, list):
+        _content = []
+        if isinstance(self.content, list):
+            _content = self.content
+        elif isinstance(self.content, str):
+            _content.append(self._add_content(self.content))
+        if isinstance(tables, list):
                 for table in tables:
                     _content.append(self._add_table(table))
-        elif isinstance(self.content, list):
-            _content = self.content
         self.content = _content
 
     def _add_content(self, content: str) -> TextContent:
