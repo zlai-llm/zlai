@@ -1,5 +1,5 @@
 import unittest
-from zlai.llms import LocalCompletion
+from zlai.llms import LocalCompletion, Zhipu, GLM4FlashGenerateConfig
 from zlai.types.generate_config.completion import GLM4GenerateConfig, GLM4LongWriter9B
 from zlai.agent.long_write import *
 
@@ -54,3 +54,46 @@ class TestLongWrite(unittest.TestCase):
         for chunk in completion:
             answer += chunk.content
         print(answer)
+
+
+class TestLongWriteFlash(unittest.TestCase):
+
+    def setUp(self):
+        """"""
+        self.llm = Zhipu(generate_config=GLM4FlashGenerateConfig())
+
+    def test_long_write_plan(self):
+        task = LongWriteAgentPlan(llm=self.llm, verbose=True)
+        completion = task("杭州旅行指南")
+        print(completion.content)
+
+    def test_long_write(self):
+        """"""
+        task = LongWriteAgentWrite(llm=self.llm, verbose=True)
+        completion = task(query=query)
+        print(completion.content)
+
+    def test_agent_seq(self):
+        """"""
+        task = LongWriteAgent(llm=self.llm, verbose=True)
+        completion = task(query="杭州旅行指南")
+        print(completion.content)
+
+    def test_long_write_plan_stream(self):
+        """"""
+        llm_long = LocalCompletion(generate_config=GLM4LongWriter9B(), stream=True, model="LongWriter-glm4-9b")
+        task = LongWriteAgentPlan(llm=llm_long, verbose=True, stream=True)
+        completion = task("杭州旅行指南")
+        for chunk in completion:
+            print(chunk)
+
+    def test_long_write_stream(self):
+        """"""
+        llm_long = LocalCompletion(generate_config=GLM4LongWriter9B(), stream=True, model="LongWriter-glm4-9b")
+        task = LongWriteAgent(llm=llm_long, stream=True, verbose=True)
+        completion = task(query="杭州旅行指南")
+        answer = ""
+        for chunk in completion:
+            answer += chunk.content
+        print(answer)
+
