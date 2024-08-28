@@ -1,17 +1,17 @@
 try:
     from openai import OpenAI
-    from openai.types.chat import ChatCompletion, ChatCompletionChunk
-    from openai.types.chat import ChatCompletionMessage
     from openai._streaming import Stream
 except ModuleNotFoundError:
     raise ModuleNotFoundError("pip install openai")
 
 import os
 from typing import Any, List, Dict, Union, Iterable, Literal, Optional, Callable
+from zlai.types.chat import ChatCompletion, ChatCompletionChunk
+from zlai.types.messages import ChatCompletionMessage
 from .generate_config import GenerateConfig
 from ..utils import LoggerMixin
 from ..parse import ParseString
-from ..schema import Message, AssistantMessage, Completion, CompletionMessage, ParseInfo
+from ..schema import Message, AssistantMessage, ParseInfo
 
 
 __all__ = [
@@ -40,8 +40,8 @@ class Generate(LoggerMixin):
 
     def _output(
             self,
-            completion: Completion
-    ) -> Union[Completion, CompletionMessage, str]:
+            completion: Union[ChatCompletion, ChatCompletionChunk]
+    ) -> Union[ChatCompletion, ChatCompletionMessage, str]:
         """"""
         if self.output == "completion":
             return completion

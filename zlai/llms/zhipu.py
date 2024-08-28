@@ -6,10 +6,10 @@ except ModuleNotFoundError:
 import os
 import time
 from typing import Any, List, Dict, Literal, Callable, Optional, Iterable
-
+from zlai.types.chat import ChatCompletion, ChatCompletionChunk
 from ..schema import *
 from .generate import Generate
-from .generate_config import TypeZhipuGenerate, GLM4GenerateConfig, GLM3TurboGenerateConfig
+from .generate_config import TypeZhipuGenerate, GLM4FlashGenerateConfig
 
 
 __all__ = ["Zhipu"]
@@ -45,7 +45,7 @@ class Zhipu(Generate):
     api_key: Optional[str]
     api_key_name: Optional[str]
     model_name: Optional[str]
-    generate_config: Union[GLM4GenerateConfig, GLM3TurboGenerateConfig]
+    generate_config: Optional[TypeZhipuGenerate]
     messages: List[Message]
     parse_info: List[ParseInfo]
     async_task_response: Optional[List]
@@ -56,7 +56,7 @@ class Zhipu(Generate):
             self,
             api_key: Optional[str] = None,
             messages: Optional[List[Message]] = None,
-            generate_config: TypeZhipuGenerate = GLM3TurboGenerateConfig(),
+            generate_config: Optional[TypeZhipuGenerate] = GLM4FlashGenerateConfig(),
             output: Literal["completion", "message", "str"] = "completion",
             verbose: Optional[bool] = False,
             api_key_name: Optional[str] = "ZHIPU_API_KEY",
@@ -86,8 +86,8 @@ class Zhipu(Generate):
 
     def generate_stream(
             self,
-            response: Iterable[Completion],
-    ) -> Union[Iterable[Completion], Iterable[Message], Iterable[str]]:
+            response: Iterable[ChatCompletionChunk],
+    ) -> Union[Iterable[ChatCompletionChunk], Iterable[Message], Iterable[str]]:
         """"""
         for chunk in response:
             yield self._output(chunk)
@@ -96,15 +96,17 @@ class Zhipu(Generate):
             self,
             query: Optional[str] = None,
             messages: Optional[List[Message]] = None,
-    ) -> Union[Completion, CompletionMessage, Iterable[Completion], str]:
+    ) -> Union[ChatCompletion, CompletionMessage, Iterable[ChatCompletionChunk], str]:
         """"""
         messages = self._make_messages(query=query, messages=messages)
         self.generate_config.messages = messages
-        response = self.zhipu_client.chat.completions.create(**self.generate_config.model_dump())
+        completion = self.zhipu_client.chat.completions.create(**self.generate_config.model_dump())
+
         if self.generate_config.stream:
-            return self.generate_stream(response)
+            completion = ChatCompletionChunk.model_validate(completion.model_dump())
+            return self.generate_stream(completion)
         else:
-            completion = response
+            completion = ChatCompletion.model_validate(completion.model_dump())
             return self._output(completion)
 
     def generate_with_parse(

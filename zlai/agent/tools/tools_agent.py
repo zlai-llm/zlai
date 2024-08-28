@@ -118,10 +118,15 @@ class ToolsAgent(AgentMixin):
 
     def _validate_data(
             self,
-            data: Union[str, Dict, List, DataFrame]
+            data: Union[str, int, float, Dict, List, DataFrame]
     ) -> str:
         """"""
-        self._logger(msg=f"[{self.agent_name}] Tool Data Type: {type(data)}, length: {len(data)}", color="magenta")
+        if isinstance(data, (int, float)):
+            length = 1
+        else:
+            length = len(data)
+
+        self._logger(msg=f"[{self.agent_name}] Tool Data Type: {type(data)}, length: {length}", color="magenta")
         if isinstance(data, DataFrame):
             data = data.to_markdown()
         else:
