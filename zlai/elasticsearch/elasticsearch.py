@@ -41,10 +41,11 @@ def get_es_global_con(
 
     :param timeout:
     :param hosts:
+    :param http_auth: auther name and password
     :return:
 
     Example:
-        connections.create_connection(hosts=['localhost'], http_auth=('elastic', 'your_password'))
+        get_es_global_con(hosts=['localhost'], http_auth=('elastic', 'your_password'))
     """
     connections.create_connection(hosts=hosts, timeout=timeout, **kwargs)
     print(colored(f'ES connected!', 'green', attrs=['bold']))
@@ -58,9 +59,10 @@ def get_es_con(
     """
 
     :param hosts:
+    :param http_auth: auther name and password
     :return:
     Example:
-        con = get_es_con(hosts=['http://localhost:9200'])
+        con = get_es_con(hosts=['http://localhost:9200'], http_auth=('elastic', 'your_password'))
     """
     return Elasticsearch(hosts=hosts, **kwargs)
 
