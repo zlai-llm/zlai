@@ -13,13 +13,12 @@ from .spark import *
 from .baidu import *
 from .step_fun import *
 from .yi import *
-from .local import *
 
 from typing import Union
 
 
 TypeGenerateConfig = Union[
-    GenerateConfig, BaseGenerateConfig, TypeLocalGenerate,
+    GenerateConfig, BaseGenerateConfig,
     TypeAliGenerate, TypeAtomGenerate, TypeBaichuanGenerate, TypeBaiduGenerate,
     TypeDeepSeekGenerate, TypeDouBaoGenerate, TypeHunYuanGenerate, TypeMoonShotGenerate,
     OpenAIGenerateConfig, TypeSiliconFlowGenerate, TypeSparkGenerate, TypeStepFunGenerate,

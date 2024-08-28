@@ -5,16 +5,13 @@ from typing import List, Union, Iterable, Optional
 
 from ..llms.generate_config import TypeGenerateConfig
 from ..schema import (
-    LLMUrl, Message, Model,
-    Completion, CompletionUsage, CompletionMessage, CompletionChoice,
-    AsyncCompletion, AsyncTaskStatus,
-    ValidateMessagesResponded, role
+    Message, Completion, CompletionUsage, CompletionMessage, CompletionChoice,
+    AsyncCompletion, AsyncTaskStatus, ValidateMessagesResponded, role
 )
 
 
 __all__ = [
     "LLMRequest",
-    "llm_url",
     "invoke_llm",
     "invoke_sse_llm",
     "validate_messages",
@@ -26,13 +23,12 @@ __all__ = [
 ]
 
 headers = {'Content-Type': 'application/json'}
-llm_url = LLMUrl
 
 
 class LLMRequest(BaseModel):
     """"""
     model_config = ConfigDict(protected_namespaces=())
-    model_name: Optional[Union[Model, str]] = ''
+    model_name: Optional[Union[str]] = ''
     messages: Optional[List[Message]] = [CompletionMessage(content='hi.', role='user')]
     generate_config: Optional[TypeGenerateConfig]
 
@@ -107,7 +103,7 @@ def validate_messages(
 
 
 def invoke_llm(
-        url: Union[LLMUrl, str],
+        url: Union[str],
         data: LLMRequest,
         timeout: int = 600,
 ) -> Completion:
@@ -133,7 +129,7 @@ def invoke_llm(
 
 
 def invoke_sse_llm(
-        url: Union[LLMUrl, str],
+        url: Union[str],
         data: LLMRequest,
         timeout: int = 600,
 ) -> Iterable[Completion]:
