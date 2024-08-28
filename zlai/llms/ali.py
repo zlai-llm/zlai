@@ -6,12 +6,12 @@ except ModuleNotFoundError:
     raise ModuleNotFoundError("pip install dashscope")
 
 import os
-import time
 from typing import (
     Any, List, Union, Dict, Literal,
     Callable, Optional, Iterable)
 from http import HTTPStatus
-from ..schema import *
+from zlai.types.messages import TypeMessage, Message
+from ..schema import ParseInfo, CompletionChoice, CompletionUsage, Completion
 from .generate import Generate
 from .generate_config import *
 
@@ -24,7 +24,7 @@ class Ali(Generate):
     api_key: Optional[str]
     api_key_name: Optional[str]
     generate_config: TypeAliGenerate
-    messages: List[Message]
+    messages: List[TypeMessage]
     parse_info: List[ParseInfo]
     output: Literal["response", "message", "str"] = "response"
 
