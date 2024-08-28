@@ -261,9 +261,20 @@ class AgentMixin(LoggerMixin):
         else:
             raise Exception("Unsupported Python version.")
 
+    def get_content_from_stream_response_v2(self, completion: Any, **kwargs) -> str:
+        """"""
+        choice = completion.choices[0]
+        if hasattr(choice, "delta"):
+            return choice.delta.content
+        else:
+            return choice.message.content
+
     def _validate_llm_stream(self, llm: [TypeLLM]):
         """"""
-        llm.generate_config.stream = self.stream
+        if hasattr(llm.generate_config, "stream"):
+            llm.generate_config.stream = self.stream
+        else:
+            pass
 
     def _trans_generate_stream(self, llm: [TypeLLM], stream: bool):
         llm.generate_config.stream = stream
@@ -298,8 +309,7 @@ class AgentMixin(LoggerMixin):
         self._validate_llm_stream(llm=llm)
         completions = llm.generate(messages=messages)
         for completion in completions:
-            assistant_content = self.get_content_from_stream_response(
-                completion=completion, generate_config=self.llm.generate_config)
+            assistant_content = self.get_content_from_stream_response_v2(completion=completion)
             stream_content += assistant_content
             task_completion.content = stream_content
             task_completion.stream = stream_content

@@ -1,4 +1,5 @@
 from zlai.prompt.template import PromptTemplate
+from zlai.agent.schema import AgentPrompt
 
 
 __all__ = [
@@ -52,11 +53,15 @@ and now continue writing {step}. If needed, you can add a small subtitle at the 
 Remember to only output the paragraph you write, without repeating the already written text.
 """
 
-prompt_long_write_plan = PromptTemplate(
-    template=long_write_plan_template,
-    input_variables=["instruction"]
+prompt_long_write_plan = AgentPrompt(
+    prompt_template=PromptTemplate(
+        template=long_write_plan_template,
+        input_variables=["instruction"]
+    )
 )
-prompt_long_write = PromptTemplate(
-    template=long_write_plan_template,
-    input_variables=["instruction", "step", "content"]
+prompt_long_write = AgentPrompt(
+    prompt_template=PromptTemplate(
+        template=long_write_template,
+        input_variables=["instruction", "step", "content"]
+    )
 )

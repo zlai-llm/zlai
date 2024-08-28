@@ -1,4 +1,4 @@
-from typing import Any, List, Dict, Optional, Callable
+from typing import Any, List, Dict, Union, Optional, Callable
 from pydantic import BaseModel, Field, ConfigDict
 from zlai.llms import TypeLLM
 from zlai.embedding import TypeEmbedding
@@ -83,7 +83,7 @@ class FreezeTaskCompletion(BaseModel):
     script: Optional[str] = Field(default=None, description="")
     parsed_data: Optional[Any] = Field(default=None, description="")
     observation: Optional[str] = Field(default=None, description="")
-    data: Optional[Dict[str, List]] = Field(default=None, description="")
+    data: Optional[Union[Dict, Dict[str, List]]] = Field(default=None, description="")
     query_id: Optional[int] = Field(default=None, description="")
     origin_query: Optional[str] = Field(default=None, description="")
     total_question: Optional[List[str]] = Field(default=None, description="")
