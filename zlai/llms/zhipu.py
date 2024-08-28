@@ -1,21 +1,43 @@
 try:
     from zhipuai import ZhipuAI
 except ModuleNotFoundError:
-    raise ModuleNotFoundError("pip install zhipuai")
+    print(ModuleNotFoundError("pip install zhipuai"))
 
 import os
 import time
-from typing import (
-    Any, List, Union, Dict, Literal,
-    Callable, Optional, Iterable)
+from typing import Any, List, Dict, Literal, Callable, Optional, Iterable
 
 from ..schema import *
-from .base import *
 from .generate import Generate
 from .generate_config import TypeZhipuGenerate, GLM4GenerateConfig, GLM3TurboGenerateConfig
 
 
 __all__ = ["Zhipu"]
+
+
+def get_unknown_async_completion(resp: AsyncTaskStatus) -> AsyncCompletion:
+    """"""
+    choice = CompletionChoice(
+        index=0,
+        finish_reason='unknown',
+        message=CompletionMessage(
+            role='assistant',
+        ),
+    )
+    usage = CompletionUsage(
+        prompt_tokens=0,
+        completion_tokens=0,
+        total_tokens=0,
+    )
+    async_completion = AsyncCompletion(
+        id=resp.id,
+        request_id=resp.request_id,
+        model=resp.model,
+        task_status=resp.task_status,
+        choices=[choice],
+        usage=usage,
+    )
+    return async_completion
 
 
 class Zhipu(Generate):
