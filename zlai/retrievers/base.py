@@ -1,6 +1,6 @@
 from typing import List, Dict, Union
 from pydantic import BaseModel
-from ..llms import LocalLLMAPI
+from ..llms import LocalCompletion
 from ..schema import Message
 
 
@@ -11,7 +11,7 @@ __all__ = [
 
 class BaseRetriever:
     """"""
-    llm: Union[LocalLLMAPI]
+    llm: Union[LocalCompletion]
     query: str
     system_message: List[Message]
 
