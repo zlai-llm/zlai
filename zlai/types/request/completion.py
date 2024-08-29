@@ -17,29 +17,11 @@ ChatModel = Literal[
 ]
 
 
-TypeRequestMessage = Union[
-    ChatCompletionMessage,
-    # Message,
-    # ChatMessage,
-    SystemMessage,
-    # SystemToolsMessage,
-    UserMessage,
-    AssistantMessage,
-    # AssistantWithMetadataMessage,
-    ObservationMessage,
-    # FunctionMessage,
-    # ToolMessage,
-    # ToolsMessage,
-    ImageMessage,
-    AudioMessage,
-]
-
-
 class ChatCompletionRequest(BaseRequest):
     """
     todo: 这里也许需要检查TypeRequestMessage的合法性，在server中不一定会检验到正确的message类型
     """
-    messages: List[TypeRequestMessage]
+    messages: List[ChatCompletionMessage]
     model: Union[str, ChatModel]
     frequency_penalty: Optional[float] = Field(default=None, description="")
     function_call: FunctionCall = Field(default=None, description="")
