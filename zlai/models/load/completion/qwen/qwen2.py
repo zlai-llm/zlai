@@ -1,3 +1,4 @@
+import torch
 from typing import Any, Dict, Tuple, Optional
 from cachetools import cached, LRUCache
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -17,18 +18,19 @@ def load_qwen2(
         max_memory: Optional[Dict] = None
 ) -> Tuple[Any, Any]:
     """
-    todo: 增加一个GPU启动，用于测试模型
+
     :param model_path:
     :param max_memory:
     :return:
     """
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     max_memory = get_device_max_memory(max_memory)
     model = AutoModelForCausalLM.from_pretrained(
         pretrained_model_name_or_path=model_path,
         torch_dtype="auto",
         device_map="auto",
         max_memory=max_memory,
-    ).cuda()
+    ).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_path)
     return model, tokenizer
 

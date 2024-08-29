@@ -10,7 +10,7 @@ from zlai.types.models_config import ModelConfig, ToolsConfig
 from zlai.types.generate_config.completion import GenerateConfig
 from zlai.models.utils import generate_id, stream_message_chunk
 from zlai.types.messages.content import TextContent
-from .glm4 import *
+from .parse_function_call import *
 
 
 __all__ = [
@@ -141,10 +141,15 @@ class LoadModelCompletion(LoggerMixin):
             content = f"Not find completion method: {self.model_name}"
             usage = None
         else:
+            kwargs = dict()
+            if self.tools_config is not None:
+                kwargs.update({
+                    "tools": self.tools_config.tools,
+                    "tool_choice": self.tools_config.tool_choice,
+                })
             content, usage = completion_function(
                 model=self.model, tokenizer=self.tokenizer, messages=messages,
-                generate_config=self.generate_config, validate=True,
-                tools=self.tools_config.tools, tool_choice=self.tools_config.tool_choice
+                generate_config=self.generate_config, validate=True, **kwargs
             )
         end = time.time()
         self._logger(msg=f"[{__class__.__name__}] Generating Done. Use {end - start:.2f}s", color="green")
