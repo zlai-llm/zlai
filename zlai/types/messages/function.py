@@ -26,7 +26,8 @@ class ObservationMessage(Message):
 class FunctionMessage(Message):
     """"""
     role: Literal["function"] = Field(default="function", description="角色")
-    content: Union[str] = Field(..., description="对话内容")
+    content: Union[str] = Field(default=None, description="对话内容")
+    name: Optional[str] = Field(default=None, description="""The name of the function to call.""")
 
     def show_streamlit(self) -> None:
         _ = self._validate_streamlit()
@@ -36,7 +37,8 @@ class FunctionMessage(Message):
 class ToolsMessage(Message):
     """"""
     role: Literal["tool"] = Field(default="tool", description="角色")
-    content: str = Field(default="", description="对话内容")
+    content: str = Field(default=None, description="对话内容")
+    name: Optional[str] = Field(default=None, description="""The name of the function to call.""")
     tool_call_id: Optional[Union[int, str, dict]] = Field(default=None, description="id")
 
     def show_streamlit(self) -> None:

@@ -42,6 +42,7 @@ async def chat_completions(request: ChatCompletionRequest):
         generate_config = base_config.generate_method.model_validate(request.gen_kwargs())
         logger.info(f"[ChatCompletion] Generate kwargs: {generate_config.gen_kwargs()}")
         messages = [message.to_message() for message in request.messages]
+        logger.info(f"[ChatCompletion] Message Type: {[type(message) for message in messages]}")
 
         try:
             model_completion = LoadModelCompletion(

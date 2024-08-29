@@ -103,7 +103,7 @@ def stream_completion_qwen_2(
     thread.start()
     for i, content in enumerate(streamer):
         if tools is not None:
-            content = re.sub(r"<tool_call>\n|\n</tool_call>", "", str(content))
+            content = re.sub(r"<tool_call>|</tool_call>", "", str(content))
         usage.completion_tokens += 1
         usage.total_tokens = usage.prompt_tokens + usage.completion_tokens
         yield content, usage

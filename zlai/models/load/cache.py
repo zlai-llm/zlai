@@ -9,7 +9,7 @@ __all__ = [
 
 class CacheConfig(BaseModel):
     """"""
-    maxsize: float = 2
+    maxsize: float = 8
     # ttl: float = 20 * 60
 
 
