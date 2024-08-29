@@ -41,6 +41,7 @@ async def chat_completions(request: ChatCompletionRequest):
         tools_config = ToolsConfig.model_validate(request.model_dump())
         generate_config = base_config.generate_method.model_validate(request.gen_kwargs())
         logger.info(f"[ChatCompletion] Generate kwargs: {generate_config.gen_kwargs()}")
+        messages = [message.to_message() for message in request.messages]
 
         try:
             model_completion = LoadModelCompletion(
@@ -52,7 +53,7 @@ async def chat_completions(request: ChatCompletionRequest):
 
         if request.stream:
             return StreamingResponse(
-                model_completion.stream_completion(messages=request.messages),
+                model_completion.stream_completion(messages=messages),
                 media_type="application/x-ndjson")
         else:
-            return model_completion.completion(messages=request.messages)
+            return model_completion.completion(messages=messages)

@@ -206,10 +206,9 @@ class ProcessMessages:
         for message in self.messages:
             if isinstance(message, ImageMessage):
                 self.processed_messages.append(message)
-            elif message.role == "function":
-                self.processed_messages.append(FunctionMessage(content=message.content))
-            elif message.role == "tool":
-                self.processed_messages.append(ToolMessage(content=message.content))
+            elif message.role in ("function", "tool"):
+                message = ObservationMessage(content=message.content)
+                self.processed_messages.append(message)
             elif message.role == "assistant":
                 if hasattr(message, "tool_calls") and message.tool_calls:
                     for tool_call in message.tool_calls:
