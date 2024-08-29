@@ -94,7 +94,8 @@ class TestMiniCPM(unittest.TestCase):
         messages = [
             ImageMessage(content="介绍这个图片", images_url=[url]).to_dict(),
         ]
-        client = OpenAI(api_key="1234", base_url=os.getenv("BASE_URL"))
+        # client = OpenAI(api_key="1234", base_url=os.getenv("BASE_URL"))
+        client = OpenAI(api_key="1234", base_url="http://127.0.0.1:8000/")
         response = client.chat.completions.create(
             model="MiniCPM-V-2_6",
             messages=messages,

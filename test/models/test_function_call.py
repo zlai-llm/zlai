@@ -1,7 +1,6 @@
 import time
 import unittest
 from zlai.models.completion.glm4 import *
-from zlai.models.utils import trans_messages
 from zlai.types import *
 
 
