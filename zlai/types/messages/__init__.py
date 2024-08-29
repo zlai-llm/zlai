@@ -20,7 +20,6 @@ TypeMessage = Union[
     AssistantWithMetadataMessage,
     ObservationMessage,
     FunctionMessage,
-    ToolMessage,
     ToolsMessage,
     ImageMessage,
     AudioMessage,

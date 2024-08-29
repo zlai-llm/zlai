@@ -18,7 +18,7 @@ def mini_cpm_messages_process(
     _messages = []
     for message in messages:
         if isinstance(message, ImageMessage):
-            msg = message.to_dict(_type="mini_cpm")
+            msg = message.to_message(_type="mini_cpm")
         else:
             msg = message.model_dump()
         _messages.append(msg)
