@@ -17,7 +17,7 @@ __all__ = [
 class ToolsConfig(BaseModel):
     """"""
     tool_choice: Optional[ChatCompletionToolChoiceOptionParam] = Field(default='none', description="")
-    tools: Optional[Union[Iterable[ChatCompletionToolParam], List[Dict]]] = Field(default=None, description="")
+    tools: Optional[Union[List[ChatCompletionToolParam], List[Dict]]] = Field(default=None, description="")
 
 
 class InferenceMethod(BaseModel):
