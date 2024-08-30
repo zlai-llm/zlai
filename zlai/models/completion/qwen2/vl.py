@@ -37,7 +37,7 @@ def completion_qwen_2_vl(
 ):
     """"""
     text, images = trans_image_messages(messages, processor)
-    inputs = processor(text=text, images=images, padding=True, return_tensors="pt").to(model.device)
+    inputs = processor(text=[text], images=images, padding=True, return_tensors="pt").to(model.device)
     output_ids = model.generate(**inputs, **generate_config.model_dump())
     generated_ids = [
         output_ids[len(input_ids):]
@@ -67,7 +67,7 @@ def stream_completion_qwen_2_vl(
         processor, skip_prompt=True, skip_special_tokens=True,
         clean_up_tokenization_spaces=True,
     )
-    inputs = processor(text=text, images=images, return_tensors="pt", padding=True).to(model.device)
+    inputs = processor(text=[text], images=images, return_tensors="pt", padding=True).to(model.device)
     usage.prompt_tokens = inputs.input_ids.shape[1]
 
     gen_config = {**inputs, **generate_config.gen_kwargs(), "streamer": streamer}

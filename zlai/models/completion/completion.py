@@ -180,8 +180,9 @@ class LoadModelCompletion(LoggerMixin):
             if completion_function is None:
                 streamer = None
                 content = f"Not find stream completion method: {self.model_name}"
+                self._logger(msg=f"[{__class__.__name__}] Completion Error: {content}", color="green")
                 chunk = stream_message_chunk(content=content, finish_reason="stop", model=self.model_name, _id=_id)
-                yield chunk
+                yield f"data: {chunk.model_dump_json()}\n\n"
             else:
                 kwargs = self.completion_params(completion_function=completion_function, messages=messages)
                 streamer = completion_function(**kwargs)

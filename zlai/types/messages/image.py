@@ -158,7 +158,7 @@ class ImageMessage(ImageMixin):
                         message["image"] = item.image_url.url
             return message
 
-    def _qwen2vl_messages(self) -> Tuple[Dict, List[TypeImage]]:
+    def _qwen2vl_message(self) -> Tuple[Dict, List[TypeImage]]:
         """"""
         images = []
         message = dict(role=self.role)
@@ -177,6 +177,7 @@ class ImageMessage(ImageMixin):
                         image = item.image_url.url
                     else:
                         raise TypeError(f"Url type error, got type {type(item.image_url.url)}")
+                    images.append(image)
                     content.append({"type": "image", "image": image})
             message["content"] = content
             return message, images
