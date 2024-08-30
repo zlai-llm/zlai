@@ -5,7 +5,7 @@ from PIL import Image
 from io import BytesIO
 from urllib.parse import urlparse
 from pydantic import ConfigDict, Field
-from typing import Optional, Literal, Union, List, Dict
+from typing import Optional, Literal, Tuple, Union, List, Dict
 from zlai.utils.image import *
 from zlai.utils import pkg_config
 from .base import Message
@@ -121,42 +121,77 @@ class ImageMessage(ImageMixin):
         """"""
         return self.model_dump()
 
-    def to_message(self, _type: Literal["mini_cpm", "glm4v"] = "mini_cpm") -> Dict:
+    def _mini_cpm_message(self) -> Dict:
         """"""
-        if _type == "mini_cpm":
-            _content = []
-            if isinstance(self.content, str):
-                _content.append(self.content)
-            elif isinstance(self.content, list):
-                question = ""
-                for item in self.content:
-                    if isinstance(item, TextContent):
-                        question = item.text
-                    if isinstance(item, ImageContent):
-                        if isinstance(item.image_url.url, str):
-                            _content.append(trans_bs64_to_image(item.image_url.url))
-                        elif isinstance(item.image_url.url, TypeImage):
-                            _content.append(item.image_url.url)
-                        else:
-                            raise TypeError(f"Url type error, but got {type(item.image_url.url)}")
-                _content.append(question)
-
-            return {"role": self.role, "content": _content}
-
-        elif _type == "glm4v":
+        _content = []
+        if isinstance(self.content, str):
+            _content.append(self.content)
+        elif isinstance(self.content, list):
             question = ""
-            image = None
             for item in self.content:
                 if isinstance(item, TextContent):
                     question = item.text
                 if isinstance(item, ImageContent):
                     if isinstance(item.image_url.url, str):
-                        image = trans_bs64_to_image(item.image_url.url)
-            message = dict(role=self.role, content=question)
-            if image:
-                message["image"] = image
+                        _content.append(trans_bs64_to_image(item.image_url.url))
+                    elif isinstance(item.image_url.url, TypeImage):
+                        _content.append(item.image_url.url)
+                    else:
+                        raise TypeError(f"Url type error, but got {type(item.image_url.url)}")
+            _content.append(question)
+        return {"role": self.role, "content": _content}
+
+    def _glm4v_message(self) -> Dict:
+        """"""
+        message = dict(role=self.role)
+        if isinstance(self.content, str):
+            message["content"] = self.content
+            return message
+        elif isinstance(self.content, list):
+            for item in self.content:
+                if isinstance(item, TextContent):
+                    message["content"] = item.text
+                elif isinstance(item, ImageContent):
+                    if isinstance(item.image_url.url, str):
+                        message["image"] = trans_bs64_to_image(item.image_url.url)
+                    elif isinstance(item.image_url.url, TypeImage):
+                        message["image"] = item.image_url.url
             return message
 
+    def _qwen2vl_messages(self) -> Tuple[Dict, List[TypeImage]]:
+        """"""
+        images = []
+        message = dict(role=self.role)
+        if isinstance(self.content, str):
+            message["content"] = self.content
+            return message, images
+        elif isinstance(self.content, list):
+            content = []
+            for item in self.content:
+                if isinstance(item, TextContent):
+                    content.append({"type": "text", "text": item.text})
+                elif isinstance(item, ImageContent):
+                    if isinstance(item.image_url.url, str):
+                        image = trans_bs64_to_image(item.image_url.url)
+                    elif isinstance(item.image_url.url, TypeImage):
+                        image = item.image_url.url
+                    else:
+                        raise TypeError(f"Url type error, got type {type(item.image_url.url)}")
+                    content.append({"type": "image", "image": image})
+            message["content"] = content
+            return message, images
+
+    def to_message(
+            self,
+            _type: Literal["mini_cpm", "glm4v", "qwen2vl"] = "mini_cpm"
+    ) -> Union[Dict, Tuple[Dict, List[TypeImage]]]:
+        """"""
+        if _type == "mini_cpm":
+            return self._mini_cpm_message()
+        elif _type == "glm4v":
+            return self._glm4v_message()
+        elif _type == "qwen2vl":
+            return self._qwen2vl_message()
         else:
             raise ValueError(f"Unknown message type {_type}")
 

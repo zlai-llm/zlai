@@ -124,20 +124,20 @@ def trans_audio_messages(messages: List[TypeMessage], processor: Any) -> Tuple[s
 
 def completion_qwen_2_audio(
         model,
-        tokenizer,
+        processor,
         messages: List[TypeMessage],
         generate_config: Optional[Qwen2GenerateConfig],
         **kwargs: Any,
 ):
     """"""
-    text, audios = trans_audio_messages(messages, tokenizer)
-    inputs = tokenizer(
+    text, audios = trans_audio_messages(messages, processor)
+    inputs = processor(
         text=text, audios=audios, return_tensors="pt", padding=True,
-        sampling_rate=tokenizer.feature_extractor.sampling_rate,
+        sampling_rate=processor.feature_extractor.sampling_rate,
     ).to(model.device)
     generated_ids = model.generate(**inputs, **generate_config.model_dump())
     generated_ids = generated_ids[:, inputs.input_ids.size(1):]
-    response = tokenizer.batch_decode(
+    response = processor.batch_decode(
         generated_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
 
     completion_tokens = generated_ids.shape[1]

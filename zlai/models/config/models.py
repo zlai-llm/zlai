@@ -77,6 +77,30 @@ chat_completion_models = {
             stream=stream_completion_qwen_2,
         ),
     ),
+    "Qwen2-VL-2B-Instruct": ModelConfig(
+        model_name="Qwen2-VL-2B-Instruct",
+        model_path="/home/models/Qwen/Qwen2-VL-2B-Instruct",
+        model_type="completion",
+        generate_method=Qwen2VL2BInstructGenerateConfig,
+        load_method=load_qwen2_vl,
+        max_memory={"0": "30GB"},
+        inference_method=InferenceMethod(
+            base=completion_qwen_2_vl,
+            stream=stream_completion_qwen_2_vl,
+        ),
+    ),
+    "Qwen2-VL-7B-Instruct": ModelConfig(
+        model_name="Qwen2-VL-7B-Instruct",
+        model_path="/home/models/Qwen/Qwen2-VL-7B-Instruct",
+        model_type="completion",
+        generate_method=Qwen2VL7BInstructGenerateConfig,
+        load_method=load_qwen2_vl,
+        max_memory={"0": "30GB"},
+        inference_method=InferenceMethod(
+            base=completion_qwen_2_vl,
+            stream=stream_completion_qwen_2_vl,
+        ),
+    ),
     "glm-4-9b-chat": ModelConfig(
         model_name="glm-4-9b-chat",
         model_path="/home/models/THUDM/glm-4-9b-chat",

@@ -1,4 +1,5 @@
 import time
+import inspect
 from logging import Logger
 from typing import Any, List, Dict, Iterable, Optional, Callable
 
@@ -132,6 +133,24 @@ class LoadModelCompletion(LoggerMixin):
         self._logger(msg=f"[{__class__.__name__}] User Question: {self._get_user_content(messages=messages)}",
                      color="green")
 
+    def completion_params(self, completion_function: Callable, messages: List[TypeMessage]) -> Dict:
+        """"""
+        kwargs = {"model": self.model, "generate_config": self.generate_config, "messages": messages, "validate": True}
+        func_params = list(inspect.signature(completion_function).parameters.keys())
+        if self.tools_config is not None:
+            kwargs.update({
+                "tools": self.tools_config.tools,
+                "tool_choice": self.tools_config.tool_choice,
+            })
+        if "tokenizer" in func_params:
+            kwargs.update({"tokenizer": self.tokenizer})
+        elif "processor" in func_params:
+            kwargs.update({"processor": self.tokenizer})
+        else:
+            raise ValueError(
+                f"Completion function {completion_function} does not have a tokenizer or processor parameter.")
+        return kwargs
+
     def completion(self, messages: List[TypeMessage]) -> ChatCompletion:
         """"""
         self._start_logger(messages=messages)
@@ -142,16 +161,8 @@ class LoadModelCompletion(LoggerMixin):
             content = f"Not find completion method: {self.model_name}"
             usage = None
         else:
-            kwargs = dict()
-            if self.tools_config is not None:
-                kwargs.update({
-                    "tools": self.tools_config.tools,
-                    "tool_choice": self.tools_config.tool_choice,
-                })
-            content, usage = completion_function(
-                model=self.model, tokenizer=self.tokenizer, messages=messages,
-                generate_config=self.generate_config, validate=True, **kwargs
-            )
+            kwargs = self.completion_params(completion_function=completion_function, messages=messages)
+            content, usage = completion_function(**kwargs)
         end = time.time()
         self._logger(msg=f"[{__class__.__name__}] Generating Done. Use {end - start:.2f}s", color="green")
         self._logger(msg=f"[{__class__.__name__}] Completion content: {content}", color="green")
@@ -172,17 +183,8 @@ class LoadModelCompletion(LoggerMixin):
                 chunk = stream_message_chunk(content=content, finish_reason="stop", model=self.model_name, _id=_id)
                 yield chunk
             else:
-                kwargs = dict()
-                if self.tools_config is not None:
-                    kwargs.update({
-                        "tools": self.tools_config.tools,
-                        "tool_choice": self.tools_config.tool_choice,
-                    })
-                streamer = completion_function(
-                    model=self.model, tokenizer=self.tokenizer,
-                    messages=messages, generate_config=self.generate_config,
-                    validate=True, **kwargs
-                )
+                kwargs = self.completion_params(completion_function=completion_function, messages=messages)
+                streamer = completion_function(**kwargs)
 
             if streamer is not None:
                 answer = ""
