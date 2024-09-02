@@ -54,6 +54,7 @@ class DocumentSaveToElasticsearch(LoggerMixin):
             thresh: Optional[float] = 1.95,
             logger: Optional[Callable] = None,
             verbose: Optional[bool] = False,
+            **kwargs,
     ):
         self.index_name = index_name
         self.tools = tools
@@ -62,7 +63,7 @@ class DocumentSaveToElasticsearch(LoggerMixin):
         self.thresh = thresh
         self.logger = logger
         self.verbose = verbose
-        self.con = get_es_con(hosts=host)
+        self.con = get_es_con(hosts=host, **kwargs)
         self.tools = ElasticSearchTools(index_name=self.index_name, con=self.con)
 
     def __call__(self, data: List[Dict], *args, **kwargs):
