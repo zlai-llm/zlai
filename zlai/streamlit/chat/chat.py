@@ -66,7 +66,7 @@ class StreamlitChat:
             tools = None
             if self.tools is not None:
                 tools = self.tools.tool_descriptions
-            client = OpenAI(api_key="1", base_url=os.getenv("BASE_URL"))
+            client = OpenAI(api_key="1", base_url=os.getenv("BASE_URL", "http://localhost:8000/"))
             completion = client.chat.completions.create(
                 model=self.model, messages=messages, tools=tools,
                 tool_choice="auto",
