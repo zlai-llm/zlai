@@ -76,7 +76,7 @@ class KnowledgeAgent(AgentMixin):
 
     def set_elasticsearch(self):
         """"""
-        con = get_es_con(hosts=self.elasticsearch_host)
+        con = get_es_con(hosts=self.elasticsearch_host, **self.kwargs)
         self.elasticsearch_tool = ElasticSearchTools(index_name=self.index_name, con=con)
 
     def search_content(
