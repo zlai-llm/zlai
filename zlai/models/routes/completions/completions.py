@@ -36,7 +36,7 @@ async def chat_completions(request: ChatCompletionRequest):
             raise HTTPException(status_code=400, detail="Invalid request, model not exists.")
         else:
             logger.info(f"[ChatCompletion] Model config: {model_config}")
-            base_config.update_kwargs(model_path=model_config.get("model_path"))
+            base_config = base_config.update_kwargs(model_path=model_config.get("model_path"))
 
         tools_config = ToolsConfig.model_validate(request.model_dump())
         generate_config = base_config.generate_method.model_validate(request.gen_kwargs())

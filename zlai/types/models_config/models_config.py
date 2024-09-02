@@ -47,4 +47,4 @@ class ModelConfig(BaseModel):
 
     def update_kwargs(self, **kwargs):
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
-        self.model_copy(update=kwargs)
+        return self.model_copy(update=kwargs)

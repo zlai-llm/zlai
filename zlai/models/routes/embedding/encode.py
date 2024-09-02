@@ -34,7 +34,7 @@ def embeddings(
             raise HTTPException(status_code=400, detail="Invalid request, model not exists.")
         else:
             logger.info(f"[Embedding] Model config: {model_config}")
-            base_config.update_kwargs(model_path=model_config.get("model_path"))
+            base_config = base_config.update_kwargs(model_path=model_config.get("model_path"))
 
         try:
             model_embedding = LoadModelEmbedding(

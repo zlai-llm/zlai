@@ -39,7 +39,7 @@ def images_generations(
             raise HTTPException(status_code=400, detail="Invalid request, model not exists.")
         else:
             logger.info(f"[ImagesGenerations] Model config: {model_config}")
-            base_config.update_kwargs(model_path=model_config.get("model_path"))
+            base_config = base_config.update_kwargs(model_path=model_config.get("model_path"))
 
         generate_config = base_config.generate_method.model_validate(request.gen_kwargs())
         logger.info(f"[ImagesGenerations] Generate kwargs: {generate_config.gen_kwargs()}")
@@ -91,7 +91,7 @@ async def images_edits(
             raise HTTPException(status_code=400, detail="Invalid request, model not exists.")
         else:
             logger.info(f"[ImagesGenerations] Model config: {model_config}")
-            base_config.update_kwargs(model_path=model_config.get("model_path"))
+            base_config = base_config.update_kwargs(model_path=model_config.get("model_path"))
 
         generate_config = base_config.generate_method.model_validate(request.gen_kwargs())
         logger.info(f"[ImagesGenerations] Generate kwargs: {generate_config.gen_kwargs()}")

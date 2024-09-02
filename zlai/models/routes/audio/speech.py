@@ -33,7 +33,7 @@ def audio_speech(
             raise HTTPException(status_code=400, detail="Invalid request, model not exists.")
         else:
             logger.info(f"[AudioSpeech] Model config: {model_config}")
-            base_config.update_kwargs(model_path=model_config.get("model_path"))
+            base_config = base_config.update_kwargs(model_path=model_config.get("model_path"))
 
         generate_config = base_config.generate_method.model_validate(request.gen_kwargs())
         logger.info(f"[ChatCompletion] Generate kwargs: {generate_config.gen_kwargs()}")
