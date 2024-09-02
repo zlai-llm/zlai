@@ -16,7 +16,7 @@ def generate_image(
     :param prompt:
     :return:
     """
-    client = OpenAI(api_key="a", base_url=os.getenv("BASE_URL"))
+    client = OpenAI(api_key="a", base_url=os.getenv("BASE_URL", "http://localhost:8000/"))
     respose = client.images.generate(
         model="Kolors-diffusers",
         prompt=prompt,

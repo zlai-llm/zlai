@@ -15,7 +15,7 @@ def generate_audio(
     :param prompt:
     :return:
     """
-    client = OpenAI(api_key="a", base_url=os.getenv("BASE_URL"))
+    client = OpenAI(api_key="a", base_url=os.getenv("BASE_URL", "http://localhost:8000/"))
     audio_response = client.audio.speech.create(
         model="CosyVoice-300M-SFT", voice="中文女", input=prompt)
     audio = BytesIO(audio_response.content)
