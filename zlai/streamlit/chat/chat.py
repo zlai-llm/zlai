@@ -14,6 +14,8 @@ from zlai.tools import transform_tool_params
 
 
 __all__ = [
+    "add_user_messages",
+    "add_assistant_messages",
     "StreamlitChat",
 ]
 
@@ -23,6 +25,59 @@ chart_tools = [
 ]
 image_tools = ["generate_image"]
 audio_tools = ["generate_audio"]
+
+
+def add_user_messages(
+        content: str,
+        image: Optional[TypeImage] = None,
+        **kwargs,
+):
+    """"""
+    if image:
+        display_message = ImageMessage(role="user", content=content, images=[image])
+        message = UserMessage(content=content)
+    else:
+        display_message = UserMessage(content=content)
+        message = display_message
+    st.session_state.display_messages.append(display_message)
+    st.session_state.messages.append(message)
+
+
+def add_assistant_messages(
+        content: Optional[str] = None,
+        image: Optional[TypeImage] = None,
+        audio: Optional[Union[BytesIO, bytes]] = None,
+        chart: Optional[str] = None,
+        tool_call: Optional[ChatCompletionMessageToolCall] = None,
+        observation: Optional[Union[str, Dict]] = None,
+        tool_call_id: Optional[str] = None,
+        **kwargs,
+):
+    """"""
+    if image:
+        display_message = ImageMessage(role="assistant", content=content, images=[image])
+        message = AssistantMessage(content=content)
+    elif audio:
+        display_message = AudioMessage(role="assistant", content=content, audios=[audio])
+        message = AssistantMessage(content=content)
+    elif chart:
+        display_message = ChartMessage(role="assistant", content=content, charts=[chart])
+        message = AssistantMessage(content="已为您生成图表。")
+    elif tool_call:
+        display_message = ChatCompletionMessage(
+            role="assistant", content=content, tool_calls=[tool_call])
+        message = display_message
+    elif tool_call_id and observation:
+        display_message = ObservationMessage(content=observation)
+        message = ToolsMessage(content=str(observation), tool_call_id=tool_call_id)
+    elif observation:
+        display_message = ObservationMessage(content=observation)
+        message = display_message
+    else:
+        display_message = AssistantMessage(content=content)
+        message = display_message
+    st.session_state.display_messages.append(display_message)
+    st.session_state.messages.append(message)
 
 
 class StreamlitChat:
@@ -118,11 +173,11 @@ class StreamlitChat:
             st.markdown(content)
             self.add_assistant_messages(content=content)
 
-    def chat_base(self, question):
+    def chat_base(self, content):
         """"""
         with st.chat_message("user", avatar=avatar_mapping.get("user")):
-            st.markdown(question)
-        self.add_user_messages(question)
+            st.markdown(content)
+        self.add_user_messages(content)
         with st.chat_message("assistant", avatar=avatar_mapping.get("assistant")):
             placeholder = st.empty()
             content = ""
@@ -172,44 +227,10 @@ class StreamlitChat:
                         placeholder.markdown(content)
                 self.add_assistant_messages(content=content)
 
-    def add_user_messages(self, question: str,):
+    def add_user_messages(self, **kwargs: Any):
         """"""
-        message = UserMessage(content=question)
-        st.session_state.messages.append(message)
-        st.session_state.display_messages.append(message)
+        add_user_messages(**kwargs)
 
-    def add_assistant_messages(
-            self,
-            content: Optional[str] = None,
-            image: Optional[TypeImage] = None,
-            audio: Optional[Union[BytesIO, bytes]] = None,
-            chart: Optional[str] = None,
-            tool_call: Optional[ChatCompletionMessageToolCall] = None,
-            observation: Optional[Union[str, Dict]] = None,
-            tool_call_id: Optional[str] = None,
-    ):
+    def add_assistant_messages(self, **kwargs: Any):
         """"""
-        if image:
-            display_message = ImageMessage(role="assistant", content=content, images=[image])
-            message = AssistantMessage(content=content)
-        elif audio:
-            display_message = AudioMessage(role="assistant", content=content, audios=[audio])
-            message = AssistantMessage(content=content)
-        elif chart:
-            display_message = ChartMessage(role="assistant", content=content, charts=[chart])
-            message = AssistantMessage(content="已为您生成图表。")
-        elif tool_call:
-            display_message = ChatCompletionMessage(
-                role="assistant", content=content, tool_calls=[tool_call])
-            message = display_message
-        elif tool_call_id and observation:
-            display_message = ObservationMessage(content=observation)
-            message = ToolsMessage(content=str(observation), tool_call_id=tool_call_id)
-        elif observation:
-            display_message = ObservationMessage(content=observation)
-            message = display_message
-        else:
-            display_message = AssistantMessage(content=content)
-            message = display_message
-        st.session_state.display_messages.append(display_message)
-        st.session_state.messages.append(message)
+        add_assistant_messages(**kwargs)
