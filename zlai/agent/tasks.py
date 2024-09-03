@@ -139,7 +139,7 @@ class TaskSwitch(Tasks):
 
     def _validate_switch_llm_stream(self):
         """"""
-        if self.llm.generate_config.stream:
+        if hasattr(self.llm.generate_config, "stream") and self.llm.generate_config.stream:
             self.llm.generate_config.stream = False
 
     def _validate_task_llm_stream(self, gen_config: Dict):
