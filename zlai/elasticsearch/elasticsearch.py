@@ -2,13 +2,13 @@ from typing import *
 from termcolor import colored
 from tqdm import tqdm
 from functools import reduce
+import elasticsearch
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
 from elasticsearch_dsl import (
     Q, Search, connections, Index, Document, tokenizer, analyzer)
 from elasticsearch_dsl.field import Text
-from elasticsearch_dsl.query import (
-    Match, MatchPhrase, MatchAll, ScriptScore, Term, Terms)
+from elasticsearch_dsl.query import MatchAll, ScriptScore
 from datetime import date
 
 from ..schema.url import ESUrl
@@ -83,18 +83,19 @@ def create_index(
     :param disp:
     :return:
 
-    >>> class ElasticSearchSchemaTest(Document):
-    >>>     url = Text()
-    >>>     title = Text(analyzer=analyzer_ik, search_analyzer=analyzer_ik)
-    >>>     context = Text(analyzer=analyzer_ik, search_analyzer=analyzer_ik)
-    >>>     vector = DenseVector(dims=1024)
-    >>>     date = Text()
+    Example:
+        class ElasticSearchSchemaTest(Document):
+            url = Text()
+            title = Text(analyzer=analyzer_ik, search_analyzer=analyzer_ik)
+            context = Text(analyzer=analyzer_ik, search_analyzer=analyzer_ik)
+            vector = DenseVector(dims=1024)
+            date = Text()
 
-    >>> con = get_es_con(hosts=ESUrl.model)
-    >>> create_index(
-    >>>     index_name='test_index',
-    >>>     field_schema=ElasticSearchSchemaTest,
-    >>>     reset=True, con=con, disp=True)
+        con = get_es_con(hosts=ESUrl.model)
+        create_index(
+            index_name='test_index',
+            field_schema=ElasticSearchSchemaTest,
+            reset=True, con=con, disp=True)
     """
     index = Index(index_name, using=con)
     index = index.settings(**elastic_search_index_settings)
@@ -167,9 +168,13 @@ def es_cosine_similarity(
     index = Index(index_name, using=con)
     search = Search(index=index_name, using=con)
 
+    if elasticsearch.__version__ <= (8, 0):
+        source = f"cosineSimilarity(params.query_vector, doc['{doc_vec_name}']) + 1.0"
+    else:
+        source = f"cosineSimilarity(params.query_vector, '{doc_vec_name}') + 1.0"
     script = {
-        "source": f"cosineSimilarity(params.query_vector, doc['{doc_vec_name}']) + 1.0",
-        "params": {"query_vector": vector}
+        "source": source,
+        "params": {"query_vector": vector},
     }
     query = MatchAll()
     script_score = ScriptScore(query=query, script=script)
@@ -323,8 +328,13 @@ class ElasticSearchTools:
 
     def cos_smi(self, vector, doc_vec_name='vector') -> None:
         """"""
+        if elasticsearch.__version__ <= (8, 0):
+            source = f"cosineSimilarity(params.query_vector, doc['{doc_vec_name}']) + 1.0"
+        else:
+            source = f"cosineSimilarity(params.query_vector, '{doc_vec_name}') + 1.0"
+
         script = {
-            "source": f"cosineSimilarity(params.query_vector, '{doc_vec_name}') + 1.0",
+            "source": source,
             "params": {"query_vector": vector}
         }
         query = ScriptScore(query=MatchAll(), script=script)
