@@ -1,3 +1,4 @@
+import numpy as np
 from typing import List, Literal, Optional
 from pydantic import BaseModel, Field
 
@@ -44,3 +45,12 @@ class CreateEmbeddingResponse(BaseModel):
 
     usage: Usage
     """The usage information for the request."""
+
+    def to_numpy(self) -> np.ndarray:
+        """"""
+        vectors = [vec.embedding for vec in self.data]
+        return np.array(vectors)
+
+    def to_list(self) -> List[List[float]]:
+        vectors = [vec.embedding for vec in self.data]
+        return vectors

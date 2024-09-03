@@ -4,7 +4,13 @@ from .pretrained import *
 from .embedding import *
 from .emb_utils import *
 from .embedding_config import *
-from ..schema import EMBUrl
+from .openai import *
 from typing import Union
 
-TypeEmbedding = Union[Embedding, TypeZhipuEmbedding, TypeAliEmbedding, PretrainedEmbedding]
+TypeEmbedding = Union[
+    Embedding,
+    TypeZhipuEmbedding,
+    TypeAliEmbedding,
+    PretrainedEmbedding,
+    OpenAIEmbedding,
+]
