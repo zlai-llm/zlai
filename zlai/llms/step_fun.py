@@ -2,7 +2,7 @@ from typing import Optional, List, Any, Literal
 
 from ..schema import Message
 from .generate import *
-from .generate_config.step_fun import TypeStepFunGenerate
+from zlai.llms.generate_config.api.step_fun import TypeStepFunGenerate
 
 
 __all__ = [

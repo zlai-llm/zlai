@@ -12,7 +12,7 @@ except ModuleNotFoundError:
 from typing import List, Dict, Literal, Optional, Iterable
 from ..schema import *
 from .generate import Generate
-from .generate_config.baidu import TypeBaiduGenerate, ErnieTiny8KGenerateConfig
+from zlai.llms.generate_config.api.baidu import TypeBaiduGenerate, ErnieTiny8KGenerateConfig
 
 
 __all__ = [

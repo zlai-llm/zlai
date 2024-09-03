@@ -5,6 +5,7 @@ from zlai.types.generate_config.completion.base import GenerateConfig
 __all__ = [
     "CodeGeexGenerateConfig",
     "CodeGeex4All9BGenerateConfig",
+    "CodeGeex4All9BGGUFGenerateConfig",
     "TypeCodeGeexGenerate",
 ]
 

@@ -1,26 +1,47 @@
-from .ali import *
-from .baichuan import *
 from .base import *
-from .zhipu import *
-from .atom import *
-from .moonshot import *
-from .deepseek import *
-from .doubao import *
-from .hunyuan import *
-from .openai import *
-from .silicon_flow import *
-from .spark import *
-from .baidu import *
-from .step_fun import *
-from .yi import *
+from .api import *
+from .local import *
 
 from typing import Union
 
 
-TypeGenerateConfig = Union[
-    GenerateConfig, BaseGenerateConfig,
+TypeAPIGenerateConfig = Union[
     TypeAliGenerate, TypeAtomGenerate, TypeBaichuanGenerate, TypeBaiduGenerate,
     TypeDeepSeekGenerate, TypeDouBaoGenerate, TypeHunYuanGenerate, TypeMoonShotGenerate,
     OpenAIGenerateConfig, TypeSiliconFlowGenerate, TypeSparkGenerate, TypeStepFunGenerate,
     TypeYiGenerate, TypeZhipuGenerate,
+]
+
+
+TypeLocalGenerateConfig = Union[
+    CodeGeexGenerateConfig,
+    CodeGeex4All9BGenerateConfig,
+    CodeGeex4All9BGGUFGenerateConfig,
+
+    DeepSeekGenerateConfig,
+    DeepSeekV2LiteChatGenerateConfig,
+    DeepSeekCoderV2LiteInstructChatGenerateConfig,
+
+    GLM4GenerateConfig,
+    GLM4Chat9BGenerateConfig,
+    GLM4Chat9B1MGenerateConfig,
+    GLM4V9BGenerateConfig,
+    GLM4LongWriter9B,
+    Llama3LongWriter8B,
+
+    MiniCPMV26GenerateConfig,
+
+    Qwen2GenerateConfig,
+    Qwen2Instruct05BGenerateConfig,
+    Qwen2Instruct15BGenerateConfig,
+    Qwen2Instruct7BGenerateConfig,
+    Qwen2Audio7BInstructGenerateConfig,
+    Qwen2VLInstructGenerateConfig,
+    Qwen2VL7BInstructGenerateConfig,
+    Qwen2VL2BInstructGenerateConfig,
+]
+
+
+TypeGenerateConfig = Union[
+    GenerateConfig, BaseGenerateConfig, TypeAPIGenerateConfig, TypeLocalGenerateConfig
 ]

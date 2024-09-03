@@ -1,12 +1,13 @@
 from pydantic import BaseModel, Field
 from typing import Optional, Union, List
-from .base import GenerateConfig
+from zlai.llms.generate_config.base import GenerateConfig
 
 
 __all__ = [
     "TypeZhipuGenerate",
     # zhipu
     "GLM4GenerateConfig",
+    "GLM4PlusGenerateConfig",
     "GLM4LongGenerateConfig",
     "GLM49BGenerateConfig",
     "GLM40520GenerateConfig",
@@ -17,6 +18,7 @@ __all__ = [
     "CodeGeexGenerateConfig",
     "GLM4AllToolsGenerateConfig",
     "GLM4VGenerateConfig",
+    "GLM4VPlusGenerateConfig",
 ]
 
 
@@ -48,6 +50,13 @@ class GLM4GenerateConfig(ZhipuGenerateConfig):
     100RMB / 1M tokens
     """
     model: str = "glm-4"
+
+
+class GLM4PlusGenerateConfig(ZhipuGenerateConfig):
+    """
+    glm-4-plus
+    """
+    model: str = "glm-4-plus"
 
 
 class GLM4LongGenerateConfig(ZhipuGenerateConfig):
@@ -119,9 +128,17 @@ class GLM4VGenerateConfig(ZhipuGenerateConfig):
     top_p: Optional[float] = 0.6
 
 
+class GLM4VPlusGenerateConfig(ZhipuGenerateConfig):
+    """"""
+    model: str = "glm-4v-plus"
+    temperature: Optional[float] = 0.8
+    top_p: Optional[float] = 0.6
+
+
 TypeZhipuGenerate = Union[
     ZhipuGenerateConfig,
     GLM4GenerateConfig,
+    GLM4PlusGenerateConfig,
     GLM4LongGenerateConfig,
     GLM49BGenerateConfig,
     GLM40520GenerateConfig,
@@ -131,5 +148,6 @@ TypeZhipuGenerate = Union[
     GLM3TurboGenerateConfig,
     CodeGeexGenerateConfig,
     GLM4AllToolsGenerateConfig,
-    GLM4VGenerateConfig
+    GLM4VGenerateConfig,
+    GLM4VPlusGenerateConfig,
 ]

@@ -1,8 +1,8 @@
 from pydantic import Field
 from typing import Optional, List, Union, Dict
-from .base import GenerateConfig
+from zlai.llms.generate_config.base import GenerateConfig
 from .openai import OpenAIGenerateConfig
-from ...schema import Message
+from zlai.schema import Message
 
 
 __all__ = [

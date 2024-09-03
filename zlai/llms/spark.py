@@ -2,7 +2,7 @@ from typing import Any, List, Literal, Optional
 
 from ..schema import *
 from .generate import *
-from .generate_config.spark import TypeSparkGenerate
+from zlai.llms.generate_config.api.spark import TypeSparkGenerate
 
 
 __all__ = ["Spark"]

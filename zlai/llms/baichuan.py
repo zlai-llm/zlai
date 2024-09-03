@@ -2,7 +2,7 @@ from typing import Any, List, Literal, Optional
 
 from ..schema import *
 from .generate import *
-from .generate_config.baichuan import TypeBaichuanGenerate
+from zlai.llms.generate_config.api.baichuan import TypeBaichuanGenerate
 
 
 __all__ = ["Baichuan"]

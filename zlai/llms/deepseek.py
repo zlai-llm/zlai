@@ -2,7 +2,7 @@ from typing import Any, List, Literal, Optional
 
 from ..schema import *
 from .generate import *
-from .generate_config.deepseek import TypeDeepSeekGenerate
+from zlai.llms.generate_config.api.deepseek import TypeDeepSeekGenerate
 
 
 __all__ = ["DeepSeek"]

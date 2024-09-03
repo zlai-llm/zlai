@@ -2,7 +2,7 @@ from typing import Any, List, Literal, Optional
 
 from ..schema import *
 from .generate import *
-from .generate_config.doubao import TypeDouBaoGenerate
+from zlai.llms.generate_config.api.doubao import TypeDouBaoGenerate
 
 
 __all__ = ["DouBao"]

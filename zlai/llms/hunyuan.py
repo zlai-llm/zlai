@@ -11,7 +11,7 @@ from typing import List, Dict, Literal, Optional, Iterable, Callable
 
 from ..schema import *
 from .generate import Generate
-from .generate_config.hunyuan import TypeHunYuanGenerate
+from zlai.llms.generate_config.api.hunyuan import TypeHunYuanGenerate
 
 
 __all__ = ["HunYuan"]

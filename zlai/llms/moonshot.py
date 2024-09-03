@@ -2,7 +2,7 @@ from typing import Optional, List, Any, Literal
 
 from ..schema import Message
 from .generate import *
-from .generate_config.moonshot import TypeMoonShotGenerate
+from zlai.llms.generate_config.api.moonshot import TypeMoonShotGenerate
 
 
 __all__ = [
