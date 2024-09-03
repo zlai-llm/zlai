@@ -1,6 +1,6 @@
 import unittest
 from zlai.llms import Baidu
-from zlai.llms.generate_config.baidu import *
+from zlai.llms.generate_config.api.baidu import *
 
 
 class TestBaidu(unittest.TestCase):

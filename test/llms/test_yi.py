@@ -1,6 +1,6 @@
 import unittest
 from zlai.llms import Yi
-from zlai.llms.generate_config.yi import *
+from zlai.llms.generate_config.api.yi import *
 
 
 class TestDouBao(unittest.TestCase):

@@ -1,7 +1,7 @@
 import unittest
 from zlai.schema import UserMessage
 from zlai.llms.ali import *
-from zlai.llms.generate_config.ali import *
+from zlai.llms.generate_config.api.ali import *
 
 
 class TestMokeAliModels(unittest.TestCase):

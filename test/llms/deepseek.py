@@ -1,7 +1,6 @@
-import os
 import unittest
 from zlai.llms.deepseek import *
-from zlai.llms.generate_config.deepseek import *
+from zlai.llms.generate_config.api.deepseek import *
 
 
 class TestMokeModels(unittest.TestCase):

@@ -1,6 +1,6 @@
 import unittest
 from zlai.llms import MoonShot
-from zlai.llms.generate_config.moonshot import *
+from zlai.llms.generate_config.api.moonshot import *
 
 
 class TestDouBao(unittest.TestCase):

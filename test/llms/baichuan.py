@@ -1,6 +1,6 @@
 import unittest
 from zlai.llms.baichuan import *
-from zlai.llms.generate_config.baichuan import *
+from zlai.llms.generate_config.api.baichuan import *
 
 
 class TestMokeModels(unittest.TestCase):

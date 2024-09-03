@@ -1,7 +1,6 @@
-import os
 import unittest
 from zlai.llms import HunYuan
-from zlai.llms.generate_config.hunyuan import *
+from zlai.llms.generate_config.api.hunyuan import *
 
 
 class TestHunYuan(unittest.TestCase):

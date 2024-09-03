@@ -1,6 +1,6 @@
 import unittest
 from zlai.llms.silicon_flow import *
-from zlai.llms.generate_config.silicon_flow import *
+from zlai.llms.generate_config.api.silicon_flow import *
 
 
 class TestMokeModels(unittest.TestCase):

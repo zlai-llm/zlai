@@ -1,6 +1,6 @@
 import unittest
 from zlai.llms import Spark
-from zlai.llms.generate_config.spark import *
+from zlai.llms.generate_config.api.spark import *
 
 
 class TestSpark(unittest.TestCase):

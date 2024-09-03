@@ -1,6 +1,6 @@
 import unittest
 from zlai.llms import Atom
-from zlai.llms.generate_config.atom import *
+from zlai.llms.generate_config.api.atom import *
 
 
 class TestAtom(unittest.TestCase):

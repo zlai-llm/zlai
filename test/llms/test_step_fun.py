@@ -1,7 +1,6 @@
-import os
 import unittest
 from zlai.llms.step_fun import *
-from zlai.llms.generate_config.step_fun import *
+from zlai.llms.generate_config.api.step_fun import *
 
 
 class TestMokeModels(unittest.TestCase):

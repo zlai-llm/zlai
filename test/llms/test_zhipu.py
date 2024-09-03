@@ -1,7 +1,6 @@
 import unittest
 from zlai.llms.zhipu import *
-from zlai.llms.generate_config.zhipu import *
-from zlai.types.messages import *
+from zlai.llms.generate_config.api.zhipu import *
 
 
 class TestMokeZhipuModels(unittest.TestCase):
