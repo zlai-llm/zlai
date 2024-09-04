@@ -8,7 +8,7 @@ from zlai.llms import TypeLLM
 from zlai.types.messages import *
 from zlai.types.messages.display import *
 from zlai.types.function_call import ChatCompletionMessageToolCall
-from zlai.streamlit import *
+from zlai.streamlit.utils import avatar_mapping
 from zlai.agent import Tools
 from zlai.tools import transform_tool_params
 
@@ -173,11 +173,11 @@ class StreamlitChat:
             st.markdown(content)
             self.add_assistant_messages(content=content)
 
-    def chat_base(self, content):
+    def chat_base(self, content: str):
         """"""
         with st.chat_message("user", avatar=avatar_mapping.get("user")):
             st.markdown(content)
-        self.add_user_messages(content)
+        self.add_user_messages(content=content)
         with st.chat_message("assistant", avatar=avatar_mapping.get("assistant")):
             placeholder = st.empty()
             content = ""
