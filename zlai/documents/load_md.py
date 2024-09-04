@@ -124,13 +124,18 @@ class ParseMarkdown:
             current_line, src_line = self._detect_line(line, src_line)
             self.lines.append(current_line)
 
-    def to_table(self, drop_root: bool = True, fix_level: bool = True) -> pd.DataFrame:
+    def to_table(self, drop_root: bool = True, fix_level: bool = True, clearn: bool = True) -> pd.DataFrame:
         if len(self.lines) == 0:
             self.split_text(self.text)
 
         df_table = pd.DataFrame([line.model_dump() for line in self.lines])
         df_table = df_table[["level", "src", "content"]]
         df_table.columns = ["level", "src", "dst"]
+
+        if clearn:
+            df_table = df_table[(df_table.src != "") & (df_table.dst != "")]
+            df_table = df_table[df_table.dst != df_table.src]
+
         if drop_root:
             df_table = df_table[df_table["src"] != "root"]
         if fix_level:
