@@ -1,6 +1,7 @@
 from pandas import DataFrame
 from typing import List, Dict, Any, Union, Optional
 from .charts import graph_chart
+from .base import graph_long_to_wide
 
 
 __all__ = [
@@ -101,3 +102,7 @@ class GraphData:
     def render(self, **kwargs):
         """"""
         return graph_chart(**kwargs)
+
+    def to_wide(self):
+        """"""
+        return graph_long_to_wide(df_long=self.df)

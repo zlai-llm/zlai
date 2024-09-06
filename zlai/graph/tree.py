@@ -1,6 +1,7 @@
 from pandas import DataFrame
 from typing import Any, List, Dict
 from .charts import tree_chart
+from .base import graph_long_to_wide
 
 
 __all__ = [
@@ -46,3 +47,7 @@ class TreeData:
     def render(self, **kwargs: Any):
         """"""
         return tree_chart(**kwargs)
+
+    def to_wide(self):
+        """"""
+        return graph_long_to_wide(df_long=self.df)
