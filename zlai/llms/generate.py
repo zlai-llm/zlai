@@ -11,7 +11,7 @@ from zlai.types.messages import ChatCompletionMessage
 from .generate_config import GenerateConfig
 from ..utils import LoggerMixin
 from ..parse import ParseString
-from ..schema import Message, AssistantMessage, ParseInfo
+from ..schema import TypeMessage, UserMessage, AssistantMessage, ParseInfo
 
 
 __all__ = [
@@ -29,13 +29,13 @@ class Generate(LoggerMixin):
     def _make_messages(
             cls,
             query: Optional[str] = None,
-            messages: Optional[List[Message]] = None,
-    ) -> List[Message]:
+            messages: Optional[List[TypeMessage]] = None,
+    ) -> List[TypeMessage]:
         """"""
         if messages:
             messages = messages
         elif query:
-            messages = [Message(role="user", content=query)]
+            messages = [UserMessage(content=query)]
         return messages
 
     def _output(
@@ -81,7 +81,7 @@ class OpenAICompletion(Generate):
     api_key: Optional[str]
     api_key_name: Optional[str]
     generate_config: Optional[GenerateConfig]
-    messages: List[Message]
+    messages: List[TypeMessage]
     parse_info: List[ParseInfo]
     api_key_name: Optional[str]
     verbose: Optional[bool]
@@ -92,7 +92,7 @@ class OpenAICompletion(Generate):
             self,
             generate_config: Optional[GenerateConfig] = None,
             api_key: Optional[str] = None,
-            messages: Optional[List[Message]] = None,
+            messages: Optional[List[TypeMessage]] = None,
             output: Literal["completion", "message", "str"] = "completion",
             verbose: Optional[bool] = False,
             api_key_name: Optional[str] = None,
@@ -127,7 +127,7 @@ class OpenAICompletion(Generate):
     def _output(
             self,
             response: Union[ChatCompletionChunk, ChatCompletion],
-    ) -> Union[ChatCompletion, Message, str]:
+    ) -> Union[ChatCompletion, TypeMessage, str]:
         """"""
         if self.output == "completion":
             return response
@@ -142,7 +142,7 @@ class OpenAICompletion(Generate):
     def generate_stream(
             self,
             completions: Union[Iterable[ChatCompletion], Stream[ChatCompletionChunk]],
-    ) -> Union[Iterable[ChatCompletion], Iterable[Message], Iterable[str]]:
+    ) -> Union[Iterable[ChatCompletion], Iterable[TypeMessage], Iterable[str]]:
         """"""
         for completion in completions:
             yield self._output(completion)
@@ -150,8 +150,8 @@ class OpenAICompletion(Generate):
     def generate(
             self,
             query: Optional[str] = None,
-            messages: Optional[List[Message]] = None,
-    ) -> Union[ChatCompletion, Message, Iterable[ChatCompletion], str]:
+            messages: Optional[List[TypeMessage]] = None,
+    ) -> Union[ChatCompletion, TypeMessage, Iterable[ChatCompletion], str]:
         """"""
         self.generate_config.messages = self._make_messages(query=query, messages=messages)
         completion = self.client.chat.completions.create(**self.generate_config.model_dump())
@@ -163,7 +163,7 @@ class OpenAICompletion(Generate):
     def generate_with_parse(
             self,
             query: Optional[str] = None,
-            messages: Optional[List[Message]] = None,
+            messages: Optional[List[TypeMessage]] = None,
             parse_fun: Optional[Callable] = None,
             parse_dict: Literal["eval", "greedy", "nested"] = "eval",
     ) -> Union[List[Any], List[List], List[Dict], str]:
