@@ -13,7 +13,6 @@ def graph_long_to_wide(df_long: DataFrame) -> DataFrame:
     for level in levels:
         current_level = df_long.loc[df_long.level == level, ["src", "dst"]]
         current_level.columns = [f"level_{level}", f"level_{level + 1}"]
-        print(current_level)
         if df_wide is None:
             df_wide = current_level
         else:
