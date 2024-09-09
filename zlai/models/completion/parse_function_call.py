@@ -67,12 +67,12 @@ class ParseFunctionCall:
             ensure_ascii=False)
         return FunctionCall(name=function_name, arguments=arguments)
 
-    def _parse_min_cpm_v3(self, content: str) -> ChatCompletionMessage:
+    def _parse_min_cpm_v3(self, content: str) -> Dict:
         """"""
         message = self.tokenizer.decode_function_call(content)
-        return ChatCompletionMessage.model_validate(message)
+        return message
 
-    def parse(self) -> Union[str, FunctionCall, ChatCompletionMessage]:
+    def parse(self) -> Union[str, Dict, FunctionCall]:
         """"""
         if self.tools is None:
             return self.content
@@ -117,8 +117,8 @@ class ParseFunctionCall:
         """"""
         function_call = self.parse()
 
-        if isinstance(function_call, ChatCompletionMessage):
-            return function_call
+        if isinstance(function_call, Dict):
+            return ChatCompletionMessage.model_validate(function_call)
 
         if isinstance(function_call, FunctionCall):
             function = Function.model_validate(function_call.model_dump())
@@ -141,6 +141,12 @@ class ParseFunctionCall:
     def to_stream_completion_delta(self) -> ChoiceDelta:
         """"""
         function_call = self.parse()
+
+        if isinstance(function_call, Dict):
+            if isinstance(function_call["tool_calls"], list):
+                _ = [item.update({"index": i}) for i, item in enumerate(function_call['tool_calls'])]
+            return ChoiceDelta.model_validate(function_call)
+
         if isinstance(function_call, FunctionCall):
             function = ChoiceDeltaToolCallFunction.model_validate(function_call.model_dump())
             tool_calls = [
