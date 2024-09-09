@@ -43,7 +43,7 @@ def completion_mini_cpm_v3(
     ]
     content = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0]
 
-    completion_tokens = output_ids[0].shape[1]
+    completion_tokens = len(output_ids[0])
     prompt_tokens = inputs.get("input_ids").shape[1]
     total_tokens = completion_tokens + prompt_tokens
     usage = CompletionUsage(
