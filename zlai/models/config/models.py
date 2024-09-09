@@ -173,6 +173,18 @@ chat_completion_models = {
             stream=stream_completion_mini_cpm,
         ),
     ),
+    "MiniCPM3-4B": ModelConfig(
+        model_name="MiniCPM3-4B",
+        model_path="/home/models/openbmb/MiniCPM3-4B",
+        model_type="completion",
+        generate_method=MiniCPM3GenerateConfig,
+        load_method=load_mini_cpm_v_3,
+        max_memory={"0": "20GB"},
+        inference_method=InferenceMethod(
+            base=completion_mini_cpm_v3,
+            stream=stream_completion_mini_cpm_v3,
+        ),
+    ),
     "DeepSeek-V2-Lite-Chat": ModelConfig(
         model_name="DeepSeek-V2-Lite-Chat",
         model_path="/home/models/deepseek-ai/DeepSeek-V2-Lite-Chat",

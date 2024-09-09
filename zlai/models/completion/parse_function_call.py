@@ -2,7 +2,7 @@ import re
 import json
 import random
 import string
-from typing import List, Optional
+from typing import Any, List, Dict, Optional
 from zlai.types.messages import *
 from zlai.types.function_call import *
 from zlai.types.chat.chat_completion_chunk import ChoiceDelta, ChoiceDeltaToolCallFunction, ChoiceDeltaToolCall
@@ -19,6 +19,8 @@ class ParseFunctionCall:
             tools: Union[dict, List[dict]] = None,
             use_tool: Optional[bool] = True,
             special_tools: Optional[List[str]] = None,
+            model: Optional[str] = None,
+            tokenizer: Optional[Any] = None,
     ):
         """
         TODO 这是一个简单的工具比较函数，能保证拦截所有非工具输出的结果，需要做进一步优化
@@ -29,6 +31,8 @@ class ParseFunctionCall:
         self.content = content
         self.tools = tools
         self.use_tool = use_tool
+        self.model = model
+        self.tokenizer = tokenizer
         if special_tools is None:
             self.special_tools = ["cogview", "simple_browser"]
         else:
@@ -63,10 +67,18 @@ class ParseFunctionCall:
             ensure_ascii=False)
         return FunctionCall(name=function_name, arguments=arguments)
 
-    def parse(self) -> Union[str, FunctionCall]:
+    def _parse_min_cpm_v3(self, content: str) -> ChatCompletionMessage:
+        """"""
+        message = self.tokenizer.decode_function_call(content)
+        return ChatCompletionMessage.model_validate(message)
+
+    def parse(self) -> Union[str, FunctionCall, ChatCompletionMessage]:
         """"""
         if self.tools is None:
             return self.content
+
+        if self.model == "MiniCPM3-4B":
+            return self._parse_min_cpm_v3(self.content)
 
         lines = self.content.strip().split("\n")
         tools = {tool['function']['name'] for tool in self.tools} if self.tools else {}
@@ -104,6 +116,10 @@ class ParseFunctionCall:
     def to_chat_completion_message(self) -> ChatCompletionMessage:
         """"""
         function_call = self.parse()
+
+        if isinstance(function_call, ChatCompletionMessage):
+            return function_call
+
         if isinstance(function_call, FunctionCall):
             function = Function.model_validate(function_call.model_dump())
             tool_calls = [

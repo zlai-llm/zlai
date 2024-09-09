@@ -86,10 +86,12 @@ class LoadModelCompletion(LoggerMixin):
         end_time = time.time()
         self._logger(msg=f"[{__class__.__name__}] Loading Done. Use {end_time - start_time:.2f}s", color="blue")
 
-    def parse_tools_call(self, content: str, usage: CompletionUsage) -> ChatCompletion:
+    def parse_tools_call(self, content: str, usage: CompletionUsage, **kwargs) -> ChatCompletion:
         """"""
         if self.tools_config.tools:
-            parse_function_call = ParseFunctionCall(content=content, tools=self.tools_config.tools)
+            parse_function_call = ParseFunctionCall(
+                content=content, tools=self.tools_config.tools,
+                model=self.model_name, tokenizer=self.tokenizer)
             chat_completion_message = parse_function_call.to_chat_completion_message()
             if chat_completion_message.content is None and chat_completion_message.tool_calls:
                 finish_reason = "tool_calls"

@@ -27,6 +27,8 @@ models_config:
       model_path: /home/models/THUDM/codegeex4-all-9b
   MiniCPM-V-2_6:
       model_path: /home/models/openbmb/MiniCPM-V-2_6
+  MiniCPM3-4B:
+      model_path: /home/models/openbmb/MiniCPM3-4B
   DeepSeek-V2-Lite-Chat:
       model_path: /home/models/deepseek-ai/DeepSeek-V2-Lite-Chat
   DeepSeek-Coder-V2-Lite-Instruct:
