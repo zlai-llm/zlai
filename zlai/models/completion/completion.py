@@ -1,4 +1,5 @@
 import time
+import asyncio
 import inspect
 from logging import Logger
 from typing import Any, List, Dict, Iterable, Optional, Callable
@@ -93,7 +94,7 @@ class LoadModelCompletion(LoggerMixin):
                 content=content, tools=self.tools_config.tools,
                 model=self.model_name, tokenizer=self.tokenizer)
             chat_completion_message = parse_function_call.to_chat_completion_message()
-            if chat_completion_message.content is None and chat_completion_message.tool_calls:
+            if isinstance(chat_completion_message.tool_calls, list):
                 finish_reason = "tool_calls"
             else:
                 finish_reason = "stop"
@@ -111,10 +112,13 @@ class LoadModelCompletion(LoggerMixin):
     def parse_stream_tools_call(self, content: str, _id: str, usage: CompletionUsage) -> ChatCompletionChunk:
         """"""
         if self.tools_config.tools:
-            parse_function_call = ParseFunctionCall(content=content, tools=self.tools_config.tools)
+            parse_function_call = ParseFunctionCall(
+                content=content, tools=self.tools_config.tools,
+                model=self.model_name, tokenizer=self.tokenizer,
+            )
             choice_delta = parse_function_call.to_stream_completion_delta()
             choice_delta.content = ""
-            if choice_delta.content is None and choice_delta.tool_calls:
+            if isinstance(choice_delta.tool_calls, list):
                 finish_reason = "tool_calls"
             else:
                 finish_reason = "stop"
@@ -197,6 +201,7 @@ class LoadModelCompletion(LoggerMixin):
                         content=delta_content, finish_reason=None, model=self.model_name, _id=_id, usage=usage
                     )
                     answer += delta_content
+                    await asyncio.sleep(0.01)
                     yield f"data: {chunk.model_dump_json()}\n\n"
                 chunk = self.parse_stream_tools_call(content=answer, _id=_id, usage=usage)
                 yield f"data: {chunk.model_dump_json()}\n\n"

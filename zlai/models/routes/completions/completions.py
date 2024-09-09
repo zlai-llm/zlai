@@ -1,6 +1,6 @@
 import os
 from fastapi import HTTPException
-from starlette.responses import StreamingResponse
+from fastapi.responses import StreamingResponse
 from zlai.utils.config import pkg_config
 from zlai.models.utils import load_model_config
 from zlai.models.completion import *
