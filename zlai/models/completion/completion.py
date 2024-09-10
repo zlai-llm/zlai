@@ -201,7 +201,7 @@ class LoadModelCompletion(LoggerMixin):
                         content=delta_content, finish_reason=None, model=self.model_name, _id=_id, usage=usage
                     )
                     answer += delta_content
-                    await asyncio.sleep(0.01)
+                    await asyncio.sleep(1E-4)
                     yield f"data: {chunk.model_dump_json()}\n\n"
                 chunk = self.parse_stream_tools_call(content=answer, _id=_id, usage=usage)
                 yield f"data: {chunk.model_dump_json()}\n\n"
