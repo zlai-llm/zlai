@@ -1,6 +1,6 @@
 from typing import List, Optional
 from pydantic import BaseModel, Field
-from ...schema import Message
+from zlai.schema import Message
 
 
 __all__ = [
