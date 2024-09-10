@@ -1,15 +1,15 @@
 from typing import Any, Union, Callable, Iterable, Optional
 from dataclasses import dataclass
 
-from ..llms import TypeLLM
-from ..embedding import Embedding
-from ..schema import SystemMessage, AssistantMessage
-from ..elasticsearch import *
-from ..prompt import PromptTemplate
+from zlai.llms import TypeLLM
+from zlai.embedding import Embedding
+from zlai.types.agent import *
+from zlai.types.messages import SystemMessage, AssistantMessage
+from zlai.elasticsearch import *
+from zlai.prompt import PromptTemplate
 from .base import AgentMixin
 from .tasks import TaskSwitch
 from .chat import ChatAgent
-from .prompt.tasks import TaskCompletion, TaskDescription, TaskParameters
 from .prompt.knowledge import *
 
 

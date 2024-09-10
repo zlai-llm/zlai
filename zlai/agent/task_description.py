@@ -1,4 +1,4 @@
-from .prompt.tasks import TaskDescription, TaskParameters
+from zlai.types.agent import TaskDescription, TaskParameters
 from .csv import CSVAgent, CSVQA
 from .weather import WeatherAgent
 from .address import AddressAgent

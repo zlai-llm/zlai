@@ -7,17 +7,16 @@ import sqlite3
 import pandas as pd
 from typing import Any, List, Union, Tuple, Optional, Callable, Iterable
 
-from ..llms import TypeLLM
-from ..embedding import TypeEmbedding
-from ..schema import Message, SystemMessage
-from ..prompt import MessagesPrompt, PromptTemplate
-from ..parse import ParseCode
+from zlai.llms import TypeLLM
+from zlai.embedding import TypeEmbedding
+from zlai.schema import Message, SystemMessage
+from zlai.prompt import MessagesPrompt, PromptTemplate
+from zlai.parse import ParseCode
+from zlai.types.agent import *
 from .base import *
 from .prompt.sqlite import *
-from .prompt.tasks import TaskDescription, TaskParameters, TaskCompletion
 from .tasks import TaskSwitch, TaskSequence
 from .chat import ChatAgent
-from .schema import StreamMessage
 
 # TODO: 在query进入后先提取表名，再进行相似表的匹配。
 

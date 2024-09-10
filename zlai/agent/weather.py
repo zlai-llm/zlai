@@ -2,14 +2,15 @@ import requests
 import traceback
 from typing import Any, Dict, Union, Annotated, Optional, Callable
 
-from ..llms import TypeLLM
-from ..schema import SystemMessage
-from ..prompt import PromptTemplate
+from zlai.llms import TypeLLM
+from zlai.schema import SystemMessage
+from zlai.prompt import PromptTemplate
+from zlai.types.agent import TaskDescription, TaskCompletion
 from .base import AgentMixin
 from .prompt.weather import *
-from .prompt.tasks import TaskDescription, TaskCompletion
 from .address import AddressAgent, StandardAddress
 from .tasks import TaskSequence
+
 
 __all__ = [
     "Weather",

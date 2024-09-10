@@ -2,16 +2,15 @@ import pandas as pd
 from pydantic import BaseModel, Field
 from typing import Any, Dict, List, Union, Annotated, Literal, Optional, Callable, Iterable
 
-from ..llms import TypeLLM
-from ..embedding import TypeEmbedding
-from ..schema import Message, SystemMessage
-from ..prompt import MessagesPrompt, PromptTemplate
-from ..parse import ParseList, ParseDict
+from zlai.llms import TypeLLM
+from zlai.embedding import TypeEmbedding
+from zlai.types.messages import Message, SystemMessage
+from zlai.types.agent import *
+from zlai.prompt import MessagesPrompt, PromptTemplate
+from zlai.parse import ParseList, ParseDict
 from .base import *
-from .tasks import TaskSwitch, TaskSequence
+from .tasks import TaskSequence
 from .prompt.fund import *
-from .prompt.tasks import TaskDescription, TaskParameters, TaskCompletion
-
 
 # TODO: 增加名称、fund code、关键词的提取
 

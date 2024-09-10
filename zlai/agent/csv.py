@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Callable
+from typing import Any, List, Union, Optional, Callable
 import pandas as pd
 
 try:
@@ -6,14 +6,14 @@ try:
 except ModuleNotFoundError:
     raise ModuleNotFoundError("pip install langchain_experimental")
 
-from ..prompt import MessagesPrompt, PromptTemplate
-from ..schema import Message, SystemMessage
-from ..embedding import Embedding
-from ..llms import *
-from ..parse import ParseCode
+from zlai.types.agent import *
+from zlai.types.messages import Message, SystemMessage
+from zlai.prompt import MessagesPrompt, PromptTemplate
+from zlai.embedding import Embedding
+from zlai.llms import TypeLLM
+from zlai.parse import ParseCode
 from .base import *
 from .prompt.csv import *
-from .prompt.tasks import TaskCompletion, TaskDescription
 from .tasks import TaskSequence, TaskSwitch
 
 

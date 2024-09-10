@@ -1,10 +1,9 @@
 from typing import Any, List, Union, Tuple, Iterable, Optional, Callable
-
-from ..llms import TypeLLM
-from ..schema import Message, SystemMessage, AssistantMessage
-from ..prompt import MessagesPrompt, PromptTemplate
+from zlai.types.agent import *
+from zlai.llms import TypeLLM
+from zlai.prompt import MessagesPrompt, PromptTemplate
+from zlai.types.messages import Message, SystemMessage, AssistantMessage
 from .base import AgentMixin
-from .prompt.tasks import TaskDescription, TaskCompletion
 from .prompt.chat import *
 
 

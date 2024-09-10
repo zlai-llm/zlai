@@ -1,12 +1,11 @@
 from pydantic import BaseModel, Field
 from typing import Any, Union, Optional, Callable
-
+from zlai.types.agent import *
 from ..llms import TypeLLM
 from ..prompt import MessagesPrompt
 from ..parse import ParseDict
 from .base import AgentMixin
 from .prompt.address import prompt_address
-from .prompt.tasks import TaskCompletion
 
 
 __all__ = [

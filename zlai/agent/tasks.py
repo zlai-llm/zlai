@@ -4,11 +4,11 @@ from collections import ChainMap
 
 from zlai.prompt import MessagesPrompt, PromptTemplate, AgentPrompt
 from zlai.types.messages import Message, SystemMessage
+from zlai.types.agent import *
 from zlai.embedding import Embedding
 from zlai.parse import ParseList
 from zlai.llms import TypeLLM
 from .base import *
-from .schema import *
 from .prompt.tasks import *
 
 

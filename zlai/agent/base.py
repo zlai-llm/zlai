@@ -15,9 +15,9 @@ from zlai.prompt import MessagesPrompt, PromptTemplate, AgentPrompt
 from zlai.embedding import TypeEmbedding
 from zlai.llms import TypeLLM, TypeZhipuGenerate
 from zlai.parse import ParseCode
+from zlai.types.agent import *
 
 from .config import *
-from .schema import *
 
 
 __all__ = [

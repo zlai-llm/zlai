@@ -5,7 +5,7 @@ from zlai.schema import Message, SystemMessage, AssistantMessage
 from zlai.prompt import MessagesPrompt, PromptTemplate
 from zlai.agent.base import AgentMixin
 from zlai.agent.tasks import TaskSequence
-from zlai.agent.prompt.tasks import TaskDescription, TaskCompletion
+from zlai.agent.schema import TaskDescription, TaskCompletion
 from zlai.agent.prompt.long_write import *
 
 

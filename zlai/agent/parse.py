@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 from typing import List, Dict, Union, Any, Optional, Callable, Literal
-from ..llms import TypeLLM
-from ..schema import Message, SystemMessage
-from ..prompt import MessagesPrompt, PromptTemplate
+from zlai.llms import TypeLLM
+from zlai.schema import Message, SystemMessage
+from zlai.prompt import MessagesPrompt, PromptTemplate
+from zlai.types.agent import TaskCompletion
 from .base import AgentMixin
-from .prompt.tasks import TaskCompletion
 
 
 __all__ = [
