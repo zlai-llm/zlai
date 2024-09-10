@@ -10,6 +10,7 @@ from .weather import *
 from .sqlite import *
 from .knowledge import *
 from .parse import *
+from .graph import *
 
 # TASK
 from .tasks import *

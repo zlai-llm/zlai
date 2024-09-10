@@ -1,7 +1,5 @@
-from dataclasses import dataclass
-from ...prompt import PromptTemplate
+from zlai.prompt import PromptTemplate, AgentPrompt
 from ...schema.messages import SystemMessage, UserMessage, AssistantMessage
-from ..schema import AgentPrompt
 
 
 __all__ = [

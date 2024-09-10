@@ -1,9 +1,7 @@
-from typing import List, Optional, ClassVar
+from typing import Optional
 from pydantic import BaseModel, Field
-from dataclasses import dataclass
-from ...prompt import PromptTemplate
-from ...schema import Message, SystemMessage, UserMessage, AssistantMessage
-from ..schema import AgentPrompt
+from zlai.prompt import PromptTemplate, AgentPrompt
+from zlai.types.messages import SystemMessage, UserMessage, AssistantMessage
 
 
 __all__ = [

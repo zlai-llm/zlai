@@ -1,6 +1,5 @@
-from ...schema.messages import SystemMessage, UserMessage, AssistantMessage
-from ...prompt import MessagesPrompt
-from ..schema.base import AgentPrompt
+from zlai.types.messages import SystemMessage, UserMessage, AssistantMessage
+from zlai.prompt import MessagesPrompt, AgentPrompt
 
 
 __all__ = [

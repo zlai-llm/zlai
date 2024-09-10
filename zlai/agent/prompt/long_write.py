@@ -1,5 +1,4 @@
-from zlai.prompt.template import PromptTemplate
-from zlai.agent.schema import AgentPrompt
+from zlai.prompt import PromptTemplate, AgentPrompt
 
 
 __all__ = [

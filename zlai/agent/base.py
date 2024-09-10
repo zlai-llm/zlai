@@ -9,15 +9,15 @@ try:
 except ModuleNotFoundError:
     raise ModuleNotFoundError("pip install langchain_experimental")
 
-from ..utils import LoggerMixin, pkg_config
-from ..prompt import MessagesPrompt, PromptTemplate
-from ..llms import TypeLLM, TypeZhipuGenerate
-from ..embedding import TypeEmbedding
-from ..schema import Message, UserMessage, SystemMessage
-from ..parse import ParseCode
+from zlai.types.messages import Message, UserMessage, SystemMessage
+from zlai.utils import LoggerMixin, pkg_config
+from zlai.prompt import MessagesPrompt, PromptTemplate, AgentPrompt
+from zlai.embedding import TypeEmbedding
+from zlai.llms import TypeLLM, TypeZhipuGenerate
+from zlai.parse import ParseCode
+
 from .config import *
-from .prompt.tasks import TaskDescription, TaskCompletion, FreezeTaskCompletion
-from .schema.info import ShowMessages, StreamMessage, steam_message
+from .schema import *
 
 
 __all__ = [
@@ -41,6 +41,7 @@ class AgentMixin(LoggerMixin):
     prompt_template: Optional[PromptTemplate] = None
     few_shot: Optional[List[Message]] = None
     messages_prompt: Optional[MessagesPrompt] = None
+    agent_prompt: Optional[AgentPrompt] = None
 
     # memory
     use_memory: Optional[bool]
@@ -62,6 +63,17 @@ class AgentMixin(LoggerMixin):
             return self.stream_generate(query=query, *args, **kwargs)
         else:
             return self.generate(query=query, *args, **kwargs)
+
+    def _init_prompt(self):
+        """"""
+        if self.agent_prompt is not None:
+            self.system_message = self.agent_prompt.system_message
+            self.system_template = self.agent_prompt.system_template
+            self.prompt_template = self.agent_prompt.prompt_template
+            self.few_shot = self.agent_prompt.few_shot
+            self.messages_prompt = self.agent_prompt.messages_prompt
+        else:
+            pass
 
     def _clear_prompt(self):
         """"""

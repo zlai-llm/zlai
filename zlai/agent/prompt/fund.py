@@ -1,7 +1,5 @@
-from typing import List, ClassVar
-from ...prompt import PromptTemplate
-from ...schema.messages import Message, SystemMessage, UserMessage, AssistantMessage
-from ..schema import AgentPrompt
+from zlai.types.messages import SystemMessage, UserMessage, AssistantMessage
+from zlai.prompt import PromptTemplate, AgentPrompt
 
 
 __all__ = [

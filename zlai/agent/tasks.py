@@ -2,11 +2,11 @@ import re
 from typing import Any, List, Dict, Union, Tuple, Iterable, Literal, Optional, Callable
 from collections import ChainMap
 
-from ..prompt import MessagesPrompt, PromptTemplate
-from ..schema import Message, SystemMessage
-from ..embedding import Embedding
-from ..parse import ParseList
-from ..llms import TypeLLM
+from zlai.prompt import MessagesPrompt, PromptTemplate, AgentPrompt
+from zlai.types.messages import Message, SystemMessage
+from zlai.embedding import Embedding
+from zlai.parse import ParseList
+from zlai.llms import TypeLLM
 from .base import *
 from .schema import *
 from .prompt.tasks import *
