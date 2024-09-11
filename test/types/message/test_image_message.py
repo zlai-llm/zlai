@@ -50,3 +50,4 @@ class TestImageMessage(unittest.TestCase):
             content="介绍这个图片", images=[image])
         print(image_message.to_message(_type="mini_cpm"))
         print(image_message.to_message(_type="glm4v"))
+        print(image_message.to_message(_type="qwen2vl"))
