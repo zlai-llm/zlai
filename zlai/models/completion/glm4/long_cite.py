@@ -20,6 +20,8 @@ def trans_messages(messages: List[TypeMessage]) -> Tuple[str, str]:
                 query = item.content
             elif item.type == "cite":
                 content = item.content
+    else:
+        query = last_message.content
     return query, content
 
 
@@ -32,7 +34,7 @@ def completion_long_cite_glm4(
 ) -> Tuple[str, CompletionUsage]:
     """"""
     gen_kwargs = {**generate_config.gen_kwargs()}
-    context, query = trans_messages(messages=messages)
+    query, context = trans_messages(messages=messages)
     output = model.query_longcite(context, query, tokenizer=tokenizer, **gen_kwargs)
     output = str(output)
     completion_tokens = len(output)

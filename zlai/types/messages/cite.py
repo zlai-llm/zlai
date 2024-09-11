@@ -16,13 +16,16 @@ class CiteMessage(Message):
     content: Optional[List[Union[QueryContent, CiteContent]]] = Field(
         default=None, description="""The content of the message.""")
 
-    def __init__(self, query: str, cite: str, **kwargs):
+    def __init__(self, query: Optional[str] = None, cite: Optional[str] = None, **kwargs):
         super().__init__(**kwargs)
-        _content = []
-        if query:
-            _content.append(QueryContent(content=query))
-        if cite:
-            _content.append(CiteContent(content=cite))
+        if isinstance(self.content, list):
+            _content = self.content
+        else:
+            _content = []
+            if query:
+                _content.append(QueryContent(content=query))
+            if cite:
+                _content.append(CiteContent(content=cite))
         self.content = _content
 
     def to_message(self):
