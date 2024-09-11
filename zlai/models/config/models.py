@@ -161,6 +161,29 @@ chat_completion_models = {
             stream=stream_completion_long_writer_llama3,
         ),
     ),
+    "LongCite-glm4-9b": ModelConfig(
+        model_name="LongCite-glm4-9b",
+        model_path="/home/models/THUDM/LongCite-glm4-9b",
+        model_type="completion",
+        generate_method=GLM4LongCite9B,
+        load_method=load_long_cite_glm4,
+        max_memory={"0": "30GB"},
+        inference_method=InferenceMethod(
+            base=completion_long_cite_glm4,
+        ),
+    ),
+    "LongCite-llama3.1-8b": ModelConfig(
+        model_name="LongCite-llama3.1-8b",
+        model_path="/home/models/THUDM/LongCite-llama3.1-8b",
+        model_type="completion",
+        generate_method=Llama3LongCite8B,
+        load_method=load_long_cite_llama3,
+        max_memory={"0": "30GB"},
+        inference_method=InferenceMethod(
+            base=completion_long_cite_llama3,
+        ),
+    ),
+
     "MiniCPM-V-2_6": ModelConfig(
         model_name="MiniCPM-V-2_6",
         model_path="/home/models/openbmb/MiniCPM-V-2_6",
