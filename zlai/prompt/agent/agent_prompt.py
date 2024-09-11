@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
-from zlai.prompt import MessagesPrompt, PromptTemplate
+from zlai.prompt.base import MessagesPrompt
+from zlai.prompt.template import PromptTemplate
 from zlai.types.messages import TypeMessage, SystemMessage
 
 __all__ = [
@@ -26,9 +27,9 @@ class AgentPrompt(BaseModel):
             prompt_template: Optional[PromptTemplate] = None,
             **kwargs
     ):
+        super().__init__(**kwargs)
         self.system_message = system_message
         self.system_template = system_template
         self.few_shot = few_shot
         self.messages_prompt = messages_prompt
         self.prompt_template = prompt_template
-        super().__init__(**kwargs)

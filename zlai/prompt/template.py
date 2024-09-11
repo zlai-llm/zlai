@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Any, List, Literal, Optional
-from ..schema import Message
+from zlai.types.messages import Message, TypeMessage
 
 
 __all__ = [
@@ -19,7 +19,7 @@ class StringPromptValue(BaseModel):
     def to_messages(
             self,
             role: Literal["system", "user", "assistant"],
-    ) -> Message:
+    ) -> TypeMessage:
         """Return prompt as messages."""
         return Message(role=role, content=self.text)
 
