@@ -9,14 +9,14 @@ try:
 except ModuleNotFoundError:
     raise ModuleNotFoundError("pip install langchain_text_splitters")
 
-from ...retrievers import TextClean
-from ...llms import TypeLLM
-from ...embedding import TypeEmbedding
-from ...prompt import PromptTemplate
-from ...schema import SystemMessage, EmbeddingMatchOutput
-from ...schema.content import PageContent
+from zlai.retrievers import TextClean
+from zlai.llms import TypeLLM
+from zlai.embedding import TypeEmbedding
+from zlai.prompt import PromptTemplate
+from zlai.types.agent import TaskCompletion
+from zlai.schema import SystemMessage, EmbeddingMatchOutput
+from zlai.schema.content import PageContent
 from ..base import AgentMixin
-from ..prompt.tasks import TaskCompletion
 from ..prompt.bing import *
 
 

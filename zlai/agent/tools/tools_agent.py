@@ -2,11 +2,11 @@ import inspect
 from pandas import DataFrame
 from pydantic import BaseModel, Field
 from typing import Any, List, Dict, Union, Tuple, Optional, Callable
-from ...llms import TypeLLM
-from ...schema import TypeMessage, Message, SystemMessage, AssistantMessage, ToolsMessage
-from ...prompt import MessagesPrompt, PromptTemplate
+from zlai.llms import TypeLLM
+from zlai.types.messages import TypeMessage, Message, SystemMessage, AssistantMessage, ToolsMessage
+from zlai.types.agent import TaskCompletion
+from zlai.prompt import MessagesPrompt, PromptTemplate
 from ..base import AgentMixin
-from ..prompt.tasks import TaskCompletion
 from ..prompt.chat import prompt_chat
 from .register import dispatch_tool, register_tool
 
