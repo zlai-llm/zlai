@@ -8,6 +8,7 @@ from .function import *
 from .image import *
 from .messages import *
 from .table import *
+from .cite import *
 
 
 TypeMessage = Union[
@@ -26,6 +27,7 @@ TypeMessage = Union[
     ChatCompletionMessage,
     ChartMessage,
     TableMessage,
+    CiteMessage,
 ]
 
 # todo: 要增加不同的message类型组别，区分request类型与展示类型

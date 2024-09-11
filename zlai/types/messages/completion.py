@@ -12,6 +12,7 @@ from .messages import UserMessage, AssistantMessage, SystemMessage
 from .function import ObservationMessage, ToolsMessage
 from .image import ImageMessage
 from .audio import AudioMessage
+from .cite import CiteMessage
 
 
 __all__ = [
@@ -28,6 +29,7 @@ TypeCompletionTransMessage = Union[
     AudioMessage,
     ObservationMessage,
     ToolsMessage,
+    CiteMessage,
 ]
 
 
@@ -69,6 +71,17 @@ class ChatCompletionMessage(Message):
                         return mark
         return mark
 
+    def _is_cite_message(self) -> bool:
+        """"""
+        mark = False
+        if isinstance(self.content, list):
+            for _content in self.content:
+                if isinstance(_content, dict):
+                    if _content.get("type") == "cite":
+                        mark = True
+                        return mark
+        return mark
+
     def to_base_message(self) -> Message:
         """"""
         return Message.model_validate(self.model_dump())
@@ -105,6 +118,8 @@ class ChatCompletionMessage(Message):
             message = self.to_image_message()
         elif self.role == "observation":
             message = ObservationMessage.model_validate(self.model_dump())
+        elif self._is_cite_message():
+            message = CiteMessage.model_validate(self.model_dump())
         else:
             message = self.to_base_message()
         return message

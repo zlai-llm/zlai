@@ -23,6 +23,10 @@ models_config:
     model_path: /home/models/THUDM/LongWriter-glm4-9b
   LongWriter-llama3.1-8b:
     model_path: /home/models/THUDM/LongWriter-llama3.1-8b
+  LongCite-llama3.1-8b:
+    model_path: /home/models/THUDM/LongCite-llama3.1-8b
+  LongCite-glm4-9b:
+    model_path: /home/models/THUDM/LongCite-glm4-9b
   codegeex4-all-9b:
       model_path: /home/models/THUDM/codegeex4-all-9b
   MiniCPM-V-2_6:

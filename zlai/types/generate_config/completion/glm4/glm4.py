@@ -10,6 +10,8 @@ __all__ = [
     "GLM4V9BGenerateConfig",
     "GLM4LongWriter9B",
     "Llama3LongWriter8B",
+    "GLM4LongCite9B",
+    "Llama3LongCite8B",
 ]
 
 
@@ -64,6 +66,20 @@ class Llama3LongWriter8B(GenerateConfig):
     repetition_penalty: int = 1
 
 
+class GLM4LongCite9B(GenerateConfig):
+    """"""
+    max_input_length: int = 128000
+    max_new_tokens: int = 1024
+    temperature: float = 0.95
+
+
+class Llama3LongCite8B(GenerateConfig):
+    """"""
+    max_input_length: int = 128000
+    max_new_tokens: int = 1024
+    temperature: float = 0.95
+
+
 TypeGLM4Generate = Union[
     GLM4GenerateConfig,
     GLM4Chat9BGenerateConfig,
@@ -71,4 +87,6 @@ TypeGLM4Generate = Union[
     GLM4V9BGenerateConfig,
     GLM4LongWriter9B,
     Llama3LongWriter8B,
+    GLM4LongCite9B,
+    Llama3LongCite8B,
 ]

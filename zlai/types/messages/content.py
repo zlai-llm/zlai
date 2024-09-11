@@ -14,6 +14,8 @@ __all__ = [
     "AudioContent",
     "ChartContent",
     "TableContent",
+    "CiteContent",
+    "QueryContent",
 ]
 
 
@@ -58,3 +60,15 @@ class TableContent(Content):
     model_config = ConfigDict(arbitrary_types_allowed=True)
     type: Literal["table"] = "table"
     table: Optional[DataFrame] = None
+
+
+class CiteContent(Content):
+    """"""
+    type: Literal["cite"] = "cite"
+    content: Optional[str] = None
+
+
+class QueryContent(Content):
+    """"""
+    type: Literal["query"] = "query"
+    content: Optional[str] = None
