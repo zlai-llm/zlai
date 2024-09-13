@@ -3,9 +3,15 @@ from pandas import DataFrame
 
 
 __all__ = [
+    "headers",
     "transform_tool_params",
     "trans_dataframe",
 ]
+
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36',
+}
 
 
 def transform_tool_params(data):
