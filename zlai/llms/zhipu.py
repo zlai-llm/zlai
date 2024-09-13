@@ -103,7 +103,7 @@ class Zhipu(Generate):
         completion = self.zhipu_client.chat.completions.create(**self.generate_config.model_dump())
 
         if self.generate_config.stream:
-            completion = ChatCompletionChunk.model_validate(completion.model_dump())
+            # completion = ChatCompletionChunk.model_validate(completion.model_dump())
             return self.generate_stream(completion)
         else:
             completion = ChatCompletion.model_validate(completion.model_dump())
