@@ -32,6 +32,8 @@ class OpenAIEmbedding(EmbeddingMixin):
             base_url: Optional[str] = os.getenv("BASE_URL", "http://localhost:8000/"),
             api_key: Optional[str] = "BASE_URL",
             api_key_name: Optional[str] = "BASE_URL",
+            timeout: Optional[float] = 30.0,
+            max_retries: Optional[int] = 5,
             verbose: bool = False,
             **kwargs
     ):
@@ -43,6 +45,8 @@ class OpenAIEmbedding(EmbeddingMixin):
         self.base_url = base_url
         self.api_key = api_key
         self.api_key_name = api_key_name
+        self.timeout = timeout
+        self.max_retries = max_retries
         self.verbose = verbose
         self._create_client()
         self.kwargs = kwargs
@@ -58,10 +62,14 @@ class OpenAIEmbedding(EmbeddingMixin):
     def _create_client(self,) -> None:
         """"""
         if self.api_key:
-            self.client = OpenAI(base_url=self.base_url, api_key=self.api_key)
+            self.client = OpenAI(
+                base_url=self.base_url, api_key=self.api_key,
+                timeout=self.timeout, max_retries=self.max_retries)
         elif os.getenv(self.api_key_name):
             self.api_key = os.getenv(self.api_key_name)
-            self.client = OpenAI(base_url=self.base_url, api_key=self.api_key)
+            self.client = OpenAI(
+                base_url=self.base_url, api_key=self.api_key,
+                timeout=self.timeout, max_retries=self.max_retries)
         else:
             raise ValueError(f"api_key not found, please set api key")
 
