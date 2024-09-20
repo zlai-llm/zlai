@@ -13,6 +13,24 @@ models_config:
       model_path: /home/models/Qwen/Qwen2-VL-2B-Instruct
   Qwen2-VL-7B-Instruct:
       model_path: /home/models/Qwen/Qwen2-VL-7B-Instruct
+  Qwen2.5-0.5B-Instruct:
+    model_path: /home/models/Qwen/Qwen2.5-0.5B-Instruct
+  Qwen2.5-1.5B-Instruct:
+    model_path: /home/models/Qwen/Qwen2.5-1.5B-Instruct
+  Qwen2.5-3B-Instruct:
+    model_path: /home/models/Qwen/Qwen2.5-3B-Instruct
+  Qwen2.5-7B-Instruct:
+    model_path: /home/models/Qwen/Qwen2.5-7B-Instruct
+  Qwen2.5-14B-Instruct:
+    model_path: /home/models/Qwen/Qwen2.5-14B-Instruct
+  Qwen2.5-32B-Instruct:
+    model_path: /home/models/Qwen/Qwen2.5-32B-Instruct
+  Qwen2.5-72B-Instruct:
+    model_path: /home/models/Qwen/Qwen2.5-72B-Instruct
+  Qwen2.5-Coder-1.5B-Instruct:
+    model_path: /home/models/Qwen/Qwen2.5-Coder-1.5B-Instruct
+  Qwen2.5-Coder-7B-Instruct:
+    model_path: /home/models/Qwen/Qwen2.5-Coder-7B-Instruct
   glm-4-9b-chat:
       model_path: /home/models/THUDM/glm-4-9b-chat
   glm-4-9b-chat-1m:
