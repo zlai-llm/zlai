@@ -406,7 +406,7 @@ audio_models = {
 
 embedding_models = {
     "bge-m3": ModelConfig(
-        model_name="CosyVoice-300M-SFT",
+        model_name="bge-m3",
         model_path="/home/models/BAAI/bge-m3",
         model_type="embedding",
         load_method=load_embedding,
