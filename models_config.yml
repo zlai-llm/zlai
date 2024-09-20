@@ -65,3 +65,5 @@ models_config:
       model_path: /home/models/FunAudioLLM/CosyVoice-300M-SFT
   bge-m3:
       model_path: /home/models/BAAI/bge-m3
+  jina-embeddings-v3:
+      model_path: /home/models/jinaai/jina-embeddings-v3

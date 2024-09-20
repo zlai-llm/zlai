@@ -2,6 +2,7 @@ from zlai.models.load import *
 from zlai.models.completion import *
 from zlai.models.diffusers import *
 from zlai.models.tts import *
+from zlai.models.embedding import *
 from zlai.types.models_config import ModelConfig, InferenceMethod
 from zlai.types.generate_config.image import *
 from zlai.types.generate_config.audio import *
@@ -411,6 +412,19 @@ embedding_models = {
         model_type="embedding",
         load_method=load_embedding,
         max_memory={"0": "32GB"},
+        inference_method=InferenceMethod(
+            base=bge_encode,
+        ),
+    ),
+    "jina-embeddings-v3": ModelConfig(
+        model_name="jina-embeddings-v3",
+        model_path="/home/models/jinaai/jina-embeddings-v3",
+        model_type="embedding",
+        load_method=load_jina_embedding_v3,
+        max_memory={"0": "32GB"},
+        inference_method=InferenceMethod(
+            base=jina_encode,
+        ),
     ),
 }
 
