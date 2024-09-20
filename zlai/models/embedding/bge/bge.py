@@ -5,11 +5,11 @@ from zlai.types.response.embedding import *
 
 
 __all__ = [
-    "encode",
+    "bge_encode",
 ]
 
 
-def encode(
+def bge_encode(
         text: List[str],
         model: SentenceTransformer,
         batch_size: Optional[int] = 32,
