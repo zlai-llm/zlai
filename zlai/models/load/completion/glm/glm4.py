@@ -20,7 +20,7 @@ def load_glm4(
 ) -> Tuple[Any, Any]:
     """"""
     max_memory = get_device_max_memory(max_memory)
-    device = "cuda"
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     tokenizer = AutoTokenizer.from_pretrained(
         pretrained_model_name_or_path=model_path, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
