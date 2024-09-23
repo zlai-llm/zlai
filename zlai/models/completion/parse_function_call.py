@@ -30,6 +30,7 @@ class ParseFunctionCall:
         self.tokenizer = tokenizer
         self.stream = stream
         self.kwargs = kwargs
+        self._tools_name()
 
     def _tools_name(self):
         """"""
