@@ -9,7 +9,6 @@ __all__ = [
     "GLM4GenerateConfig",
     "GLM4PlusGenerateConfig",
     "GLM4LongGenerateConfig",
-    "GLM49BGenerateConfig",
     "GLM40520GenerateConfig",
     "GLM4AirGenerateConfig",
     "GLM4AirXGenerateConfig",
@@ -64,11 +63,6 @@ class GLM4LongGenerateConfig(ZhipuGenerateConfig):
     100RMB / 1M tokens
     """
     model: str = "glm-4-long"
-
-
-class GLM49BGenerateConfig(ZhipuGenerateConfig):
-    """"""
-    model: str = "glm-4-9b"
 
 
 class GLM40520GenerateConfig(ZhipuGenerateConfig):
@@ -140,7 +134,6 @@ TypeZhipuGenerate = Union[
     GLM4GenerateConfig,
     GLM4PlusGenerateConfig,
     GLM4LongGenerateConfig,
-    GLM49BGenerateConfig,
     GLM40520GenerateConfig,
     GLM4AirGenerateConfig,
     GLM4AirXGenerateConfig,
