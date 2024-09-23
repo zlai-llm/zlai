@@ -1,16 +1,49 @@
 import string
 import random
-from typing import Dict, List, Union, Optional
+from typing import Dict, List, Union, Tuple, Optional
 from zlai.types.function_call import Function, ChatCompletionMessageToolCall
 from zlai.types.chat.chat_completion_chunk import ChoiceDelta, ChoiceDeltaToolCallFunction, ChoiceDeltaToolCall
 from zlai.types.messages import ChatCompletionMessage
 
 
 __all__ = [
+    "find_sub_string_indices",
+    "parse_dict_content",
     "message_instance",
     "message_function_call",
     "choice_function_call",
 ]
+
+
+def find_sub_string_indices(string: str, sub_string: str) -> List[Tuple[int, int]]:
+    """
+    Find all indices of a sub string in a string
+    :param string:
+    :param sub_string:
+    :return:
+    """
+    indices = []
+    start = 0
+    while True:
+        start = string.find(sub_string, start)
+        if start == -1:
+            break
+        indices.append((start, start + len(sub_string)))
+        start += len(sub_string)
+    return indices
+
+
+def parse_dict_content(content: str, ) -> str:
+    """"""
+    start_indices = find_sub_string_indices(content, "{")
+    end_indices = find_sub_string_indices(content, "}")
+    content = content[start_indices[0][0]: end_indices[-1][-1]]
+
+    if len(start_indices) - len(end_indices) == 1:
+        content = content + "}"
+    elif len(start_indices) - len(end_indices) == -1:
+        content = "{" + content
+    return content
 
 
 def generate_id(prefix: str, k: int = 29) -> str:

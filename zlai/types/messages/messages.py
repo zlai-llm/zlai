@@ -46,4 +46,4 @@ class AssistantMessage(Message):
 class AssistantWithMetadataMessage(AssistantMessage):
     """for glm4 function call"""
     metadata: str = Field(default=None, description="metadata")
-    content: Optional[str] = Field(default="", description="对话内容")
+    content: Optional[Union[str, Dict]] = Field(default="", description="对话内容")
