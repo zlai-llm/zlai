@@ -24,6 +24,7 @@ class InferenceMethod(BaseModel):
     """"""
     base: Optional[Callable] = None
     stream: Optional[Callable] = None
+    function_call: Optional[Callable] = None
 
 
 class ModelConfig(BaseModel):

@@ -89,11 +89,12 @@ class LoadModelCompletion(LoggerMixin):
 
     def parse_tools_call(self, content: str, usage: CompletionUsage, **kwargs) -> ChatCompletion:
         """"""
-        if self.tools_config.tools:
+        if self.tools_config.tools and self.model_config.inference_method.function_call:
+            parse_func = self.model_config.inference_method.function_call
             parse_function_call = ParseFunctionCall(
-                content=content, tools=self.tools_config.tools,
-                model=self.model_name, tokenizer=self.tokenizer)
-            chat_completion_message = parse_function_call.to_chat_completion_message()
+                content=content, tools=self.tools_config.tools, parse_func=parse_func,
+                tokenizer=self.tokenizer, stream=False)
+            chat_completion_message = parse_function_call.to_message_instance()
             if isinstance(chat_completion_message.tool_calls, list):
                 finish_reason = "tool_calls"
             else:
@@ -111,12 +112,13 @@ class LoadModelCompletion(LoggerMixin):
 
     def parse_stream_tools_call(self, content: str, _id: str, usage: CompletionUsage) -> ChatCompletionChunk:
         """"""
-        if self.tools_config.tools:
+        if self.tools_config.tools and self.model_config.inference_method.function_call:
+            parse_func = self.model_config.inference_method.function_call
             parse_function_call = ParseFunctionCall(
-                content=content, tools=self.tools_config.tools,
-                model=self.model_name, tokenizer=self.tokenizer,
+                content=content, tools=self.tools_config.tools, parse_func=parse_func,
+                tokenizer=self.tokenizer, stream=True
             )
-            choice_delta = parse_function_call.to_stream_completion_delta()
+            choice_delta = parse_function_call.to_message_instance()
             choice_delta.content = ""
             if isinstance(choice_delta.tool_calls, list):
                 finish_reason = "tool_calls"

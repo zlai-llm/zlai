@@ -7,6 +7,7 @@ from zlai.types.models_config import ModelConfig, InferenceMethod
 from zlai.types.generate_config.image import *
 from zlai.types.generate_config.audio import *
 from zlai.types.generate_config.completion import *
+from zlai.parse.function_call import *
 
 
 __all__ = [
@@ -29,6 +30,7 @@ chat_completion_models = {
         inference_method=InferenceMethod(
             base=completion_qwen_2,
             stream=stream_completion_qwen_2,
+            function_call=parse_qwen2,
         ),
     ),
     "Qwen2-1.5B-Instruct": ModelConfig(
@@ -41,6 +43,7 @@ chat_completion_models = {
         inference_method=InferenceMethod(
             base=completion_qwen_2,
             stream=stream_completion_qwen_2,
+            function_call=parse_qwen2,
         ),
     ),
     "Qwen2-7B-Instruct": ModelConfig(
@@ -53,6 +56,7 @@ chat_completion_models = {
         inference_method=InferenceMethod(
             base=completion_qwen_2,
             stream=stream_completion_qwen_2,
+            function_call=parse_qwen2,
         ),
     ),
     "Qwen2-Audio-7B-Instruct": ModelConfig(
@@ -112,6 +116,7 @@ chat_completion_models = {
         inference_method=InferenceMethod(
             base=completion_qwen2_5,
             stream=stream_completion_qwen2_5,
+            function_call=parse_qwen2_5,
         ),
     ),
     "Qwen2.5-1.5B-Instruct": ModelConfig(
@@ -124,6 +129,7 @@ chat_completion_models = {
         inference_method=InferenceMethod(
             base=completion_qwen2_5,
             stream=stream_completion_qwen2_5,
+            function_call=parse_qwen2_5,
         ),
     ),
     "Qwen2.5-3B-Instruct": ModelConfig(
@@ -136,6 +142,7 @@ chat_completion_models = {
         inference_method=InferenceMethod(
             base=completion_qwen2_5,
             stream=stream_completion_qwen2_5,
+            function_call=parse_qwen2_5,
         ),
     ),
     "Qwen2.5-7B-Instruct": ModelConfig(
@@ -148,6 +155,7 @@ chat_completion_models = {
         inference_method=InferenceMethod(
             base=completion_qwen2_5,
             stream=stream_completion_qwen2_5,
+            function_call=parse_qwen2_5,
         ),
     ),
     "Qwen2.5-14B-Instruct": ModelConfig(
@@ -160,6 +168,7 @@ chat_completion_models = {
         inference_method=InferenceMethod(
             base=completion_qwen2_5,
             stream=stream_completion_qwen2_5,
+            function_call=parse_qwen2_5,
         ),
     ),
     "Qwen2.5-32B-Instruct": ModelConfig(
@@ -172,6 +181,7 @@ chat_completion_models = {
         inference_method=InferenceMethod(
             base=completion_qwen2_5,
             stream=stream_completion_qwen2_5,
+            function_call=parse_qwen2_5,
         ),
     ),
     "Qwen2.5-72B-Instruct": ModelConfig(
@@ -184,6 +194,7 @@ chat_completion_models = {
         inference_method=InferenceMethod(
             base=completion_qwen2_5,
             stream=stream_completion_qwen2_5,
+            function_call=parse_qwen2_5,
         ),
     ),
     "Qwen2.5-Coder-1.5B-Instruct": ModelConfig(
@@ -196,6 +207,7 @@ chat_completion_models = {
         inference_method=InferenceMethod(
             base=completion_qwen2_5,
             stream=stream_completion_qwen2_5,
+            function_call=parse_qwen2_5,
         ),
     ),
     "Qwen2.5-Coder-7B-Instruct": ModelConfig(
@@ -208,6 +220,7 @@ chat_completion_models = {
         inference_method=InferenceMethod(
             base=completion_qwen2_5,
             stream=stream_completion_qwen2_5,
+            function_call=parse_qwen2_5,
         ),
     ),
     "glm-4-9b-chat": ModelConfig(
@@ -220,6 +233,7 @@ chat_completion_models = {
         inference_method=InferenceMethod(
             base=completion_glm_4,
             stream=stream_completion_glm_4,
+            function_call=parse_glm4,
         ),
     ),
     "glm-4-9b-chat-1m": ModelConfig(
@@ -315,6 +329,7 @@ chat_completion_models = {
         inference_method=InferenceMethod(
             base=completion_mini_cpm_v3,
             stream=stream_completion_mini_cpm_v3,
+            function_call=parse_mini_cpm_v3,
         ),
     ),
     "DeepSeek-V2-Lite-Chat": ModelConfig(
