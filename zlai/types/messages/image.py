@@ -182,9 +182,33 @@ class ImageMessage(ImageMixin):
             message["content"] = content
             return message, images
 
+    def _ocr_message(self) -> Tuple[Dict, List[TypeImage]]:
+        """"""
+        images = []
+        message = dict(role=self.role)
+        if isinstance(self.content, str):
+            message["content"] = self.content
+            return message, images
+        elif isinstance(self.content, list):
+            content = []
+            for item in self.content:
+                if isinstance(item, TextContent):
+                    content.append({"type": "text", "text": item.text})
+                elif isinstance(item, ImageContent):
+                    if isinstance(item.image_url.url, str):
+                        image = trans_bs64_to_image(item.image_url.url)
+                    elif isinstance(item.image_url.url, TypeImage):
+                        image = item.image_url.url
+                    else:
+                        raise TypeError(f"Url type error, got type {type(item.image_url.url)}")
+                    images.append(image)
+                    content.append({"type": "image", "image": image})
+            message["content"] = content
+            return message, images
+
     def to_message(
             self,
-            _type: Literal["mini_cpm", "glm4v", "qwen2vl"] = "mini_cpm"
+            _type: Literal["mini_cpm", "glm4v", "qwen2vl", "ocr"] = "mini_cpm"
     ) -> Union[Dict, Tuple[Dict, List[TypeImage]]]:
         """"""
         if _type == "mini_cpm":
@@ -193,6 +217,8 @@ class ImageMessage(ImageMixin):
             return self._glm4v_message()
         elif _type == "qwen2vl":
             return self._qwen2vl_message()
+        elif _type == "ocr":
+            return self._ocr_message()
         else:
             raise ValueError(f"Unknown message type {_type}")
 

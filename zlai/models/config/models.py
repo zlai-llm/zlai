@@ -368,6 +368,17 @@ chat_completion_models = {
             stream=stream_completion_codegeex_4,
         ),
     ),
+    "GOT-OCR2_0": ModelConfig(
+        model_name="GOT-OCR2_0",
+        model_path="/home/models/stepfun-ai/GOT-OCR2_0",
+        model_type="completion",
+        generate_method=GotOCR2GenerateConfig,
+        load_method=load_got_ocr,
+        max_memory={"0": "20GB"},
+        inference_method=InferenceMethod(
+            base=completion_got_ocr,
+        ),
+    ),
 }
 
 diffusers_models = {

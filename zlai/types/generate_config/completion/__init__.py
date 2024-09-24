@@ -6,6 +6,7 @@ from .qwen2 import *
 from .mini_cpm import *
 from .deepseek import *
 from .codegeex import *
+from .stepfun import *
 from typing import Union
 
 
@@ -18,4 +19,5 @@ TypeGenerateConfig = Union[
     TypeMiniCPMGenerate,
     TypeQwen15Generate,
     TypeQwen2Generate,
+    TypeGotOCR2Generate,
 ]

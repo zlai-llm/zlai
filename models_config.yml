@@ -55,6 +55,8 @@ models_config:
       model_path: /home/models/deepseek-ai/DeepSeek-V2-Lite-Chat
   DeepSeek-Coder-V2-Lite-Instruct:
       model_path: /home/models/deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct
+  GOT-OCR2_0:
+    model_path: /home/models/stepfun-ai/GOT-OCR2_0
   Kolors-diffusers:
       model_path: /home/models/Kwai-Kolors/Kolors-diffusers
   Kolors-image2image:
