@@ -15,6 +15,7 @@ __all__ = [
 class LoadModelEmbedding(LoggerMixin):
     """"""
     model: Any
+    tokenizer: Optional[Any]
     model_config: ModelConfig
     load_method: Union[SentenceTransformer, Callable]
 
@@ -39,6 +40,7 @@ class LoadModelEmbedding(LoggerMixin):
         self.batch_size = batch_size
         self.args = args
         self.kwargs = kwargs
+        self.tokenizer = None
         self.set_model_path()
         self.load_model()
 
@@ -55,6 +57,10 @@ class LoadModelEmbedding(LoggerMixin):
         self._logger(msg=f"[{__class__.__name__}] Loading model...", color="blue")
         start_time = time.time()
         self.model = self.load_method(self.model_path)
+
+        if isinstance(self.model, tuple):
+            self.model, self.tokenizer = self.model
+
         end_time = time.time()
         self._logger(msg=f"[{__class__.__name__}] Loading Done. Use {end_time - start_time:.2f}s", color="blue")
 
@@ -76,7 +82,7 @@ class LoadModelEmbedding(LoggerMixin):
         else:
             vectors, usage = generate_function(
                 text=text, model=self.model, batch_size=self.batch_size, verbose=True,
-                normalize_embeddings=True, device=self.model.device,
+                normalize_embeddings=True, device=self.model.device, tokenizer=self.tokenizer,
             )
             response.data = self._trans_vectors_to_embedding(vectors=vectors)
             response.usage = usage
