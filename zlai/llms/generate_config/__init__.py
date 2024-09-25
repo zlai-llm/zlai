@@ -8,7 +8,7 @@ from typing import Union
 TypeAPIGenerateConfig = Union[
     TypeAliGenerate, TypeAtomGenerate, TypeBaichuanGenerate, TypeBaiduGenerate,
     TypeDeepSeekGenerate, TypeDouBaoGenerate, TypeHunYuanGenerate, TypeMoonShotGenerate,
-    OpenAIGenerateConfig, TypeSiliconFlowGenerate, TypeSparkGenerate, TypeStepFunGenerate,
+    TypeOpenAIGenerate, TypeSiliconFlowGenerate, TypeSparkGenerate, TypeStepFunGenerate,
     TypeYiGenerate, TypeZhipuGenerate,
 ]
 

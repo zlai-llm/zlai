@@ -5,6 +5,7 @@ from zlai.schema import Message
 
 
 __all__ = [
+    "TypeOpenAIGenerate",
     "OpenAIGenerateConfig",
 ]
 
@@ -64,3 +65,8 @@ class OpenAIGenerateConfig(GenerateConfig):
             List[String]
             """
     )
+
+
+TypeOpenAIGenerate = Union[
+    OpenAIGenerateConfig
+]
