@@ -13,6 +13,7 @@ __all__ = [
     "GLM4AirGenerateConfig",
     "GLM4AirXGenerateConfig",
     "GLM4FlashGenerateConfig",
+    "GLM4FlashXGenerateConfig",
     "GLM3TurboGenerateConfig",
     "CodeGeexGenerateConfig",
     "GLM4AllToolsGenerateConfig",
@@ -95,6 +96,14 @@ class GLM4FlashGenerateConfig(ZhipuGenerateConfig):
     model: str = "glm-4-flash"
 
 
+class GLM4FlashXGenerateConfig(ZhipuGenerateConfig):
+    """
+    Flash 最实惠
+    0.1RMB / 1M tokens
+    """
+    model: str = "glm-4-flashx"
+
+
 class GLM3TurboGenerateConfig(ZhipuGenerateConfig):
     """
     1RMB / 1M tokens
@@ -138,6 +147,7 @@ TypeZhipuGenerate = Union[
     GLM4AirGenerateConfig,
     GLM4AirXGenerateConfig,
     GLM4FlashGenerateConfig,
+    GLM4FlashXGenerateConfig,
     GLM3TurboGenerateConfig,
     CodeGeexGenerateConfig,
     GLM4AllToolsGenerateConfig,
