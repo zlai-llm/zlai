@@ -8,7 +8,7 @@ __all__ = ["OpenAI"]
 
 
 class OpenAI(OpenAICompletion):
-    base_url: Optional[str] = "https://api.zhizengzeng.com/v1"
+    base_url: Optional[str] = "https://api.openai.com/v1"
 
     def __init__(
             self,
@@ -18,6 +18,7 @@ class OpenAI(OpenAICompletion):
             output: Literal["completion", "message", "str"] = "completion",
             verbose: Optional[bool] = False,
             api_key_name: Optional[str] = "OPENAI_API_KEY",
+            base_url: Optional[str] = None,
             *args: Any,
             **kwargs: Any,
     ):
@@ -27,6 +28,7 @@ class OpenAI(OpenAICompletion):
             api_key=api_key,
             api_key_name=api_key_name,
             *args, **kwargs)
+        self.base_url = base_url
         self.messages = messages
         self.verbose = verbose
         self.output = output
